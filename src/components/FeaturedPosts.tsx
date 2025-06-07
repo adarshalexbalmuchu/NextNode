@@ -1,61 +1,54 @@
 
 import BlogCard from "./BlogCard";
+import { usePosts } from "@/hooks/usePosts";
+import { format } from "date-fns";
 
 const FeaturedPosts = () => {
-  const featuredPosts = [
-    {
-      title: "The Future of Large Language Models: Beyond GPT-4",
-      excerpt: "Exploring the next generation of AI models and their potential to revolutionize how we interact with technology. From multimodal capabilities to reasoning breakthroughs.",
-      readTime: "12 min",
-      difficulty: "Advanced" as const,
-      tags: ["AI", "LLMs", "GPT-4", "Research"],
-      date: "Dec 5, 2024",
-      isRead: true,
-      progress: 75
-    },
-    {
-      title: "Quantum Computing Meets AI: A New Era of Possibilities",
-      excerpt: "How quantum computers could accelerate machine learning algorithms and solve problems that are intractable for classical computers.",
-      readTime: "8 min",
-      difficulty: "Intermediate" as const,
-      tags: ["Quantum", "AI", "Computing"],
-      date: "Dec 3, 2024"
-    },
-    {
-      title: "Building Ethical AI Systems: Lessons from DeepMind",
-      excerpt: "An in-depth look at how leading AI research organizations are tackling bias, fairness, and transparency in artificial intelligence.",
-      readTime: "15 min",
-      difficulty: "Beginner" as const,
-      tags: ["Ethics", "AI Safety", "DeepMind"],
-      date: "Dec 1, 2024",
-      isRead: true,
-      progress: 100
-    },
-    {
-      title: "The Rise of Autonomous Agents in Software Development",
-      excerpt: "How AI agents are transforming coding, debugging, and software architecture. A practical guide to the tools reshaping development.",
-      readTime: "10 min",
-      difficulty: "Intermediate" as const,
-      tags: ["Automation", "Coding", "Agents"],
-      date: "Nov 28, 2024"
-    },
-    {
-      title: "Neural Networks that Learn to Think: Chain-of-Thought Reasoning",
-      excerpt: "Breaking down how modern AI models develop reasoning capabilities and what this means for problem-solving applications.",
-      readTime: "18 min",
-      difficulty: "Advanced" as const,
-      tags: ["Reasoning", "Neural Networks", "CoT"],
-      date: "Nov 25, 2024"
-    },
-    {
-      title: "From Silicon to Synapse: Neuromorphic Computing Explained",
-      excerpt: "Understanding brain-inspired computing architectures and their potential to create more efficient, adaptive AI systems.",
-      readTime: "14 min",
-      difficulty: "Intermediate" as const,
-      tags: ["Neuromorphic", "Hardware", "Brain-AI"],
-      date: "Nov 22, 2024"
-    }
-  ];
+  const { data: posts, isLoading, error } = usePosts(true);
+
+  if (isLoading) {
+    return (
+      <section className="py-20 px-6">
+        <div className="container mx-auto max-w-7xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Latest <span className="text-primary text-glow">Research</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Dive deep into cutting-edge AI research, emerging technologies, and the innovations shaping our future.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, index) => (
+              <div key={index} className="glass p-6 rounded-xl animate-pulse">
+                <div className="h-6 bg-muted rounded mb-4"></div>
+                <div className="h-4 bg-muted rounded mb-2"></div>
+                <div className="h-4 bg-muted rounded mb-4"></div>
+                <div className="flex gap-2 mb-4">
+                  <div className="h-6 w-16 bg-muted rounded-full"></div>
+                  <div className="h-6 w-12 bg-muted rounded-full"></div>
+                </div>
+                <div className="flex justify-between">
+                  <div className="h-4 w-20 bg-muted rounded"></div>
+                  <div className="h-4 w-16 bg-muted rounded"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-20 px-6">
+        <div className="container mx-auto max-w-7xl text-center">
+          <p className="text-red-400">Error loading posts. Please try again later.</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-20 px-6">
@@ -72,13 +65,22 @@ const FeaturedPosts = () => {
 
         {/* Featured Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredPosts.map((post, index) => (
+          {posts?.map((post, index) => (
             <div 
-              key={index}
+              key={post.id}
               className="animate-fade-in"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <BlogCard {...post} />
+              <BlogCard 
+                title={post.title}
+                excerpt={post.excerpt || ''}
+                readTime={`${post.read_time} min`}
+                difficulty={post.difficulty_level as 'Beginner' | 'Intermediate' | 'Advanced'}
+                tags={post.categories ? [post.categories.name] : []}
+                date={format(new Date(post.created_at), 'MMM d, yyyy')}
+                isRead={false}
+                progress={0}
+              />
             </div>
           ))}
         </div>

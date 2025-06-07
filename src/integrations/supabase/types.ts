@@ -9,13 +9,168 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          color: string | null
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      post_sections: {
+        Row: {
+          anchor: string
+          created_at: string
+          id: string
+          level: number | null
+          order_index: number | null
+          post_id: string | null
+          title: string
+        }
+        Insert: {
+          anchor: string
+          created_at?: string
+          id?: string
+          level?: number | null
+          order_index?: number | null
+          post_id?: string | null
+          title: string
+        }
+        Update: {
+          anchor?: string
+          created_at?: string
+          id?: string
+          level?: number | null
+          order_index?: number | null
+          post_id?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_sections_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          author: string
+          category_id: string | null
+          content: string
+          created_at: string
+          difficulty_level: string | null
+          excerpt: string | null
+          featured: boolean | null
+          id: string
+          published: boolean | null
+          read_time: number | null
+          slug: string
+          title: string
+          updated_at: string
+          view_count: number | null
+        }
+        Insert: {
+          author?: string
+          category_id?: string | null
+          content: string
+          created_at?: string
+          difficulty_level?: string | null
+          excerpt?: string | null
+          featured?: boolean | null
+          id?: string
+          published?: boolean | null
+          read_time?: number | null
+          slug: string
+          title: string
+          updated_at?: string
+          view_count?: number | null
+        }
+        Update: {
+          author?: string
+          category_id?: string | null
+          content?: string
+          created_at?: string
+          difficulty_level?: string | null
+          excerpt?: string | null
+          featured?: boolean | null
+          id?: string
+          published?: boolean | null
+          read_time?: number | null
+          slug?: string
+          title?: string
+          updated_at?: string
+          view_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reading_progress: {
+        Row: {
+          id: string
+          last_read_at: string
+          post_id: string | null
+          progress_percentage: number | null
+          session_id: string
+        }
+        Insert: {
+          id?: string
+          last_read_at?: string
+          post_id?: string | null
+          progress_percentage?: number | null
+          session_id: string
+        }
+        Update: {
+          id?: string
+          last_read_at?: string
+          post_id?: string | null
+          progress_percentage?: number | null
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reading_progress_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_post_views: {
+        Args: { post_slug: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
