@@ -45,8 +45,8 @@ const ListItem: FC<ListItemProps> = ({ index, style, data }) => {
         excerpt={post.excerpt}
         author={post.author}
         date={post.created_at}
-        readTime={post.read_time}
-        difficulty={post.difficulty_level}
+        readTime={post.read_time?.toString() || "5"}
+        difficulty={post.difficulty_level as "Beginner" | "Intermediate" | "Advanced" || "Intermediate"}
         featured={post.featured}
         category={post.categories}
         slug={post.slug}

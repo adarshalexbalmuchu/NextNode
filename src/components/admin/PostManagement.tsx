@@ -46,13 +46,19 @@ const PostManagement = () => {
         .from('posts')
         .select(`
           *,
-          categories(name, color),
-          profiles(first_name, last_name, email)
+          categories(name, color)
         `)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data as Post[];
+      
+      // Transform the data to match our Post type
+      const transformedData = data?.map(post => ({
+        ...post,
+        profiles: null, // We'll handle author lookup separately if needed
+      })) || [];
+
+      return transformedData as Post[];
     },
   });
 

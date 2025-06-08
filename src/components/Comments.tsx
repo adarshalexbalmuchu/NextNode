@@ -36,17 +36,35 @@ const Comments = ({ postId }: CommentsProps) => {
   const { data: comments, isLoading } = useQuery({
     queryKey: ['comments', postId],
     queryFn: async () => {
-      // Get all comments with their profiles
-      const { data: allComments, error } = await supabase
+      // Get all comments first
+      const { data: allComments, error: commentsError } = await supabase
         .from('comments')
-        .select(`
-          *,
-          profiles(first_name, last_name, email)
-        `)
+        .select('*')
         .eq('post_id', postId)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (commentsError) throw commentsError;
+
+      // Get all unique user IDs from comments
+      const userIds = [...new Set(allComments?.map(comment => comment.user_id) || [])];
+      
+      // Get profiles for all users
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, first_name, last_name, email')
+        .in('id', userIds);
+
+      if (profilesError) throw profilesError;
+
+      // Create a map of user profiles
+      const profilesMap = profiles?.reduce((acc, profile) => {
+        acc[profile.id] = {
+          first_name: profile.first_name,
+          last_name: profile.last_name,
+          email: profile.email,
+        };
+        return acc;
+      }, {} as Record<string, CommentProfile>) || {};
 
       // Organize into parent comments and replies
       const parentComments = allComments?.filter(comment => !comment.parent_id) || [];
@@ -57,13 +75,17 @@ const Comments = ({ postId }: CommentsProps) => {
         if (!acc[reply.parent_id!]) {
           acc[reply.parent_id!] = [];
         }
-        acc[reply.parent_id!].push(reply);
+        acc[reply.parent_id!].push({
+          ...reply,
+          profiles: profilesMap[reply.user_id] || null,
+        });
         return acc;
-      }, {} as Record<string, typeof replies>);
+      }, {} as Record<string, Comment[]>);
 
       // Attach replies to parent comments
       const commentsWithReplies = parentComments.map(comment => ({
         ...comment,
+        profiles: profilesMap[comment.user_id] || null,
         replies: repliesMap[comment.id] || [],
       }));
 

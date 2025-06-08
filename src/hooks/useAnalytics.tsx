@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, ReactNode } from 'react';
 import { analytics } from '@/utils/analytics';
 
@@ -24,19 +25,31 @@ interface AnalyticsProviderProps {
 export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }) => {
   const track = (event: string, properties?: Record<string, any>) => {
     if (analytics) {
-      analytics.track(event, properties);
+      analytics.trackEvent({
+        event,
+        properties,
+        timestamp: Date.now(),
+        userId: properties?.userId,
+        sessionId: properties?.sessionId,
+      });
     }
   };
 
   const identify = (userId: string, traits?: Record<string, any>) => {
     if (analytics) {
-      analytics.identify(userId, traits);
+      analytics.identifyUser({
+        id: userId,
+        email: traits?.email,
+        name: traits?.name,
+        createdAt: traits?.createdAt,
+        plan: traits?.plan,
+      });
     }
   };
 
   const page = (name?: string, properties?: Record<string, any>) => {
     if (analytics) {
-      analytics.page(name, properties);
+      analytics.trackPageView(name, properties?.title);
     }
   };
 
