@@ -11,12 +11,14 @@ import { MessageCircle, Reply, Send } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import type { Database } from '@/integrations/supabase/types';
 
+type CommentProfile = {
+  first_name: string | null;
+  last_name: string | null;
+  email: string;
+};
+
 type Comment = Database['public']['Tables']['comments']['Row'] & {
-  profiles: {
-    first_name: string | null;
-    last_name: string | null;
-    email: string;
-  } | null;
+  profiles: CommentProfile | null;
   replies?: Comment[];
 };
 
@@ -34,38 +36,36 @@ const Comments = ({ postId }: CommentsProps) => {
   const { data: comments, isLoading } = useQuery({
     queryKey: ['comments', postId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      // Get all comments with their profiles
+      const { data: allComments, error } = await supabase
         .from('comments')
         .select(`
           *,
-          profiles!comments_user_id_fkey(first_name, last_name, email)
+          profiles(first_name, last_name, email)
         `)
         .eq('post_id', postId)
-        .is('parent_id', null)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      // Fetch replies for each comment
-      const commentsWithReplies = await Promise.all(
-        (data || []).map(async (comment) => {
-          const { data: replies, error: repliesError } = await supabase
-            .from('comments')
-            .select(`
-              *,
-              profiles!comments_user_id_fkey(first_name, last_name, email)
-            `)
-            .eq('parent_id', comment.id)
-            .order('created_at', { ascending: true });
+      // Organize into parent comments and replies
+      const parentComments = allComments?.filter(comment => !comment.parent_id) || [];
+      const replies = allComments?.filter(comment => comment.parent_id) || [];
 
-          if (repliesError) throw repliesError;
+      // Group replies by parent
+      const repliesMap = replies.reduce((acc, reply) => {
+        if (!acc[reply.parent_id!]) {
+          acc[reply.parent_id!] = [];
+        }
+        acc[reply.parent_id!].push(reply);
+        return acc;
+      }, {} as Record<string, typeof replies>);
 
-          return {
-            ...comment,
-            replies: replies || [],
-          };
-        })
-      );
+      // Attach replies to parent comments
+      const commentsWithReplies = parentComments.map(comment => ({
+        ...comment,
+        replies: repliesMap[comment.id] || [],
+      }));
 
       return commentsWithReplies as Comment[];
     },
@@ -136,7 +136,7 @@ const Comments = ({ postId }: CommentsProps) => {
     return 'U';
   };
 
-  const getUserDisplayName = (profile: Comment['profiles']) => {
+  const getUserDisplayName = (profile: CommentProfile | null) => {
     if (!profile) return 'Unknown User';
     if (profile.first_name && profile.last_name) {
       return `${profile.first_name} ${profile.last_name}`;

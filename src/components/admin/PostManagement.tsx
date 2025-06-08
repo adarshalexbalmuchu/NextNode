@@ -1,30 +1,43 @@
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, Edit, Trash2, Eye, EyeOff } from 'lucide-react';
+import { Search, Plus, Edit, Trash2, Eye } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import type { Database } from '@/integrations/supabase/types';
 
-type Post = Database['public']['Tables']['posts']['Row'] & {
-  categories?: Database['public']['Tables']['categories']['Row'];
+type Post = {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  author: string;
+  created_at: string;
+  updated_at: string;
+  published: boolean | null;
+  featured: boolean | null;
+  view_count: number | null;
+  read_time: number | null;
+  difficulty_level: string | null;
+  categories?: {
+    name: string;
+    color: string;
+  } | null;
   profiles?: {
-    first_name: string;
-    last_name: string;
+    first_name: string | null;
+    last_name: string | null;
     email: string;
-  };
+  } | null;
 };
 
 const PostManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const { data: posts, isLoading } = useQuery({
     queryKey: ['admin-posts'],
@@ -33,45 +46,13 @@ const PostManagement = () => {
         .from('posts')
         .select(`
           *,
-          categories (
-            name,
-            color
-          ),
-          profiles!posts_author_fkey (
-            first_name,
-            last_name,
-            email
-          )
+          categories(name, color),
+          profiles(first_name, last_name, email)
         `)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
       return data as Post[];
-    },
-  });
-
-  const togglePublishMutation = useMutation({
-    mutationFn: async ({ postId, published }: { postId: string; published: boolean }) => {
-      const { error } = await supabase
-        .from('posts')
-        .update({ published: !published })
-        .eq('id', postId);
-
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-posts'] });
-      toast({
-        title: "Success",
-        description: "Post status updated successfully",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to update post status",
-        variant: "destructive",
-      });
     },
   });
 
@@ -100,15 +81,45 @@ const PostManagement = () => {
     },
   });
 
-  const filteredPosts = posts?.filter(post => {
-    const authorName = post.profiles ? 
-      `${post.profiles.first_name} ${post.profiles.last_name}`.toLowerCase() : 
-      post.author.toLowerCase();
-    
-    return post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           authorName.includes(searchTerm.toLowerCase()) ||
-           post.categories?.name.toLowerCase().includes(searchTerm.toLowerCase());
+  const togglePublishMutation = useMutation({
+    mutationFn: async ({ postId, published }: { postId: string; published: boolean }) => {
+      const { error } = await supabase
+        .from('posts')
+        .update({ published })
+        .eq('id', postId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-posts'] });
+      toast({
+        title: "Success",
+        description: "Post status updated successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update post status",
+        variant: "destructive",
+      });
+    },
   });
+
+  const filteredPosts = posts?.filter(post =>
+    post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    post.author.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const getAuthorName = (post: Post) => {
+    if (post.profiles?.first_name && post.profiles?.last_name) {
+      return `${post.profiles.first_name} ${post.profiles.last_name}`;
+    }
+    if (post.profiles?.email) {
+      return post.profiles.email;
+    }
+    return post.author;
+  };
 
   if (isLoading) {
     return (
@@ -127,7 +138,7 @@ const PostManagement = () => {
       <CardHeader>
         <CardTitle>Post Management</CardTitle>
         <CardDescription>
-          Manage blog posts and content
+          Manage blog posts, drafts, and publication status
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -141,9 +152,9 @@ const PostManagement = () => {
               className="pl-10"
             />
           </div>
-          <Button className="ml-4" onClick={() => navigate('/create-post')}>
+          <Button className="ml-4">
             <Plus className="w-4 h-4 mr-2" />
-            Create Post
+            New Post
           </Button>
         </div>
 
@@ -167,16 +178,11 @@ const PostManagement = () => {
                     <div>
                       <div className="font-medium">{post.title}</div>
                       <div className="text-sm text-muted-foreground">
-                        {post.read_time} min read
+                        /{post.slug}
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>
-                    {post.profiles ? 
-                      `${post.profiles.first_name} ${post.profiles.last_name}` : 
-                      post.author
-                    }
-                  </TableCell>
+                  <TableCell>{getAuthorName(post)}</TableCell>
                   <TableCell>
                     {post.categories && (
                       <Badge 
@@ -191,7 +197,7 @@ const PostManagement = () => {
                     )}
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2">
+                    <div className="flex gap-2">
                       <Badge variant={post.published ? "default" : "secondary"}>
                         {post.published ? "Published" : "Draft"}
                       </Badge>
@@ -200,27 +206,32 @@ const PostManagement = () => {
                       )}
                     </div>
                   </TableCell>
-                  <TableCell>{post.view_count || 0}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      <Eye className="w-4 h-4 text-muted-foreground" />
+                      {post.view_count || 0}
+                    </div>
+                  </TableCell>
                   <TableCell>
                     {new Date(post.created_at).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-2">
                       <Button
-                        variant="ghost"
+                        variant="outline"
                         size="sm"
                         onClick={() => togglePublishMutation.mutate({
                           postId: post.id,
-                          published: post.published || false
+                          published: !post.published,
                         })}
                       >
-                        {post.published ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        {post.published ? "Unpublish" : "Publish"}
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="outline" size="sm">
                         <Edit className="w-4 h-4" />
                       </Button>
                       <Button 
-                        variant="ghost" 
+                        variant="outline" 
                         size="sm"
                         onClick={() => deletePostMutation.mutate(post.id)}
                       >

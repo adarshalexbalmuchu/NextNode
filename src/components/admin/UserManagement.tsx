@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,13 +8,12 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Search, UserPlus, Edit, Trash2 } from 'lucide-react';
+import { Search, UserPlus } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import type { Database } from '@/integrations/supabase/types';
 
 type UserRole = Database['public']['Enums']['app_role'];
 type Profile = Database['public']['Tables']['profiles']['Row'];
-type UserRoleRow = Database['public']['Tables']['user_roles']['Row'];
 
 interface UserWithRole extends Profile {
   role: UserRole;
@@ -27,24 +26,33 @@ const UserManagement = () => {
   const { data: users, isLoading } = useQuery({
     queryKey: ['admin-users'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      // Get all profiles
+      const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
-        .select(`
-          *,
-          user_roles!inner(role)
-        `);
+        .select('*');
 
-      if (error) throw error;
+      if (profilesError) throw profilesError;
 
-      // Type the response properly to handle the joined data
-      type ProfileWithUserRoles = Profile & {
-        user_roles: { role: UserRole }[];
-      };
+      // Get all user roles
+      const { data: userRoles, error: rolesError } = await supabase
+        .from('user_roles')
+        .select('user_id, role');
 
-      return (data as ProfileWithUserRoles[]).map(user => ({
-        ...user,
-        role: user.user_roles[0]?.role || 'user' as UserRole
-      })) as UserWithRole[];
+      if (rolesError) throw rolesError;
+
+      // Map roles to profiles
+      const rolesMap = userRoles?.reduce((acc, role) => {
+        acc[role.user_id] = role.role;
+        return acc;
+      }, {} as Record<string, UserRole>) || {};
+
+      // Combine profiles with their roles
+      const usersWithRoles = profiles?.map(profile => ({
+        ...profile,
+        role: rolesMap[profile.id] || 'user' as UserRole
+      })) || [];
+
+      return usersWithRoles as UserWithRole[];
     },
   });
 
@@ -73,7 +81,7 @@ const UserManagement = () => {
         description: "User role updated successfully",
       });
     },
-    onError: (error) => {
+    onError: () => {
       toast({
         title: "Error",
         description: "Failed to update user role",

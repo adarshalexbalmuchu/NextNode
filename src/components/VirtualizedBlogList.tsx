@@ -1,97 +1,85 @@
-import React, { useMemo } from 'react';
-import { FixedSizeList as List } from 'react-window';
-import { BlogCard } from './BlogCard';
-import { Skeleton } from './ui/skeleton';
+
+import React, { FC, useMemo } from 'react';
+import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
+import BlogCard from './BlogCard';
 
 interface BlogPost {
   id: string;
   title: string;
-  content: string;
-  excerpt: string;
+  slug: string;
+  excerpt: string | null;
   author: string;
   created_at: string;
-  image_url?: string;
-  tags?: string[];
-  read_time?: number;
+  read_time: number | null;
+  difficulty_level: string | null;
+  featured: boolean | null;
+  categories?: {
+    name: string;
+    color: string;
+  } | null;
 }
 
 interface VirtualizedBlogListProps {
   posts: BlogPost[];
-  loading?: boolean;
-  height?: number;
-  itemHeight?: number;
   onPostClick?: (post: BlogPost) => void;
-  className?: string;
 }
 
-interface ListItemProps {
-  index: number;
-  style: React.CSSProperties;
-  data: {
-    posts: BlogPost[];
-    onPostClick?: (post: BlogPost) => void;
-  };
+interface ListItemData {
+  posts: BlogPost[];
+  onPostClick?: (post: BlogPost) => void;
 }
 
-const ListItem: React.FC<ListItemProps> = ({ index, style, data }) => {
+type ListItemProps = ListChildComponentProps<ListItemData>;
+
+const ListItem: FC<ListItemProps> = ({ index, style, data }) => {
   const { posts, onPostClick } = data;
   const post = posts[index];
 
-  if (!post) {
-    return (
-      <div style={style} className="p-4">
-        <Skeleton className="w-full h-48 rounded-lg" />
-      </div>
-    );
-  }
+  if (!post) return null;
 
   return (
-    <div style={style} className="p-4">
+    <div style={style} className="px-2 py-2">
       <BlogCard
-        post={post}
+        key={post.id}
+        title={post.title}
+        excerpt={post.excerpt}
+        author={post.author}
+        date={post.created_at}
+        readTime={post.read_time}
+        difficulty={post.difficulty_level}
+        featured={post.featured}
+        category={post.categories}
+        slug={post.slug}
         onClick={() => onPostClick?.(post)}
       />
     </div>
   );
 };
 
-const VirtualizedBlogList: React.FC<VirtualizedBlogListProps> = ({
-  posts,
-  loading = false,
-  height = 600,
-  itemHeight = 280,
-  onPostClick,
-  className = '',
+const VirtualizedBlogList: FC<VirtualizedBlogListProps> = ({ 
+  posts, 
+  onPostClick = () => {} 
 }) => {
-  const itemData = useMemo(() => ({
+  const itemData: ListItemData = useMemo(() => ({
     posts,
     onPostClick,
   }), [posts, onPostClick]);
 
-  if (loading) {
+  if (!posts.length) {
     return (
-      <div className={`space-y-4 ${className}`}>
-        {Array.from({ length: 3 }).map((_, index) => (
-          <Skeleton key={index} className="w-full h-48 rounded-lg" />
-        ))}
-      </div>
-    );
-  }
-
-  if (posts.length === 0) {
-    return (
-      <div className={`text-center py-12 ${className}`}>
-        <p className="text-lg text-muted-foreground">No posts found</p>
+      <div className="text-center py-12">
+        <p className="text-muted-foreground">No posts found</p>
       </div>
     );
   }
 
   return (
-    <div className={className}>
+    <div className="w-full">
       <List
-        height={height}
+        width="100%"
+        height={600}
         itemCount={posts.length}
-        itemSize={itemHeight}
+        itemSize={300}
         itemData={itemData}
         overscanCount={5}
       >
