@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Icon Generator</title>
+</head>
+<body>
+    <canvas id="canvas" width="512" height="512"></canvas>
+    <script>
+        // Simple icon generator for PWA
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Draw gradient background
+        const gradient = ctx.createLinearGradient(0, 0, 512, 512);
+        gradient.addColorStop(0, '#1a1a2e');
+        gradient.addColorStop(0.5, '#16213e');
+        gradient.addColorStop(1, '#0f3460');
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 512, 512);
+        
+        // Draw rounded rectangle
+        ctx.fillStyle = '#e94560';
+        ctx.beginPath();
+        ctx.roundRect(100, 100, 312, 312, 40);
+        ctx.fill();
+        
+        // Draw text
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 120px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('QRF', 256, 256);
+        
+        // Generate data URL
+        const dataUrl = canvas.toDataURL('image/png');
+        console.log('Icon generated. Copy this data URL to create the icon files.');
+        console.log(dataUrl);
+        
+        // Function to download the icon
+        function downloadIcon(size, filename) {
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            
+            tempCanvas.width = size;
+            tempCanvas.height = size;
+            
+            tempCtx.drawImage(canvas, 0, 0, size, size);
+            
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = tempCanvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        // Create download buttons
+        const sizes = [
+            { size: 192, name: 'icon-192x192.png' },
+            { size: 512, name: 'icon-512x512.png' },
+            { size: 72, name: 'icon-72x72.png' },
+            { size: 96, name: 'icon-96x96.png' },
+            { size: 128, name: 'icon-128x128.png' },
+            { size: 144, name: 'icon-144x144.png' },
+            { size: 152, name: 'icon-152x152.png' },
+            { size: 384, name: 'icon-384x384.png' },
+            { size: 32, name: 'favicon-32x32.png' },
+            { size: 16, name: 'favicon-16x16.png' },
+            { size: 180, name: 'apple-touch-icon.png' }
+        ];
+        
+        sizes.forEach(({ size, name }) => {
+            const button = document.createElement('button');
+            button.textContent = `Download ${name}`;
+            button.onclick = () => downloadIcon(size, name);
+            document.body.appendChild(button);
+            document.body.appendChild(document.createElement('br'));
+        });
+    </script>
+</body>
+</html>

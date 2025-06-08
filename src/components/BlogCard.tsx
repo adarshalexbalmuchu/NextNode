@@ -1,5 +1,7 @@
 
-import { useState } from "react";
+import { useState, useCallback, memo } from "react";
+import { useNavigate } from "react-router-dom";
+import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 
 interface BlogCardProps {
   title: string;
@@ -10,9 +12,17 @@ interface BlogCardProps {
   date: string;
   isRead?: boolean;
   progress?: number;
+  slug?: string;
 }
 
-const BlogCard = ({ 
+// Memoize difficulty colors to prevent recreation on each render
+const difficultyColors = {
+  'Beginner': 'bg-green-500/20 text-green-400',
+  'Intermediate': 'bg-yellow-500/20 text-yellow-400', 
+  'Advanced': 'bg-red-500/20 text-red-400'
+} as const;
+
+const BlogCard = memo(({ 
   title, 
   excerpt, 
   readTime, 
@@ -20,23 +30,31 @@ const BlogCard = ({
   tags, 
   date, 
   isRead = false,
-  progress = 0 
+  progress = 0,
+  slug
 }: BlogCardProps) => {
+  usePerformanceMonitor('BlogCard');
   const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate();
 
-  const difficultyColors = {
-    'Beginner': 'bg-green-500/20 text-green-400',
-    'Intermediate': 'bg-yellow-500/20 text-yellow-400', 
-    'Advanced': 'bg-red-500/20 text-red-400'
-  };
+  // Memoize event handlers to prevent unnecessary re-renders
+  const handleClick = useCallback(() => {
+    if (slug) {
+      navigate(`/post/${slug}`);
+    }
+  }, [slug, navigate]);
+
+  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
+  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
 
   return (
     <article 
       className={`glass p-6 rounded-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer group ${
         isHovered ? 'glow' : 'hover:glow-hover'
       }`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
@@ -106,6 +124,8 @@ const BlogCard = ({
       )}
     </article>
   );
-};
+});
+
+BlogCard.displayName = 'BlogCard';
 
 export default BlogCard;

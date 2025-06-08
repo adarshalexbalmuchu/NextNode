@@ -2,50 +2,167 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
+import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { RefreshCw, TrendingUp, TrendingDown, Users, Eye, MessageSquare, Heart } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { format, subDays, parseISO } from 'date-fns';
 
 const Analytics = () => {
-  const { data: postsAnalytics } = useQuery({
-    queryKey: ['posts-analytics'],
+  const [timeRange, setTimeRange] = useState('30d');
+  const [refreshing, setRefreshing] = useState(false);
+
+  const { data: postsAnalytics, refetch: refetchPosts } = useQuery({
+    queryKey: ['posts-analytics', timeRange],
     queryFn: async () => {
+      const daysAgo = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
+      const startDate = subDays(new Date(), daysAgo).toISOString();
+      
       const { data, error } = await supabase
         .from('posts')
-        .select('view_count, created_at, categories(name)');
+        .select('view_count, created_at, categories(name), title')
+        .gte('created_at', startDate)
+        .order('view_count', { ascending: false });
 
       if (error) throw error;
       return data;
     },
   });
 
-  const { data: userGrowth } = useQuery({
-    queryKey: ['user-growth'],
+  const { data: userGrowth, refetch: refetchUsers } = useQuery({
+    queryKey: ['user-growth', timeRange],
     queryFn: async () => {
+      const daysAgo = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
+      const startDate = subDays(new Date(), daysAgo).toISOString();
+      
       const { data, error } = await supabase
         .from('profiles')
-        .select('created_at');
+        .select('created_at')
+        .gte('created_at', startDate)
+        .order('created_at', { ascending: true });
 
       if (error) throw error;
       return data;
     },
   });
 
-  // Mock data for demonstration
-  const viewsData = [
-    { name: 'Jan', views: 4000 },
-    { name: 'Feb', views: 3000 },
-    { name: 'Mar', views: 5000 },
-    { name: 'Apr', views: 4500 },
-    { name: 'May', views: 6000 },
-    { name: 'Jun', views: 5500 },
-  ];
+  const { data: engagementStats } = useQuery({
+    queryKey: ['engagement-stats', timeRange],
+    queryFn: async () => {
+      // This would be real engagement data from your analytics
+      const daysAgo = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
+      const startDate = subDays(new Date(), daysAgo).toISOString();
+      
+      // Mock data - replace with real queries when you have engagement tracking
+      return {
+        totalViews: 45678,
+        totalUsers: 1234,
+        totalComments: 567,
+        totalLikes: 2345,
+        averageSessionTime: '4:23',
+        bounceRate: 32.5,
+        conversionRate: 8.2,
+      };
+    },
+  });
 
-  const categoryData = [
-    { name: 'AI Research', value: 400, color: '#00ffff' },
-    { name: 'Machine Learning', value: 300, color: '#ff6b6b' },
-    { name: 'Quantum Computing', value: 200, color: '#4ecdc4' },
-    { name: 'Robotics', value: 150, color: '#45b7d1' },
-    { name: 'Neural Networks', value: 100, color: '#96ceb4' },
-  ];
+  // Process data for charts
+  const processedViewsData = useMemo(() => {
+    if (!postsAnalytics) return [];
+    
+    // Group posts by date and sum views
+    const viewsByDate = postsAnalytics.reduce((acc, post) => {
+      const date = format(parseISO(post.created_at), 'MMM dd');
+      acc[date] = (acc[date] || 0) + (post.view_count || 0);
+      return acc;
+    }, {} as Record<string, number>);
+
+    return Object.entries(viewsByDate).map(([date, views]) => ({
+      date,
+      views,
+    }));
+  }, [postsAnalytics]);
+
+  const processedUserGrowth = useMemo(() => {
+    if (!userGrowth) return [];
+    
+    // Group users by date
+    const usersByDate = userGrowth.reduce((acc, user) => {
+      const date = format(parseISO(user.created_at), 'MMM dd');
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    // Convert to cumulative growth
+    let cumulative = 0;
+    return Object.entries(usersByDate).map(([date, count]) => {
+      cumulative += count;
+      return { date, users: cumulative, newUsers: count };
+    });
+  }, [userGrowth]);
+
+  const topPosts = useMemo(() => {
+    if (!postsAnalytics) return [];
+    return postsAnalytics
+      .slice(0, 5)
+      .map(post => ({
+        title: post.title,
+        views: post.view_count || 0,
+        category: post.categories?.name || 'Uncategorized',
+      }));
+  }, [postsAnalytics]);
+
+  const categoryData = useMemo(() => {
+    if (!postsAnalytics) return [];
+    
+    const categoryStats = postsAnalytics.reduce((acc, post) => {
+      const category = post.categories?.name || 'Uncategorized';
+      acc[category] = (acc[category] || 0) + (post.view_count || 0);
+      return acc;
+    }, {} as Record<string, number>);
+
+    const colors = ['#00ffff', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3'];
+    
+    return Object.entries(categoryStats)
+      .map(([name, value], index) => ({
+        name,
+        value,
+        color: colors[index % colors.length],
+      }))
+      .sort((a, b) => b.value - a.value);
+  }, [postsAnalytics]);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await Promise.all([refetchPosts(), refetchUsers()]);
+    setRefreshing(false);
+  };
+
+  // Mock data for demonstration - will be replaced with real data
+  const viewsData = useMemo(() => {
+    if (!userGrowth) return [
+      { name: 'Jan', views: 4000 },
+      { name: 'Feb', views: 3000 },
+      { name: 'Mar', views: 5000 },
+      { name: 'Apr', views: 4500 },
+      { name: 'May', views: 6000 },
+      { name: 'Jun', views: 5500 },
+    ];
+
+    // Group user registrations by month for the chart
+    const monthlyData = userGrowth.reduce((acc, user) => {
+      const month = format(parseISO(user.created_at), 'MMM');
+      acc[month] = (acc[month] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    return Object.entries(monthlyData).map(([name, views]) => ({
+      name,
+      views,
+    }));
+  }, [userGrowth]);
 
   const engagementData = [
     { name: 'Mon', comments: 12, views: 2400 },

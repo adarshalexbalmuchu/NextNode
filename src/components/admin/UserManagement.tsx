@@ -36,9 +36,14 @@ const UserManagement = () => {
 
       if (error) throw error;
 
-      return data.map(user => ({
+      // Type the response properly to handle the joined data
+      type ProfileWithUserRoles = Profile & {
+        user_roles: { role: UserRole }[];
+      };
+
+      return (data as ProfileWithUserRoles[]).map(user => ({
         ...user,
-        role: user.user_roles[0]?.role || 'user'
+        role: user.user_roles[0]?.role || 'user' as UserRole
       })) as UserWithRole[];
     },
   });

@@ -1,0 +1,10 @@
+node_modules
+dist
+build
+coverage
+.git
+*.lock
+.env
+.env.local
+.env.production
+*.log

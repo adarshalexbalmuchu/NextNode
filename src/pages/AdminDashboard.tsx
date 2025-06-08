@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
+import { useDashboardStats } from '@/hooks/useDashboardStats';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -14,6 +15,7 @@ import Analytics from '@/components/admin/Analytics';
 
 const AdminDashboard = () => {
   const { user, userRole, hasRole } = useAuth();
+  const { stats, recentActivities, refetch } = useDashboardStats();
   const [activeTab, setActiveTab] = useState('overview');
 
   if (!hasRole('admin')) {
@@ -25,6 +27,35 @@ const AdminDashboard = () => {
           <Shield className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
           <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
           <p className="text-muted-foreground">You don't have permission to access this page.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (stats.loading) {
+    return (
+      <div className="min-h-screen w-full">
+        <Background />
+        <Header />
+        <div className="container mx-auto px-6 py-20 text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto mb-4"></div>
+          <h1 className="text-2xl font-bold mb-4">Loading Dashboard...</h1>
+          <p className="text-muted-foreground">Fetching the latest data</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (stats.error) {
+    return (
+      <div className="min-h-screen w-full">
+        <Background />
+        <Header />
+        <div className="container mx-auto px-6 py-20 text-center">
+          <div className="text-red-500 w-16 h-16 mx-auto mb-4">⚠️</div>
+          <h1 className="text-2xl font-bold mb-4">Error Loading Dashboard</h1>
+          <p className="text-muted-foreground mb-4">{stats.error}</p>
+          <Button onClick={refetch}>Try Again</Button>
         </div>
       </div>
     );
@@ -70,9 +101,9 @@ const AdminDashboard = () => {
                   <Users className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">1,234</div>
+                  <div className="text-2xl font-bold">{stats.totalUsers}</div>
                   <p className="text-xs text-muted-foreground">
-                    +10% from last month
+                    Platform users
                   </p>
                 </CardContent>
               </Card>
@@ -83,9 +114,9 @@ const AdminDashboard = () => {
                   <FileText className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">89</div>
+                  <div className="text-2xl font-bold">{stats.publishedPosts}</div>
                   <p className="text-xs text-muted-foreground">
-                    +5 this week
+                    Total content
                   </p>
                 </CardContent>
               </Card>
@@ -96,9 +127,9 @@ const AdminDashboard = () => {
                   <BarChart3 className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">45.2K</div>
+                  <div className="text-2xl font-bold">{stats.totalViews}</div>
                   <p className="text-xs text-muted-foreground">
-                    +25% from last month
+                    Content engagement
                   </p>
                 </CardContent>
               </Card>
@@ -109,9 +140,9 @@ const AdminDashboard = () => {
                   <Settings className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">12</div>
+                  <div className="text-2xl font-bold">{stats.activeAuthors}</div>
                   <p className="text-xs text-muted-foreground">
-                    3 new this month
+                    Content creators
                   </p>
                 </CardContent>
               </Card>
@@ -125,27 +156,23 @@ const AdminDashboard = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium">New user registered</p>
-                        <p className="text-xs text-muted-foreground">john.doe@example.com</p>
+                    {recentActivities.length > 0 ? (
+                      recentActivities.map((activity) => (
+                        <div key={activity.id} className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium">{activity.title}</p>
+                            <p className="text-xs text-muted-foreground">{activity.description}</p>
+                          </div>
+                          <Badge variant="secondary">
+                            {new Date(activity.timestamp).toLocaleString()}
+                          </Badge>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="flex items-center justify-center py-8">
+                        <p className="text-sm text-muted-foreground">No recent activities</p>
                       </div>
-                      <Badge variant="secondary">2 min ago</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium">Post published</p>
-                        <p className="text-xs text-muted-foreground">AI Ethics in Healthcare</p>
-                      </div>
-                      <Badge variant="secondary">1 hour ago</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium">Comment moderated</p>
-                        <p className="text-xs text-muted-foreground">Spam comment removed</p>
-                      </div>
-                      <Badge variant="secondary">3 hours ago</Badge>
-                    </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>

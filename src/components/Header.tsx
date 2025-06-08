@@ -1,9 +1,9 @@
 
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, BookOpen, User, LogOut, Settings } from "lucide-react";
+import { Search, BookOpen, User, LogOut, Settings, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -51,6 +51,11 @@ const Header = () => {
             <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">Articles</Link>
             <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Research</a>
             <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">About</a>
+            {hasRole('author') && (
+              <Link to="/create-post" className="text-muted-foreground hover:text-foreground transition-colors">
+                Create Post
+              </Link>
+            )}
             {hasRole('admin') && (
               <Link to="/admin" className="text-muted-foreground hover:text-foreground transition-colors">
                 Admin
@@ -94,6 +99,12 @@ const Header = () => {
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Settings</span>
                   </DropdownMenuItem>
+                  {hasRole('author') && (
+                    <DropdownMenuItem onClick={() => navigate('/create-post')}>
+                      <FileText className="mr-2 h-4 w-4" />
+                      <span>Create Post</span>
+                    </DropdownMenuItem>
+                  )}
                   {hasRole('admin') && (
                     <DropdownMenuItem onClick={() => navigate('/admin')}>
                       <Settings className="mr-2 h-4 w-4" />

@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ type Post = Database['public']['Tables']['posts']['Row'] & {
 const PostManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { data: posts, isLoading } = useQuery({
     queryKey: ['admin-posts'],
@@ -125,7 +127,7 @@ const PostManagement = () => {
               className="pl-10"
             />
           </div>
-          <Button className="ml-4">
+          <Button className="ml-4" onClick={() => navigate('/create-post')}>
             <Plus className="w-4 h-4 mr-2" />
             Create Post
           </Button>
