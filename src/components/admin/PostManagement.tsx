@@ -14,6 +14,11 @@ import type { Database } from '@/integrations/supabase/types';
 
 type Post = Database['public']['Tables']['posts']['Row'] & {
   categories?: Database['public']['Tables']['categories']['Row'];
+  profiles?: {
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
 };
 
 const PostManagement = () => {
@@ -31,6 +36,11 @@ const PostManagement = () => {
           categories (
             name,
             color
+          ),
+          profiles!posts_author_fkey (
+            first_name,
+            last_name,
+            email
           )
         `)
         .order('created_at', { ascending: false });
@@ -90,11 +100,15 @@ const PostManagement = () => {
     },
   });
 
-  const filteredPosts = posts?.filter(post =>
-    post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    post.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    post.categories?.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredPosts = posts?.filter(post => {
+    const authorName = post.profiles ? 
+      `${post.profiles.first_name} ${post.profiles.last_name}`.toLowerCase() : 
+      post.author.toLowerCase();
+    
+    return post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           authorName.includes(searchTerm.toLowerCase()) ||
+           post.categories?.name.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   if (isLoading) {
     return (
@@ -157,7 +171,12 @@ const PostManagement = () => {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>{post.author}</TableCell>
+                  <TableCell>
+                    {post.profiles ? 
+                      `${post.profiles.first_name} ${post.profiles.last_name}` : 
+                      post.author
+                    }
+                  </TableCell>
                   <TableCell>
                     {post.categories && (
                       <Badge 

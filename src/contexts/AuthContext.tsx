@@ -1,11 +1,37 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
-import { AuthContext, AuthContextType, AuthResult } from './AuthContextProvider';
 
 type UserRole = Database['public']['Enums']['app_role'];
+
+export interface AuthResult {
+  error: AuthError | null;
+  user?: User | null;
+  success?: boolean;
+}
+
+export interface AuthContextType {
+  user: User | null;
+  session: Session | null;
+  userRole: UserRole | null;
+  loading: boolean;
+  signIn: (email: string, password: string) => Promise<AuthResult>;
+  signUp: (email: string, password: string, firstName?: string, lastName?: string) => Promise<AuthResult>;
+  signOut: () => Promise<void>;
+  hasRole: (role: UserRole) => boolean;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);

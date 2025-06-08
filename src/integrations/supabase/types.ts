@@ -16,6 +16,7 @@ export type Database = {
           description: string | null
           id: string
           name: string
+          slug: string | null
         }
         Insert: {
           color?: string | null
@@ -23,6 +24,7 @@ export type Database = {
           description?: string | null
           id?: string
           name: string
+          slug?: string | null
         }
         Update: {
           color?: string | null
@@ -30,6 +32,7 @@ export type Database = {
           description?: string | null
           id?: string
           name?: string
+          slug?: string | null
         }
         Relationships: []
       }
@@ -266,6 +269,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_user_profile: {
+        Args: {
+          _user_id: string
+          _email: string
+          _first_name?: string
+          _last_name?: string
+        }
+        Returns: boolean
+      }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
