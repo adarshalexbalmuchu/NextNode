@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -15,7 +16,7 @@ type Comment = Database['public']['Tables']['comments']['Row'] & {
     first_name: string | null;
     last_name: string | null;
     email: string;
-  };
+  } | null;
   replies?: Comment[];
 };
 
@@ -37,7 +38,7 @@ const Comments = ({ postId }: CommentsProps) => {
         .from('comments')
         .select(`
           *,
-          profiles!inner(first_name, last_name, email)
+          profiles!comments_user_id_fkey(first_name, last_name, email)
         `)
         .eq('post_id', postId)
         .is('parent_id', null)
@@ -47,12 +48,12 @@ const Comments = ({ postId }: CommentsProps) => {
 
       // Fetch replies for each comment
       const commentsWithReplies = await Promise.all(
-        data.map(async (comment) => {
+        (data || []).map(async (comment) => {
           const { data: replies, error: repliesError } = await supabase
             .from('comments')
             .select(`
               *,
-              profiles!inner(first_name, last_name, email)
+              profiles!comments_user_id_fkey(first_name, last_name, email)
             `)
             .eq('parent_id', comment.id)
             .order('created_at', { ascending: true });
@@ -135,9 +136,35 @@ const Comments = ({ postId }: CommentsProps) => {
     return 'U';
   };
 
-  // Only users can comment (readers)
-  if (!hasRole('user')) {
-    return null;
+  const getUserDisplayName = (profile: Comment['profiles']) => {
+    if (!profile) return 'Unknown User';
+    if (profile.first_name && profile.last_name) {
+      return `${profile.first_name} ${profile.last_name}`;
+    }
+    return profile.email;
+  };
+
+  // Only authenticated users can comment
+  if (!user) {
+    return (
+      <Card className="glass mt-8">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <MessageCircle className="w-5 h-5" />
+            Comments
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Card className="border-dashed">
+            <CardContent className="text-center py-6">
+              <p className="text-muted-foreground">
+                Please <a href="/auth" className="text-primary hover:underline">sign in</a> to view and leave comments
+              </p>
+            </CardContent>
+          </Card>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
@@ -153,32 +180,22 @@ const Comments = ({ postId }: CommentsProps) => {
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Add new comment */}
-        {user ? (
-          <div className="space-y-4">
-            <Textarea
-              placeholder="Share your thoughts on this article..."
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              className="min-h-[100px]"
-            />
-            <Button 
-              onClick={handleSubmitComment}
-              disabled={!newComment.trim() || addCommentMutation.isPending}
-              className="flex items-center gap-2"
-            >
-              <Send className="w-4 h-4" />
-              {addCommentMutation.isPending ? 'Posting...' : 'Post Comment'}
-            </Button>
-          </div>
-        ) : (
-          <Card className="border-dashed">
-            <CardContent className="text-center py-6">
-              <p className="text-muted-foreground">
-                Please <a href="/auth" className="text-primary hover:underline">sign in</a> to leave a comment
-              </p>
-            </CardContent>
-          </Card>
-        )}
+        <div className="space-y-4">
+          <Textarea
+            placeholder="Share your thoughts on this article..."
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            className="min-h-[100px]"
+          />
+          <Button 
+            onClick={handleSubmitComment}
+            disabled={!newComment.trim() || addCommentMutation.isPending}
+            className="flex items-center gap-2"
+          >
+            <Send className="w-4 h-4" />
+            {addCommentMutation.isPending ? 'Posting...' : 'Post Comment'}
+          </Button>
+        </div>
 
         {/* Comments list */}
         {isLoading ? (
@@ -203,15 +220,13 @@ const Comments = ({ postId }: CommentsProps) => {
                 <div className="flex items-start gap-3">
                   <Avatar>
                     <AvatarFallback>
-                      {getInitials(comment.profiles.first_name, comment.profiles.last_name, comment.profiles.email)}
+                      {getInitials(comment.profiles?.first_name, comment.profiles?.last_name, comment.profiles?.email)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 space-y-2">
                     <div className="flex items-center gap-2">
                       <span className="font-medium">
-                        {comment.profiles.first_name && comment.profiles.last_name
-                          ? `${comment.profiles.first_name} ${comment.profiles.last_name}`
-                          : comment.profiles.email}
+                        {getUserDisplayName(comment.profiles)}
                       </span>
                       <span className="text-sm text-muted-foreground">
                         {formatDate(comment.created_at)}
@@ -219,17 +234,15 @@ const Comments = ({ postId }: CommentsProps) => {
                     </div>
                     <p className="text-sm leading-relaxed">{comment.content}</p>
                     
-                    {user && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setReplyTo(replyTo === comment.id ? null : comment.id)}
-                        className="text-xs"
-                      >
-                        <Reply className="w-3 h-3 mr-1" />
-                        Reply
-                      </Button>
-                    )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setReplyTo(replyTo === comment.id ? null : comment.id)}
+                      className="text-xs"
+                    >
+                      <Reply className="w-3 h-3 mr-1" />
+                      Reply
+                    </Button>
 
                     {/* Reply form */}
                     {replyTo === comment.id && (
@@ -269,15 +282,13 @@ const Comments = ({ postId }: CommentsProps) => {
                           <div key={reply.id} className="flex items-start gap-3">
                             <Avatar className="w-8 h-8">
                               <AvatarFallback className="text-xs">
-                                {getInitials(reply.profiles.first_name, reply.profiles.last_name, reply.profiles.email)}
+                                {getInitials(reply.profiles?.first_name, reply.profiles?.last_name, reply.profiles?.email)}
                               </AvatarFallback>
                             </Avatar>
                             <div className="flex-1 space-y-1">
                               <div className="flex items-center gap-2">
                                 <span className="text-sm font-medium">
-                                  {reply.profiles.first_name && reply.profiles.last_name
-                                    ? `${reply.profiles.first_name} ${reply.profiles.last_name}`
-                                    : reply.profiles.email}
+                                  {getUserDisplayName(reply.profiles)}
                                 </span>
                                 <span className="text-xs text-muted-foreground">
                                   {formatDate(reply.created_at)}

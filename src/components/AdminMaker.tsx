@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -5,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { AlertTriangle, Shield, User, Crown, CheckCircle, XCircle } from 'lucide-react';
 
@@ -56,27 +56,24 @@ const AdminMaker = () => {
       const targetUser = users[0];
       addResult('User Lookup', 'success', `User found: ${targetUser.first_name || targetUser.last_name || targetUser.email}`, targetUser);
 
-      // Step 2: Use the new safe admin creation function (bypasses RLS recursion)
-      addResult('Admin Creation', 'info', `Making ${targetEmail} an admin using safe function...`, null);
+      // Step 2: Insert admin role directly
+      addResult('Admin Creation', 'info', `Making ${targetEmail} an admin...`, null);
       
-      const { data: result, error: functionError } = await supabase
-        .rpc('safe_make_admin', { user_email: targetEmail });
+      const { error: roleError } = await supabase
+        .from('user_roles')
+        .upsert({
+          user_id: targetUser.id,
+          role: 'admin' as const,
+          assigned_by: user?.id
+        });
 
-      if (functionError) {
-        addResult('Admin Creation', 'error', `Error making user admin: ${functionError.message}`, functionError);
+      if (roleError) {
+        addResult('Admin Creation', 'error', `Error making user admin: ${roleError.message}`, roleError);
         return;
       }
 
-      // Check the result from the function
-      if (result && result.success) {
-        addResult('Admin Creation', 'success', result.message || `Successfully made ${targetEmail} an admin!`, result);
-        addResult('Next Steps', 'info', 'The user may need to refresh their browser to see admin features', null);
-      } else {
-        addResult('Admin Creation', 'error', result?.message || `Failed to make ${targetEmail} an admin`, result);
-        return;
-      }
-
-      // Admin creation completed successfully - no need for additional verification
+      addResult('Admin Creation', 'success', `Successfully made ${targetEmail} an admin!`, null);
+      addResult('Next Steps', 'info', 'The user may need to refresh their browser to see admin features', null);
 
     } catch (error) {
       addResult('Unexpected Error', 'error', `Unexpected error: ${(error as Error).message}`, error);
@@ -228,19 +225,11 @@ const AdminMaker = () => {
             </p>
             <div className="bg-gray-100 p-3 rounded-lg font-mono text-sm overflow-auto">
               <pre>{`-- Replace 'your-email@example.com' with your actual email
-UPDATE public.user_roles 
-SET role = 'admin', updated_at = NOW()
-WHERE user_id = (
-    SELECT id FROM auth.users 
-    WHERE email = 'your-email@example.com'
-);
-
--- If no role exists, insert admin role
-INSERT INTO public.user_roles (user_id, role, created_at, updated_at)
-SELECT id, 'admin', NOW(), NOW()
-FROM auth.users 
+INSERT INTO public.user_roles (user_id, role, assigned_by)
+SELECT id, 'admin', NULL
+FROM public.profiles 
 WHERE email = 'your-email@example.com'
-    AND id NOT IN (SELECT user_id FROM public.user_roles);`}</pre>
+ON CONFLICT (user_id, role) DO NOTHING;`}</pre>
             </div>
           </div>
         </CardContent>
