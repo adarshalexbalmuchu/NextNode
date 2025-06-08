@@ -1,3 +1,4 @@
+
 import '@testing-library/jest-dom'
 import { expect, afterEach } from 'vitest'
 import { cleanup } from '@testing-library/react'
@@ -13,6 +14,10 @@ afterEach(() => {
 
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
+  root: Element | Document | null = null;
+  rootMargin: string = '0px';
+  thresholds: ReadonlyArray<number> = [];
+  
   constructor() {}
   observe() {
     return null
@@ -23,7 +28,10 @@ global.IntersectionObserver = class IntersectionObserver {
   unobserve() {
     return null
   }
-}
+  takeRecords(): IntersectionObserverEntry[] {
+    return [];
+  }
+} as any
 
 // Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {

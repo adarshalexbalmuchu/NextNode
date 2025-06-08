@@ -3,9 +3,9 @@ import React, { createContext, useContext, ReactNode } from 'react';
 import { analytics } from '@/utils/analytics';
 
 interface AnalyticsContextType {
-  track: (event: string, properties?: Record<string, any>) => void;
-  identify: (userId: string, traits?: Record<string, any>) => void;
-  page: (name?: string, properties?: Record<string, any>) => void;
+  track: (name: string, properties?: Record<string, any>) => void;
+  identify: (id: string, properties?: Record<string, any>) => void;
+  page: (path?: string, properties?: Record<string, any>) => void;
 }
 
 const AnalyticsContext = createContext<AnalyticsContextType | null>(null);
@@ -23,33 +23,27 @@ interface AnalyticsProviderProps {
 }
 
 export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }) => {
-  const track = (event: string, properties?: Record<string, any>) => {
+  const track = (name: string, properties?: Record<string, any>) => {
     if (analytics) {
       analytics.trackEvent({
-        event,
+        name,
         properties,
-        timestamp: Date.now(),
-        userId: properties?.userId,
-        sessionId: properties?.sessionId,
       });
     }
   };
 
-  const identify = (userId: string, traits?: Record<string, any>) => {
+  const identify = (id: string, properties?: Record<string, any>) => {
     if (analytics) {
       analytics.identifyUser({
-        id: userId,
-        email: traits?.email,
-        name: traits?.name,
-        createdAt: traits?.createdAt,
-        plan: traits?.plan,
+        id,
+        properties,
       });
     }
   };
 
-  const page = (name?: string, properties?: Record<string, any>) => {
+  const page = (path?: string, properties?: Record<string, any>) => {
     if (analytics) {
-      analytics.trackPageView(name, properties?.title);
+      analytics.trackPageView(path, properties?.title);
     }
   };
 

@@ -1,3 +1,4 @@
+
 // Service Worker registration utilities
 interface ServiceWorkerConfig {
   onSuccess?: (registration: ServiceWorkerRegistration) => void;
@@ -119,8 +120,8 @@ export const promptPWAInstall = () => {
 
 // Background sync registration
 export const registerBackgroundSync = (tag: string = 'background-sync') => {
-  if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
-    navigator.serviceWorker.ready.then((registration) => {
+  if ('serviceWorker' in navigator && 'sync' in (window as any).ServiceWorkerRegistration.prototype) {
+    navigator.serviceWorker.ready.then((registration: any) => {
       return registration.sync.register(tag);
     }).catch((error) => {
       console.log('Background sync registration failed:', error);

@@ -56,7 +56,7 @@ class AnalyticsManager {
 
   private checkDoNotTrack(): boolean {
     if (this.config.respectDnt !== false) {
-      const dnt = navigator.doNotTrack || (window as any).doNotTrack || navigator.msDoNotTrack;
+      const dnt = navigator.doNotTrack || (window as any).doNotTrack;
       if (dnt === '1' || dnt === 'yes') {
         console.log('🔒 Analytics: Respecting Do Not Track preference');
         return false;

@@ -103,13 +103,13 @@ const SearchResults = () => {
                   <BlogCard
                     key={post.id}
                     title={post.title}
-                    excerpt={post.excerpt}
-                    author={post.author}
-                    date={post.created_at}
+                    excerpt={post.excerpt || ''}
                     readTime={post.read_time?.toString() || "5"}
                     difficulty={post.difficulty_level as "Beginner" | "Intermediate" | "Advanced" || "Intermediate"}
-                    featured={post.featured}
-                    category={post.categories}
+                    tags={post.categories ? [post.categories.name] : []}
+                    date={post.created_at}
+                    isRead={false}
+                    progress={0}
                     slug={post.slug}
                   />
                 ))}
