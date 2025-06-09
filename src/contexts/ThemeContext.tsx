@@ -1,100 +1,49 @@
 /**
- * Theme context for managing dark/light mode
+ * Dark mode enforcer - ensures the app is always in dark mode
  */
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 
-type Theme = 'dark' | 'light' | 'system';
-
-type ThemeProviderProps = {
+type DarkModeProviderProps = {
   children: React.ReactNode;
-  defaultTheme?: Theme;
-  storageKey?: string;
 };
 
-type ThemeProviderState = {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
-  actualTheme: 'dark' | 'light';
+type DarkModeProviderState = {
+  theme: 'dark';
+  actualTheme: 'dark';
 };
 
-const initialState: ThemeProviderState = {
-  theme: 'system',
-  setTheme: () => null,
+const initialState: DarkModeProviderState = {
+  theme: 'dark',
   actualTheme: 'dark',
 };
 
-const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
+const DarkModeProviderContext = createContext<DarkModeProviderState>(initialState);
 
-export function ThemeProvider({
-  children,
-  defaultTheme = 'system',
-  storageKey = 'neural-ui-theme',
-  ...props
-}: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
-  );
-
-  const [actualTheme, setActualTheme] = useState<'dark' | 'light'>('dark');
-
+export function ThemeProvider({ children }: DarkModeProviderProps) {
   useEffect(() => {
+    // Always enforce dark mode
     const root = window.document.documentElement;
-
-    root.classList.remove('light', 'dark');
-
-    let resolvedTheme: 'dark' | 'light';
-
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
-        .matches
-        ? 'dark'
-        : 'light';
-      resolvedTheme = systemTheme;
-    } else {
-      resolvedTheme = theme;
-    }
-
-    root.classList.add(resolvedTheme);
-    setActualTheme(resolvedTheme);
-  }, [theme]);
-
-  // Listen for system theme changes
-  useEffect(() => {
-    if (theme !== 'system') return;
-
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    root.classList.remove('light');
+    root.classList.add('dark');
     
-    const handleChange = () => {
-      const root = window.document.documentElement;
-      root.classList.remove('light', 'dark');
-      
-      const systemTheme = mediaQuery.matches ? 'dark' : 'light';
-      root.classList.add(systemTheme);
-      setActualTheme(systemTheme);
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, [theme]);
+    // Remove any stored theme preferences since we only use dark mode
+    localStorage.removeItem('neural-ui-theme');
+  }, []);
 
   const value = {
-    theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
-      setTheme(theme);
-    },
-    actualTheme,
+    theme: 'dark' as const,
+    actualTheme: 'dark' as const,
   };
 
   return (
-    <ThemeProviderContext.Provider {...props} value={value}>
+    <DarkModeProviderContext.Provider value={value}>
       {children}
-    </ThemeProviderContext.Provider>
+    </DarkModeProviderContext.Provider>
   );
 }
 
 export const useTheme = () => {
-  const context = useContext(ThemeProviderContext);
+  const context = useContext(DarkModeProviderContext);
 
   if (context === undefined)
     throw new Error('useTheme must be used within a ThemeProvider');

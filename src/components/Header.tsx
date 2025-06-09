@@ -13,7 +13,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -124,8 +123,6 @@ const Header = () => {
 
           {/* Search & Auth */}
           <div className="hidden md:flex items-center space-x-4">
-            <ThemeToggle />
-            
             <Button
               variant="ghost"
               size="sm"

@@ -61,22 +61,14 @@ test.describe('Homepage and Navigation', () => {
     await expect(page.locator('[data-testid="mobile-menu"]')).toBeVisible();
   });
 
-  test('should handle theme switching', async ({ page }) => {
-    // Check if theme toggle exists
-    const themeToggle = page.locator('[data-testid="theme-toggle"]');
+  test('should enforce dark mode', async ({ page }) => {
+    // Check that dark mode is always enforced
+    const html = page.locator('html');
+    await expect(html).toHaveClass(/dark/);
     
-    if (await themeToggle.isVisible()) {
-      // Test theme switching
-      await themeToggle.click();
-      
-      // Check if theme changed (look for dark mode class)
-      const html = page.locator('html');
-      await expect(html).toHaveClass(/dark/);
-      
-      // Switch back
-      await themeToggle.click();
-      await expect(html).not.toHaveClass(/dark/);
-    }
+    // Verify no theme toggle exists
+    const themeToggle = page.locator('[data-testid="theme-toggle"]');
+    await expect(themeToggle).not.toBeVisible();
   });
 
   test('should load quickly and meet performance standards', async ({ page }) => {

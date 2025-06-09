@@ -9,7 +9,7 @@
 
 @layer base {
   :root {
-    /* Core Colors - Futuristic Palette */
+    /* Core Colors - Futuristic Palette (Dark Mode Only) */
     --background: 218 23% 6%;        /* Deep Space Navy */
     --foreground: 210 40% 98%;       /* Glass White */
 
@@ -44,36 +44,6 @@
     --glow: 180 100% 50%;
     --glass: rgba(255, 255, 255, 0.05);
     --glass-border: rgba(255, 255, 255, 0.1);
-  }
-
-  .light {
-    --background: 0 0% 100%;
-    --foreground: 222 84% 5%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222 84% 5%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 84% 5%;
-
-    --primary: 180 100% 35%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
-
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-
-    --accent: 180 100% 35%;
-    --accent-foreground: 210 40% 98%;
-
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 180 100% 35%;
-
-    --glass: rgba(0, 0, 0, 0.02);
-    --glass-border: rgba(0, 0, 0, 0.08);
   }
 }
 

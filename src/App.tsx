@@ -164,7 +164,7 @@ const App = () => {
       }}
     >
       <AsyncErrorBoundary>
-        <ThemeProvider defaultTheme="dark" storageKey="neural-ui-theme">
+        <ThemeProvider>
           <QueryClientProvider client={queryClient}>
             <TooltipProvider>
               <Toaster />
