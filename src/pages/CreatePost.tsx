@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -14,6 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Save, Eye, FileText } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { useCategories } from '@/hooks/usePosts';
+import ImageUpload from '@/components/ImageUpload';
 
 interface PostFormData {
   title: string;
@@ -25,6 +27,7 @@ interface PostFormData {
   read_time: number;
   published: boolean;
   featured: boolean;
+  featured_image: string;
 }
 
 const CreatePost = () => {
@@ -43,6 +46,7 @@ const CreatePost = () => {
     read_time: 5,
     published: false,
     featured: false,
+    featured_image: '',
   });
 
   const [previewMode, setPreviewMode] = useState(false);
@@ -71,7 +75,7 @@ const CreatePost = () => {
         .from('posts')
         .insert({
           ...data,
-          author: `${user.email}`, // You might want to get the actual name from profile
+          author: `${user.email}`,
           slug: data.slug || data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
         });
 
@@ -105,6 +109,14 @@ const CreatePost = () => {
       const slug = value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
       setFormData(prev => ({ ...prev, slug }));
     }
+  };
+
+  const handleImageUploaded = (imageUrl: string) => {
+    handleInputChange('featured_image', imageUrl);
+  };
+
+  const handleImageRemoved = () => {
+    handleInputChange('featured_image', '');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -205,6 +217,14 @@ const CreatePost = () => {
                     className="min-h-[80px]"
                   />
                 </div>
+
+                {/* Featured Image Upload */}
+                <ImageUpload
+                  onImageUploaded={handleImageUploaded}
+                  onImageRemoved={handleImageRemoved}
+                  currentImage={formData.featured_image}
+                  label="Featured Image"
+                />
 
                 <div className="space-y-2">
                   <Label htmlFor="content">Content *</Label>

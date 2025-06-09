@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, Edit, Trash2, Eye } from 'lucide-react';
+import { Search, Plus, Edit, Trash2, Eye, Image as ImageIcon } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import type { Database } from '@/integrations/supabase/types';
 
@@ -21,6 +21,7 @@ type Post = {
   updated_at: string;
   published: boolean | null;
   featured: boolean | null;
+  featured_image: string | null;
   view_count: number | null;
   read_time: number | null;
   difficulty_level: string | null;
@@ -168,6 +169,7 @@ const PostManagement = () => {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Image</TableHead>
                 <TableHead>Title</TableHead>
                 <TableHead>Author</TableHead>
                 <TableHead>Category</TableHead>
@@ -180,6 +182,19 @@ const PostManagement = () => {
             <TableBody>
               {filteredPosts?.map((post) => (
                 <TableRow key={post.id}>
+                  <TableCell>
+                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-muted flex items-center justify-center">
+                      {post.featured_image ? (
+                        <img
+                          src={post.featured_image}
+                          alt={post.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <ImageIcon className="w-6 h-6 text-muted-foreground" />
+                      )}
+                    </div>
+                  </TableCell>
                   <TableCell>
                     <div>
                       <div className="font-medium">{post.title}</div>

@@ -128,6 +128,7 @@ export type Database = {
           difficulty_level: string | null
           excerpt: string | null
           featured: boolean | null
+          featured_image: string | null
           id: string
           published: boolean | null
           read_time: number | null
@@ -144,6 +145,7 @@ export type Database = {
           difficulty_level?: string | null
           excerpt?: string | null
           featured?: boolean | null
+          featured_image?: string | null
           id?: string
           published?: boolean | null
           read_time?: number | null
@@ -160,6 +162,7 @@ export type Database = {
           difficulty_level?: string | null
           excerpt?: string | null
           featured?: boolean | null
+          featured_image?: string | null
           id?: string
           published?: boolean | null
           read_time?: number | null
