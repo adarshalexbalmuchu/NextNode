@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -41,7 +40,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const ensureUserProfile = async (userId: string) => {
     try {
-      // Check if profile exists
       const { data: existingProfile, error: fetchError } = await supabase
         .from('profiles')
         .select('id')
@@ -49,7 +47,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .single();
 
       if (fetchError && fetchError.code === 'PGRST116') {
-        // Profile doesn't exist, create it
         const { data: userData } = await supabase.auth.getUser();
         
         if (userData.user) {
@@ -64,8 +61,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
           if (insertError) {
             console.error('Error creating user profile:', insertError);
-          } else {
-            console.log('User profile created successfully');
           }
         }
       }
@@ -76,51 +71,37 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const fetchUserRole = React.useCallback(async (userId: string): Promise<UserRole | null> => {
     try {
-      // First, ensure the user profile exists
       await ensureUserProfile(userId);
 
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', userId)
-        .order('assigned_at', { ascending: false })
-        .limit(1)
-        .single();
+      // Use the new security definer function to get role
+      const { data, error } = await supabase.rpc('get_current_user_role');
 
       if (error) {
-        // If no role exists, create a default 'user' role
-        if (error.code === 'PGRST116') { // No rows returned
-          console.log('No role found for user, creating default role...');
-          
-          // Try to create a default role
-          const { error: insertError } = await supabase
-            .from('user_roles')
-            .insert({
-              user_id: userId,
-              role: 'user' as UserRole,
-            });
+        console.error('Error fetching user role:', error);
+        
+        // Fallback: try to create default role
+        const { error: insertError } = await supabase
+          .from('user_roles')
+          .insert({
+            user_id: userId,
+            role: 'user' as UserRole,
+          });
 
-          if (insertError) {
-            console.error('Error creating default role:', insertError);
-            return 'user'; // Default fallback
-          }
-
-          return 'user';
+        if (insertError) {
+          console.error('Error creating default role:', insertError);
         }
         
-        console.error('Error fetching user role:', error);
-        return 'user'; // Default fallback
+        return 'user';
       }
 
-      return data?.role || 'user';
+      return data || 'user';
     } catch (error) {
       console.error('Unexpected error fetching user role:', error);
-      return 'user'; // Default fallback
+      return 'user';
     }
   }, []);
 
   useEffect(() => {
-    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state changed:', event, session?.user?.id);
@@ -128,20 +109,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Fetch user role when user logs in
-          setTimeout(async () => {
-            const role = await fetchUserRole(session.user.id);
-            setUserRole(role);
-            setLoading(false);
-          }, 0);
+          const role = await fetchUserRole(session.user.id);
+          setUserRole(role);
         } else {
           setUserRole(null);
-          setLoading(false);
         }
+        setLoading(false);
       }
     );
 
-    // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -161,7 +137,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signIn = async (email: string, password: string): Promise<AuthResult> => {
     try {
-      // Validate inputs
       if (!email || !email.trim()) {
         return { error: { message: 'Email is required', name: 'ValidationError', status: 400 } as AuthError };
       }
@@ -169,7 +144,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return { error: { message: 'Password is required', name: 'ValidationError', status: 400 } as AuthError };
       }
       
-      // Basic email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email.trim())) {
         return { error: { message: 'Please enter a valid email address', name: 'ValidationError', status: 400 } as AuthError };
@@ -194,7 +168,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signUp = async (email: string, password: string, firstName?: string, lastName?: string): Promise<AuthResult> => {
     try {
-      // Validate inputs
       if (!email || !email.trim()) {
         return { error: { message: 'Email is required', name: 'ValidationError', status: 400 } as AuthError };
       }
@@ -202,13 +175,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return { error: { message: 'Password is required', name: 'ValidationError', status: 400 } as AuthError };
       }
       
-      // Basic email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email.trim())) {
         return { error: { message: 'Please enter a valid email address', name: 'ValidationError', status: 400 } as AuthError };
       }
 
-      // Password validation
       if (password.length < 6) {
         return { error: { message: 'Password must be at least 6 characters long', name: 'ValidationError', status: 400 } as AuthError };
       }
@@ -233,7 +204,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       if (data.user) {
-        // Attempt to create profile if not created automatically
         await ensureUserProfile(data.user.id);
       }
 
@@ -251,13 +221,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const hasRole = (role: UserRole): boolean => {
     if (!userRole) return false;
     
-    // Admin has all permissions
     if (userRole === 'admin') return true;
-    
-    // Author has author and user permissions
     if (userRole === 'author' && (role === 'author' || role === 'user')) return true;
-    
-    // User only has user permissions
     if (userRole === 'user' && role === 'user') return true;
     
     return false;

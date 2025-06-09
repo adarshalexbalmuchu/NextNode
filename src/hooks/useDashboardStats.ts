@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -34,6 +35,18 @@ export const useDashboardStats = () => {
     try {
       setStats(prev => ({ ...prev, loading: true, error: null }));
 
+      // Check if user is admin first
+      const { data: userRole, error: roleError } = await supabase.rpc('get_current_user_role');
+      
+      if (roleError || userRole !== 'admin') {
+        setStats(prev => ({
+          ...prev,
+          loading: false,
+          error: 'Admin access required to view dashboard stats',
+        }));
+        return;
+      }
+
       // Fetch total users count
       const { count: totalUsers, error: usersError } = await supabase
         .from('profiles')
@@ -55,7 +68,7 @@ export const useDashboardStats = () => {
         throw postsError;
       }
 
-      // Fetch total views (sum of all post view counts)
+      // Fetch total views
       const { data: viewsData, error: viewsError } = await supabase
         .from('posts')
         .select('view_count')
@@ -68,27 +81,18 @@ export const useDashboardStats = () => {
 
       const totalViews = viewsData?.reduce((sum, post) => sum + (post.view_count || 0), 0) || 0;
 
-      // Fetch active authors (users with author or admin role who have published posts)
+      // Fetch active authors count
       const { data: authorsData, error: authorsError } = await supabase
-        .from('user_roles')
-        .select(`
-          user_id,
-          role,
-          profiles!inner(*)
-        `)
-        .in('role', ['author', 'admin']);
-
-      if (authorsError) throw authorsError;
-
-      // Count unique authors who have published posts
-      const { data: postsWithAuthors, error: postsWithAuthorsError } = await supabase
         .from('posts')
         .select('author')
         .eq('published', true);
 
-      if (postsWithAuthorsError) throw postsWithAuthorsError;
+      if (authorsError) {
+        console.error('Error fetching authors data:', authorsError);
+        throw authorsError;
+      }
 
-      const uniqueAuthors = new Set(postsWithAuthors?.map(post => post.author) || []);
+      const uniqueAuthors = new Set(authorsData?.map(post => post.author) || []);
       const activeAuthors = uniqueAuthors.size;
 
       setStats({
@@ -112,69 +116,35 @@ export const useDashboardStats = () => {
 
   const fetchRecentActivities = async () => {
     try {
-      // Fetch recent user registrations
-      const { data: recentUsers, error: usersError } = await supabase
-        .from('profiles')
-        .select('email, created_at')
-        .order('created_at', { ascending: false })
-        .limit(3);
+      // Check if user is admin
+      const { data: userRole, error: roleError } = await supabase.rpc('get_current_user_role');
+      
+      if (roleError || userRole !== 'admin') {
+        return;
+      }
 
-      if (usersError) throw usersError;
-
-      // Fetch recent published posts
+      // Fetch recent posts (simplified for now)
       const { data: recentPosts, error: postsError } = await supabase
         .from('posts')
         .select('title, created_at')
         .eq('published', true)
         .order('created_at', { ascending: false })
-        .limit(3);
+        .limit(5);
 
-      if (postsError) throw postsError;
+      if (postsError) {
+        console.error('Error fetching recent posts:', postsError);
+        return;
+      }
 
-      // Fetch recent comments
-      const { data: recentComments, error: commentsError } = await supabase
-        .from('comments')
-        .select(`
-          content,
-          created_at,
-          posts!inner(title)
-        `)
-        .order('created_at', { ascending: false })
-        .limit(3);
+      const activities: RecentActivity[] = recentPosts?.map(post => ({
+        id: `post-${post.title}`,
+        type: 'post_published' as const,
+        title: 'Post published',
+        description: post.title,
+        timestamp: post.created_at,
+      })) || [];
 
-      if (commentsError) throw commentsError;
-
-      // Combine and sort all activities
-      const activities: RecentActivity[] = [
-        ...(recentUsers?.map(user => ({
-          id: `user-${user.email}`,
-          type: 'user_registration' as const,
-          title: 'New user registered',
-          description: user.email,
-          timestamp: user.created_at,
-        })) || []),
-        ...(recentPosts?.map(post => ({
-          id: `post-${post.title}`,
-          type: 'post_published' as const,
-          title: 'Post published',
-          description: post.title,
-          timestamp: post.created_at,
-        })) || []),
-        ...(recentComments?.map(comment => ({
-          id: `comment-${comment.content.substring(0, 20)}`,
-          type: 'comment_created' as const,
-          title: 'New comment',
-          description: `Comment on "${comment.posts?.title || 'Unknown post'}"`,
-          timestamp: comment.created_at,
-        })) || []),
-      ];
-
-      // Sort by timestamp and take the 5 most recent
-      const sortedActivities = activities
-        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-        .slice(0, 5);
-
-      setRecentActivities(sortedActivities);
+      setRecentActivities(activities);
 
     } catch (error) {
       console.error('Error fetching recent activities:', error);
