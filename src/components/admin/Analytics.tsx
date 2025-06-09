@@ -13,13 +13,13 @@ const Analytics = () => {
   const { data: postsAnalytics, isLoading: postsLoading, error: postsError, refetch: refetchPosts } = useQuery({
     queryKey: ['posts-analytics', timeRange],
     queryFn: async () => {
-      // Check admin access first using existing function
+      // Check admin access first using the correct function
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         throw new Error('Authentication required');
       }
 
-      const { data: userRole, error: roleError } = await supabase.rpc('get_user_role', { _user_id: user.id });
+      const { data: userRole, error: roleError } = await supabase.rpc('get_current_user_role');
       
       if (roleError || userRole !== 'admin') {
         throw new Error('Admin access required');
@@ -49,13 +49,13 @@ const Analytics = () => {
   const { data: userGrowth, isLoading: usersLoading, refetch: refetchUsers } = useQuery({
     queryKey: ['user-growth', timeRange],
     queryFn: async () => {
-      // Check admin access first using existing function
+      // Check admin access first using the correct function
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         throw new Error('Authentication required');
       }
 
-      const { data: userRole, error: roleError } = await supabase.rpc('get_user_role', { _user_id: user.id });
+      const { data: userRole, error: roleError } = await supabase.rpc('get_current_user_role');
       
       if (roleError || userRole !== 'admin') {
         throw new Error('Admin access required');

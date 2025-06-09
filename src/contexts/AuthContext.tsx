@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -73,8 +74,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await ensureUserProfile(userId);
 
-      // Use the existing get_user_role function
-      const { data, error } = await supabase.rpc('get_user_role', { _user_id: userId });
+      // Use the get_current_user_role function that now exists
+      const { data, error } = await supabase.rpc('get_current_user_role');
 
       if (error) {
         console.error('Error fetching user role:', error);
