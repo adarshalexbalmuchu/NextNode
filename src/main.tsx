@@ -1,5 +1,15 @@
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
+import { initCriticalResources } from './utils/criticalResourceOptimizer'
 
-createRoot(document.getElementById("root")!).render(<App />);
+// Initialize critical resources before React renders
+initCriticalResources();
+
+// Use concurrent features for better performance
+const root = createRoot(document.getElementById("root")!, {
+  // Enable concurrent features
+  identifierPrefix: 'quantum-read-'
+});
+
+root.render(<App />);

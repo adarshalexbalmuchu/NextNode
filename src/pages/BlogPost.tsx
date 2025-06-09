@@ -10,6 +10,9 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft, Clock, User, Calendar, Eye } from 'lucide-react';
 import { format } from 'date-fns';
+import { SkeletonBlogPost } from '@/components/ui/skeleton';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import ErrorFallback from '@/components/ErrorFallback';
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -69,16 +72,28 @@ const BlogPost = () => {
         <Header />
         <div className="container mx-auto px-6 py-20">
           <div className="max-w-4xl mx-auto">
-            <div className="animate-pulse space-y-6">
-              <div className="h-8 bg-muted rounded w-1/4"></div>
-              <div className="h-12 bg-muted rounded w-3/4"></div>
-              <div className="h-4 bg-muted rounded w-1/2"></div>
-              <div className="h-64 bg-muted rounded"></div>
-              <div className="space-y-4">
-                {[...Array(8)].map((_, i) => (
-                  <div key={i} className="h-4 bg-muted rounded"></div>
-                ))}
-              </div>
+            <div className="mb-8">
+              <Button
+                variant="ghost"
+                onClick={() => navigate('/')}
+                className="flex items-center gap-2 mb-4"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back to Posts
+              </Button>
+            </div>
+            
+            <SkeletonBlogPost showMeta={true} shimmer={true} />
+            
+            <div className="mt-12 text-center">
+              <LoadingSpinner 
+                size="lg" 
+                text="Loading article..." 
+                variant="gradient"
+                showProgress={true}
+                progress={33}
+                timeout={15000}
+              />
             </div>
           </div>
         </div>
@@ -92,15 +107,24 @@ const BlogPost = () => {
         <Background />
         <Header />
         <div className="container mx-auto px-6 py-20">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-3xl font-bold mb-4">Post Not Found</h1>
-            <p className="text-muted-foreground mb-8">
-              The blog post you're looking for doesn't exist or has been removed.
-            </p>
-            <Button onClick={() => navigate('/')}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
-            </Button>
+          <div className="max-w-4xl mx-auto">
+            <div className="mb-8">
+              <Button
+                variant="ghost"
+                onClick={() => navigate('/')}
+                className="flex items-center gap-2 mb-4"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back to Posts
+              </Button>
+            </div>
+            
+            <ErrorFallback
+              error={error as Error || new Error('Post not found')}
+              resetError={() => navigate('/')}
+              title="Post Not Found"
+              description="The blog post you're looking for doesn't exist or has been removed."
+            />
           </div>
         </div>
       </div>

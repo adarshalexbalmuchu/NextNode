@@ -20,7 +20,7 @@
     <!-- PWA and Performance -->
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#3b82f6" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Neural" />
     <link rel="apple-touch-icon" href="/favicon.ico" />
@@ -29,6 +29,24 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://your-supabase-url.supabase.co" />
+    
+    <!-- Critical CSS inline for faster LCP -->
+    <style>
+      /* Critical styles for immediate render */
+      body { margin: 0; background: #0a0a0a; color: #fff; font-family: system-ui, -apple-system, sans-serif; }
+      #root { min-height: 100vh; }
+      .loading-fallback { 
+        min-height: 100vh; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+      }
+    </style>
+    
+    <!-- Preload hero image and critical assets -->
+    <link rel="preload" href="/src/assets/hero-image.webp" as="image" type="image/webp" />
+    <link rel="modulepreload" href="/src/main.tsx" />
   </head>
 
   <body>

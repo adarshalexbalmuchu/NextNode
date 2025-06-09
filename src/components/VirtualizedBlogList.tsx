@@ -1,5 +1,4 @@
-
-import React, { FC, useMemo } from 'react';
+import React, { FC, useMemo, memo } from 'react';
 import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import BlogCard from './BlogCard';
 
@@ -31,7 +30,8 @@ interface ListItemData {
 
 type ListItemProps = ListChildComponentProps<ListItemData>;
 
-const ListItem: FC<ListItemProps> = ({ index, style, data }) => {
+// Memoized list item for performance
+const ListItem: FC<ListItemProps> = memo(({ index, style, data }) => {
   const { posts, onPostClick } = data;
   const post = posts[index];
 
@@ -43,7 +43,7 @@ const ListItem: FC<ListItemProps> = ({ index, style, data }) => {
         key={post.id}
         title={post.title}
         excerpt={post.excerpt || ''}
-        readTime={post.read_time?.toString() || "5"}
+        readTime={`${post.read_time || 5} min`}
         difficulty={post.difficulty_level as "Beginner" | "Intermediate" | "Advanced" || "Intermediate"}
         tags={post.categories ? [post.categories.name] : []}
         date={post.created_at}
@@ -53,9 +53,10 @@ const ListItem: FC<ListItemProps> = ({ index, style, data }) => {
       />
     </div>
   );
-};
+});
 
-const VirtualizedBlogList: FC<VirtualizedBlogListProps> = ({ 
+// Optimize list component with memo
+const VirtualizedBlogList: FC<VirtualizedBlogListProps> = memo(({ 
   posts, 
   onPostClick = () => {} 
 }) => {
@@ -86,6 +87,8 @@ const VirtualizedBlogList: FC<VirtualizedBlogListProps> = ({
       </List>
     </div>
   );
-};
+});
+
+VirtualizedBlogList.displayName = 'VirtualizedBlogList';
 
 export default VirtualizedBlogList;

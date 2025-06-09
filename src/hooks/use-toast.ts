@@ -5,8 +5,8 @@ import type {
   ToastProps,
 } from "@/components/ui/toast"
 
-const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000000
+const TOAST_LIMIT = 3
+const TOAST_REMOVE_DELAY = 5000
 
 type ToasterToast = ToastProps & {
   id: string
@@ -62,10 +62,21 @@ const addToRemoveQueue = (toastId: string) => {
 
   const timeout = setTimeout(() => {
     toastTimeouts.delete(toastId)
-    dispatch({
-      type: "REMOVE_TOAST",
-      toastId: toastId,
-    })
+    
+    // Use requestIdleCallback for non-blocking dispatch
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => {
+        dispatch({
+          type: "REMOVE_TOAST",
+          toastId: toastId,
+        })
+      })
+    } else {
+      dispatch({
+        type: "REMOVE_TOAST",
+        toastId: toastId,
+      })
+    }
   }, TOAST_REMOVE_DELAY)
 
   toastTimeouts.set(toastId, timeout)

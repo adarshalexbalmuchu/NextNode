@@ -2,13 +2,19 @@
 import BlogCard from "./BlogCard";
 import { usePosts } from "@/hooks/usePosts";
 import { format } from "date-fns";
+import { SkeletonCard } from "@/components/ui/skeleton";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import ErrorFallback from "@/components/ErrorFallback";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const FeaturedPosts = () => {
   const { data: posts, isLoading, error } = usePosts(true);
 
   if (isLoading) {
     return (
-      <section className="py-20 px-6">
+      <section id="featured" className="py-20 px-6">
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -18,22 +24,26 @@ const FeaturedPosts = () => {
               Dive deep into cutting-edge AI research, emerging technologies, and the innovations shaping our future.
             </p>
           </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[...Array(6)].map((_, index) => (
-              <div key={index} className="glass p-6 rounded-xl animate-pulse">
-                <div className="h-6 bg-muted rounded mb-4"></div>
-                <div className="h-4 bg-muted rounded mb-2"></div>
-                <div className="h-4 bg-muted rounded mb-4"></div>
-                <div className="flex gap-2 mb-4">
-                  <div className="h-6 w-16 bg-muted rounded-full"></div>
-                  <div className="h-6 w-12 bg-muted rounded-full"></div>
-                </div>
-                <div className="flex justify-between">
-                  <div className="h-4 w-20 bg-muted rounded"></div>
-                  <div className="h-4 w-16 bg-muted rounded"></div>
-                </div>
+              <div 
+                key={index}
+                className="animate-fade-in"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <SkeletonCard showImage={true} shimmer={true} />
               </div>
             ))}
+          </div>
+          
+          <div className="text-center mt-16">
+            <LoadingSpinner 
+              size="md" 
+              text="Loading featured articles..." 
+              variant="gradient"
+              timeout={10000}
+            />
           </div>
         </div>
       </section>
@@ -42,16 +52,30 @@ const FeaturedPosts = () => {
 
   if (error) {
     return (
-      <section className="py-20 px-6">
-        <div className="container mx-auto max-w-7xl text-center">
-          <p className="text-red-400">Error loading posts. Please try again later.</p>
+      <section id="featured" className="py-20 px-6">
+        <div className="container mx-auto max-w-7xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Latest <span className="text-primary text-glow">Research</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Dive deep into cutting-edge AI research, emerging technologies, and the innovations shaping our future.
+            </p>
+          </div>
+          
+          <ErrorFallback
+            error={error as Error}
+            resetError={() => window.location.reload()}
+            title="Failed to load featured articles"
+            description="We couldn't load the featured articles. Please try again."
+          />
         </div>
       </section>
     );
   }
 
   return (
-    <section className="py-20 px-6">
+    <section id="featured" className="py-20 px-6">
       <div className="container mx-auto max-w-7xl">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -80,6 +104,7 @@ const FeaturedPosts = () => {
                 date={format(new Date(post.created_at), 'MMM d, yyyy')}
                 isRead={false}
                 progress={0}
+                slug={post.slug}
               />
             </div>
           ))}
@@ -87,9 +112,12 @@ const FeaturedPosts = () => {
 
         {/* Load More */}
         <div className="text-center mt-16">
-          <button className="glass px-8 py-4 rounded-xl hover:glow-hover transition-all duration-300 font-medium">
-            Explore All Articles
-          </button>
+          <Link to="/blog">
+            <Button size="lg" className="group">
+              <span>Explore All Articles</span>
+              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

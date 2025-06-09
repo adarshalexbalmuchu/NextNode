@@ -40,12 +40,26 @@ export const registerServiceWorker = (config: ServiceWorkerConfig = {}) => {
         });
     });
 
-    // Listen for service worker messages
+    // Listen for service worker messages - optimized to prevent blocking
     navigator.serviceWorker.addEventListener('message', (event) => {
+      // Use requestIdleCallback to prevent blocking main thread
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+          handleServiceWorkerMessage(event);
+        });
+      } else {
+        // Fallback for browsers without requestIdleCallback
+        setTimeout(() => {
+          handleServiceWorkerMessage(event);
+        }, 0);
+      }
+    });
+    
+    const handleServiceWorkerMessage = (event: MessageEvent) => {
       if (event.data && event.data.type === 'SKIP_WAITING') {
         window.location.reload();
       }
-    });
+    };
   }
 
   // Online/offline event listeners

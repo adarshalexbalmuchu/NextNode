@@ -1,5 +1,4 @@
-
-import { useState, useCallback, memo } from "react";
+import { useState, useCallback, memo, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 
@@ -33,7 +32,11 @@ const BlogCard = memo(({
   progress = 0,
   slug
 }: BlogCardProps) => {
-  usePerformanceMonitor('BlogCard');
+  // Performance monitoring - only in dev mode
+  if (process.env.NODE_ENV === 'development') {
+    usePerformanceMonitor('BlogCard');
+  }
+  
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
 
@@ -44,6 +47,19 @@ const BlogCard = memo(({
     }
   }, [slug, navigate]);
 
+  // Memoize difficulty color to prevent lookup on each render
+  const difficultyColor = useMemo(() => 
+    difficultyColors[difficulty] || difficultyColors['Beginner'], 
+    [difficulty]
+  );
+
+  // Memoize formatted date
+  const formattedDate = useMemo(() => 
+    new Date(date).toLocaleDateString(), 
+    [date]
+  );
+
+  // Missing event handlers
   const handleMouseEnter = useCallback(() => setIsHovered(true), []);
   const handleMouseLeave = useCallback(() => setIsHovered(false), []);
 
@@ -55,6 +71,15 @@ const BlogCard = memo(({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
+      tabIndex={0}
+      role="button"
+      aria-label={`Read article: ${title}`}
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
@@ -111,11 +136,11 @@ const BlogCard = memo(({
       <div className="flex items-center justify-between text-sm text-muted-foreground">
         <div className="flex items-center space-x-4">
           <span>{readTime} read</span>
-          <span className={`px-2 py-1 rounded-md text-xs ${difficultyColors[difficulty]}`}>
+          <span className={`px-2 py-1 rounded-md text-xs ${difficultyColor}`}>
             {difficulty}
           </span>
         </div>
-        <time>{date}</time>
+        <time>{formattedDate}</time>
       </div>
 
       {/* Hover Effects */}

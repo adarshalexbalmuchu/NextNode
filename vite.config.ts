@@ -28,29 +28,100 @@ export default defineConfig(({ mode }) => ({
   build: {
     // Enable source maps for better debugging
     sourcemap: mode === 'development',
-    // Optimize bundle splitting
+    // Optimize for better performance
+    target: 'esnext',
+    minify: 'esbuild',
+    cssMinify: true,
+    reportCompressedSize: false, // Faster builds
+    // Optimize bundle splitting for better caching and loading
     rollupOptions: {
       output: {
-        manualChunks: {
-          // Vendor chunks
-          'react-vendor': ['react', 'react-dom'],
-          'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-popover'],
-          'form-vendor': ['react-hook-form', '@hookform/resolvers', 'zod'],
-          'query-vendor': ['@tanstack/react-query'],
-          'router-vendor': ['react-router-dom'],
-          'supabase-vendor': ['@supabase/supabase-js'],
-          // Feature chunks
-          'admin-features': [
-            './src/pages/AdminDashboard.tsx',
-            './src/components/admin/Analytics.tsx',
-            './src/components/admin/PostManagement.tsx',
-            './src/components/admin/UserManagement.tsx'
-          ],
-          'charts': ['recharts'],
+        manualChunks: (id) => {
+          // Vendor chunks - separate by importance and usage frequency
+          if (id.includes('node_modules')) {
+            // Critical vendor chunk (loaded immediately)
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'react-core';
+            }
+            
+            // UI library chunk (lazy loaded)
+            if (id.includes('@radix-ui') || id.includes('lucide-react')) {
+              return 'ui-libs';
+            }
+            
+            // Form handling chunk
+            if (id.includes('react-hook-form') || id.includes('@hookform') || id.includes('zod')) {
+              return 'form-libs';
+            }
+            
+            // Data fetching chunk
+            if (id.includes('@tanstack/react-query') || id.includes('@supabase')) {
+              return 'data-libs';
+            }
+            
+            // Routing chunk
+            if (id.includes('react-router')) {
+              return 'router-lib';
+            }
+            
+            // Charts and visualization (heavy, rarely used)
+            if (id.includes('recharts') || id.includes('d3')) {
+              return 'chart-libs';
+            }
+            
+            // Other vendor libraries
+            return 'vendor-misc';
+          }
+          
+          // Feature-based code splitting
+          // Admin features (admin-only code)
+          if (id.includes('/pages/Admin') || 
+              id.includes('/pages/CreatePost') || 
+              id.includes('/pages/BootstrapAdmin') ||
+              id.includes('/components/admin/')) {
+            return 'admin-features';
+          }
+          
+          // Blog features (commonly used)
+          if (id.includes('/pages/BlogPost') || 
+              id.includes('/components/Comments') ||
+              id.includes('/components/VirtualizedBlogList')) {
+            return 'blog-features';
+          }
+          
+          // Static pages (lazy loaded)
+          if (id.includes('/pages/Privacy') || 
+              id.includes('/pages/Terms') || 
+              id.includes('/pages/Cookies') ||
+              id.includes('/pages/Newsletter') ||
+              id.includes('/pages/RSSPage')) {
+            return 'static-pages';
+          }
+          
+          // Utils and helpers
+          if (id.includes('/utils/') || id.includes('/hooks/')) {
+            return 'app-utils';
+          }
         },
+        // Optimize asset filenames for better caching
+        chunkFileNames: (chunkInfo) => {
+          const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').pop() : 'chunk';
+          return `js/[name]-[hash].js`;
+        },
+        assetFileNames: (assetInfo) => {
+          const info = assetInfo.name!.split('.');
+          const ext = info[info.length - 1];
+          if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(ext)) {
+            return `images/[name]-[hash][extname]`;
+          }
+          if (/css/i.test(ext)) {
+            return `css/[name]-[hash][extname]`;
+          }
+          return `assets/[name]-[hash][extname]`;
+        }
       },
     },
     // Optimize chunk size warnings
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 500, // More strict limit to encourage better splitting
   },
 }));

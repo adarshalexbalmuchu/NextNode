@@ -106,26 +106,47 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state changed:', event, session?.user?.id);
-        setSession(session);
-        setUser(session?.user ?? null);
+        
+        // Batch state updates to prevent multiple re-renders
+        const updates = {
+          session,
+          user: session?.user ?? null,
+          loading: false,
+          userRole: null as string | null
+        };
         
         if (session?.user) {
-          const role = await fetchUserRole(session.user.id);
-          setUserRole(role);
-        } else {
+          // Optimize: fetch user role without blocking UI
+          fetchUserRole(session.user.id).then(role => {
+            setUserRole(role);
+          }).catch(err => {
+            console.error('Failed to fetch user role:', err);
+            setUserRole('user'); // fallback
+          });
+        }
+        
+        // Apply batched updates
+        setSession(updates.session);
+        setUser(updates.user);
+        setLoading(updates.loading);
+        if (!session?.user) {
           setUserRole(null);
         }
-        setLoading(false);
       }
     );
 
+    // Optimize initial session fetch
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       
       if (session?.user) {
+        // Non-blocking role fetch
         fetchUserRole(session.user.id).then(role => {
           setUserRole(role);
+        }).catch(() => {
+          setUserRole('user'); // fallback
+        }).finally(() => {
           setLoading(false);
         });
       } else {
