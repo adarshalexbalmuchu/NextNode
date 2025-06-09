@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -35,8 +34,18 @@ export const useDashboardStats = () => {
     try {
       setStats(prev => ({ ...prev, loading: true, error: null }));
 
-      // Check if user is admin first
-      const { data: userRole, error: roleError } = await supabase.rpc('get_current_user_role');
+      // Check if user is admin first using existing function
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setStats(prev => ({
+          ...prev,
+          loading: false,
+          error: 'Authentication required',
+        }));
+        return;
+      }
+
+      const { data: userRole, error: roleError } = await supabase.rpc('get_user_role', { _user_id: user.id });
       
       if (roleError || userRole !== 'admin') {
         setStats(prev => ({
@@ -116,8 +125,11 @@ export const useDashboardStats = () => {
 
   const fetchRecentActivities = async () => {
     try {
-      // Check if user is admin
-      const { data: userRole, error: roleError } = await supabase.rpc('get_current_user_role');
+      // Check if user is admin using existing function
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: userRole, error: roleError } = await supabase.rpc('get_user_role', { _user_id: user.id });
       
       if (roleError || userRole !== 'admin') {
         return;

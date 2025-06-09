@@ -73,8 +73,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await ensureUserProfile(userId);
 
-      // Use the new security definer function to get role
-      const { data, error } = await supabase.rpc('get_current_user_role');
+      // Use the existing get_user_role function
+      const { data, error } = await supabase.rpc('get_user_role', { _user_id: userId });
 
       if (error) {
         console.error('Error fetching user role:', error);
