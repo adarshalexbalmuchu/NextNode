@@ -174,7 +174,7 @@ const BootstrapAdmin = () => {
             </p>
           </div>
 
-          <Card>
+          <Card className="glass-panel">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Crown className="h-6 w-6 text-yellow-600" />
@@ -221,10 +221,10 @@ const BootstrapAdmin = () => {
                 )}
               </div>
 
-              <Button 
+                <Button 
                 onClick={makeAdmin} 
                 disabled={isLoading || !targetEmail}
-                className="w-full"
+                className="btn-primary w-full"
               >
                 {isLoading ? (
                   <>

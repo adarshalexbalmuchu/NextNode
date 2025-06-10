@@ -65,9 +65,9 @@ const BlogCard = memo(({
 
   return (
     <article 
-      className={`glass p-6 rounded-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer group ${
-        isHovered ? 'glow' : 'hover:glow-hover'
-      }`}
+      className={`glass-panel glass-panel-hover p-4 sm:p-6 rounded-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer group ${
+        isHovered ? 'glow' : ''
+      } flex flex-col justify-between min-h-[280px]`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
@@ -80,73 +80,80 @@ const BlogCard = memo(({
       tabIndex={0}
       role="button"
       aria-label={`Read article: ${title}`}
+      aria-describedby={`excerpt-${slug}`}
     >
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex-1">
-          <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-2">
-            {title}
-          </h3>
-          <p className="text-muted-foreground text-sm line-clamp-3 leading-relaxed">
-            {excerpt}
-          </p>
+      {/* Progress indicator for read articles */}
+      {(isRead || progress > 0) && (
+        <div className="absolute top-0 left-0 right-0 h-1 bg-muted rounded-t-xl overflow-hidden">
+          <div 
+            className="h-full bg-primary transition-all duration-300"
+            style={{ width: `${Math.max(progress, isRead ? 100 : 0)}%` }}
+          />
         </div>
-        
-        {/* Progress Ring for Read Articles */}
-        {isRead && progress > 0 && (
-          <div className="relative w-12 h-12 ml-4">
-            <svg className="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
-              <path
-                className="text-muted/20"
-                stroke="currentColor"
-                strokeWidth="3"
-                fill="none"
-                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-              />
-              <path
-                className="text-primary"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeDasharray={`${progress}, 100`}
-                strokeLinecap="round"
-                fill="none"
-                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-              />
+      )}
+
+      {/* Header section with meta information */}
+      <div className="flex-1">
+        {/* Meta information */}
+        <div className="flex items-center justify-between mb-3 text-xs sm:text-sm text-muted-foreground">
+          <time dateTime={date} className="font-medium">
+            {formattedDate}
+          </time>
+          <div className="flex items-center gap-2">
+            <span className="flex items-center gap-1">
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {readTime}
+            </span>
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${difficultyColor}`}>
+              {difficulty}
+            </span>
+          </div>
+        </div>
+
+        {/* Title - with better typography */}
+        <h3 className="text-lg sm:text-xl font-bold mb-3 line-clamp-2 group-hover:text-primary transition-colors duration-200 leading-tight">
+          {title}
+        </h3>
+
+        {/* Excerpt with better readability */}
+        <p 
+          id={`excerpt-${slug}`}
+          className="text-sm sm:text-base text-muted-foreground line-clamp-3 leading-relaxed mb-4"
+        >
+          {excerpt}
+        </p>
+      </div>
+
+      {/* Footer section with tags and read status */}
+      <div className="flex items-center justify-between pt-3 border-t border-border/50">
+        <div className="flex flex-wrap gap-1.5 flex-1 mr-3">
+          {tags.slice(0, 3).map((tag, index) => (
+            <span 
+              key={index}
+              className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-md hover:bg-primary/20 transition-colors"
+            >
+              #{tag}
+            </span>
+          ))}
+          {tags.length > 3 && (
+            <span className="text-xs text-muted-foreground">
+              +{tags.length - 3} more
+            </span>
+          )}
+        </div>
+
+        {/* Read status indicator */}
+        {isRead && (
+          <div className="flex items-center gap-1 text-xs text-primary">
+            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-xs font-medium">{Math.round(progress)}%</span>
-            </div>
+            Read
           </div>
         )}
       </div>
-
-      {/* Tags */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        {tags.map((tag, index) => (
-          <span 
-            key={index}
-            className="px-3 py-1 bg-primary/10 text-primary text-xs rounded-full border border-primary/20"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
-
-      {/* Footer */}
-      <div className="flex items-center justify-between text-sm text-muted-foreground">
-        <div className="flex items-center space-x-4">
-          <span>{readTime} read</span>
-          <span className={`px-2 py-1 rounded-md text-xs ${difficultyColor}`}>
-            {difficulty}
-          </span>
-        </div>
-        <time>{formattedDate}</time>
-      </div>
-
-      {/* Hover Effects */}
-      {isHovered && (
-        <div className="absolute -inset-px bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-xl -z-10 blur-sm" />
-      )}
     </article>
   );
 });

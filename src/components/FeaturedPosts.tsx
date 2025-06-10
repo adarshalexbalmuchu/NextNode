@@ -113,7 +113,7 @@ const FeaturedPosts = () => {
         {/* Load More */}
         <div className="text-center mt-16">
           <Link to="/blog">
-            <Button size="lg" className="group">
+            <Button size="lg" className="btn-primary group">
               <span>Explore All Articles</span>
               <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>

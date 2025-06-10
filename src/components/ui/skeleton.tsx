@@ -170,7 +170,7 @@ const SkeletonDashboard = ({ shimmer = true }: { shimmer?: boolean }) => (
     {/* Stats Cards */}
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {Array.from({ length: 4 }).map((_, index) => (
-        <div key={index} className="glass p-6 rounded-lg space-y-3">
+        <div key={index} className="glass-panel p-6 rounded-lg space-y-3">
           <div className="flex items-center justify-between">
             <Skeleton variant="text" width="100" shimmer={shimmer} />
             <Skeleton variant="circular" width="24" height="24" shimmer={shimmer} />
@@ -183,11 +183,11 @@ const SkeletonDashboard = ({ shimmer = true }: { shimmer?: boolean }) => (
     
     {/* Charts */}
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="glass p-6 rounded-lg space-y-4">
+      <div className="glass-panel p-6 rounded-lg space-y-4">
         <Skeleton variant="text" height="20" width="200" shimmer={shimmer} />
         <Skeleton variant="rectangular" height="300" shimmer={shimmer} />
       </div>
-      <div className="glass p-6 rounded-lg space-y-4">
+      <div className="glass-panel p-6 rounded-lg space-y-4">
         <Skeleton variant="text" height="20" width="180" shimmer={shimmer} />
         <Skeleton variant="rectangular" height="300" shimmer={shimmer} />
       </div>

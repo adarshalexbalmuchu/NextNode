@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide covers performance optimization strategies implemented in the Quantum Read Flow project, including code splitting, lazy loading, bundle optimization, and performance monitoring.
+This guide covers performance optimization strategies implemented in the NextNode project, including code splitting, lazy loading, bundle optimization, and performance monitoring.
 
 ## Implemented Optimizations
 

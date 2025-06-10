@@ -103,7 +103,7 @@ const AdminDashboard = () => {
 
           <TabsContent value="overview" role="tabpanel" aria-labelledby="overview-tab">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
-              <Card className="glass">
+              <Card className="glass-panel">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Total Users</CardTitle>
                   <Users className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
@@ -116,7 +116,7 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
               
-              <Card className="glass">
+              <Card className="glass-panel">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Published Posts</CardTitle>
                   <FileText className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
@@ -129,7 +129,7 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
               
-              <Card className="glass">
+              <Card className="glass-panel">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Total Views</CardTitle>
                   <BarChart3 className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
@@ -142,7 +142,7 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
               
-              <Card className="glass">
+              <Card className="glass-panel">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Active Authors</CardTitle>
                   <Settings className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
@@ -157,7 +157,7 @@ const AdminDashboard = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-              <Card className="glass">
+              <Card className="glass-panel">
                 <CardHeader>
                   <CardTitle className="text-lg sm:text-xl">Recent Activity</CardTitle>
                   <CardDescription className="text-sm">Latest actions on the platform</CardDescription>
@@ -190,7 +190,7 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
 
-              <Card className="glass">
+              <Card className="glass-panel">
                 <CardHeader>
                   <CardTitle className="text-lg sm:text-xl">System Status</CardTitle>
                   <CardDescription className="text-sm">Platform health overview</CardDescription>

@@ -15,7 +15,7 @@ const Privacy = () => {
           {/* Hero Section */}
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-              Privacy <span className="text-primary">Policy</span>
+              Privacy <span className="text-primary text-glow">Policy</span>
             </h1>
             <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
               Your privacy matters to us. Here's how we protect and handle your data.
@@ -23,7 +23,7 @@ const Privacy = () => {
           </div>
 
           {/* Content */}
-          <Card className="glass">
+          <Card className="glass-panel">
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
                 <Shield className="w-6 h-6 text-primary" />

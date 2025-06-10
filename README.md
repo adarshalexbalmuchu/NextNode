@@ -1,4 +1,4 @@
-# Quantum Read Flow - AI-Powered Blog Platform
+# NextNode - AI-Powered Blog Platform
 
 ![Performance Optimized](https://img.shields.io/badge/Performance-Optimized-brightgreen)
 ![Bundle Size](https://img.shields.io/badge/Main%20Bundle-39KB-success)

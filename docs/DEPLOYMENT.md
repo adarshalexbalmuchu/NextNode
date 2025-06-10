@@ -1,6 +1,6 @@
-# Deployment Guide - Quantum Read Flow
+# Deployment Guide - NextNode
 
-This guide covers production deployment strategies for the Quantum Read Flow blog platform.
+This guide covers production deployment strategies for the NextNode blog platform.
 
 ## 🚀 Quick Start
 

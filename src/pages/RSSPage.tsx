@@ -21,7 +21,7 @@ const RSSPage = () => {
           {/* Hero Section */}
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-              RSS <span className="text-primary">Feed</span>
+              RSS <span className="text-primary text-glow">Feed</span>
             </h1>
             <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
               Stay updated with our latest articles and research through RSS feeds. 

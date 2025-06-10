@@ -5,6 +5,7 @@ import Background from '@/components/Background';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Comments from '@/components/Comments';
+import BreadcrumbNav from '@/components/BreadcrumbNav';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,6 +14,7 @@ import { format } from 'date-fns';
 import { SkeletonBlogPost } from '@/components/ui/skeleton';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import ErrorFallback from '@/components/ErrorFallback';
+import { useAccessibility } from '@/hooks/useAccessibility';
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -138,12 +140,23 @@ const BlogPost = () => {
       
       <article className="container mx-auto px-6 py-20">
         <div className="max-w-4xl mx-auto">
+          {/* Breadcrumb Navigation */}
+          <div className="mb-8">
+            <BreadcrumbNav 
+              items={[
+                { label: 'Home', href: '/' },
+                { label: 'Blog', href: '/blog' },
+                { label: post.title, href: `/blog/${post.slug}` }
+              ]} 
+            />
+          </div>
+          
           {/* Navigation */}
           <div className="mb-8">
             <Button
               variant="ghost"
               onClick={() => navigate('/')}
-              className="flex items-center gap-2 mb-4"
+              className="btn-glass flex items-center gap-2 mb-4"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Posts
@@ -185,7 +198,7 @@ const BlogPost = () => {
             )}
 
             {/* Meta Information */}
-            <Card className="glass mb-8">
+            <Card className="glass-panel mb-8">
               <CardContent className="p-6">
                 <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
                   <div className="flex items-center gap-2">
@@ -210,7 +223,7 @@ const BlogPost = () => {
           </header>
 
           {/* Article Content */}
-          <Card className="glass mb-12">
+          <Card className="glass-panel mb-12">
             <CardContent className="p-8">
               <div className="prose prose-neutral dark:prose-invert max-w-none">
                 <div 
@@ -223,7 +236,7 @@ const BlogPost = () => {
           </Card>
 
           {/* Article Footer */}
-          <Card className="glass mb-12">
+          <Card className="glass-panel mb-12">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -235,10 +248,10 @@ const BlogPost = () => {
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" className="btn-glass">
                     Share Article
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" className="btn-glass">
                     Bookmark
                   </Button>
                 </div>

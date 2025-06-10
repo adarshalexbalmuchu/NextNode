@@ -71,8 +71,8 @@ const Terms = () => {
                   <h2 className="text-2xl font-semibold mb-4">Contact Information</h2>
                   <p className="text-muted-foreground">
                     Questions about the Terms of Service should be sent to us at{' '}
-                    <a href="mailto:legal@nextnode.ai" className="text-primary hover:underline">
-                      legal@nextnode.ai
+                    <a href="mailto:nextnode.ai@gmail.com" className="text-primary hover:underline">
+                      nextnode.ai@gmail.com
                     </a>
                   </p>
                 </section>

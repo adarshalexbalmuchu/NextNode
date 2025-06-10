@@ -11,7 +11,10 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    react(),
+    react({
+      // Use SWC for faster compilation - simplified config
+      jsxImportSource: 'react'
+    }),
     mode === 'development' && componentTagger(),
     mode === 'analyze' && visualizer({
       filename: 'dist/stats.html',
@@ -31,7 +34,7 @@ export default defineConfig(({ mode }) => ({
     // Optimize for better performance
     target: 'esnext',
     minify: 'esbuild',
-    cssMinify: true,
+    cssMinify: 'esbuild',
     reportCompressedSize: false, // Faster builds
     // Optimize bundle splitting for better caching and loading
     rollupOptions: {
@@ -124,4 +127,36 @@ export default defineConfig(({ mode }) => ({
     // Optimize chunk size warnings
     chunkSizeWarningLimit: 500, // More strict limit to encourage better splitting
   },
+  
+  // Optimize dependencies
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'react-router-dom',
+      '@tanstack/react-query',
+      '@radix-ui/react-slot'
+    ],
+    exclude: [
+      // Exclude heavy libraries from pre-bundling
+      'recharts'
+    ]
+  },
+  
+  // CSS optimizations
+  css: {
+    devSourcemap: mode === 'development',
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "@/styles/variables.scss";`
+      }
+    }
+  },
+  
+  // Preview server optimizations
+  preview: {
+    port: 4173,
+    strictPort: true,
+    host: true
+  }
 }));

@@ -8,35 +8,33 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import ErrorBoundary, { AsyncErrorBoundary } from "@/components/ErrorBoundary";
-import React, { Suspense, lazy, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { initWebVitals } from "@/hooks/usePerformanceMonitor";
-import { registerServiceWorker, promptPWAInstall } from "@/utils/serviceWorker";
-import { checkPerformanceBudget, logBundleInfo } from "@/utils/performanceOptimizer";
-import { initCriticalResources } from "@/utils/criticalResourceOptimizer";
+// import { initWebVitals } from "@/hooks/usePerformanceMonitor";
+// import { registerServiceWorker, promptPWAInstall } from "@/utils/serviceWorker";
+// import { checkPerformanceBudget, logBundleInfo } from "@/utils/performanceOptimizer";
+// import { initCriticalResources } from "@/utils/criticalResourceOptimizer";
 import { toast } from "@/hooks/use-toast";
 import ComponentPreloader from "@/components/ComponentPreloader";
+import {
+  LazyBlog,
+  LazyBlogPost,
+  LazyAbout,
+  LazyContact,
+  LazyPrivacy,
+  LazyTerms,
+  LazyCookies,
+  LazyNewsletter,
+  LazyRSSPage,
+  LazyAdminDashboard,
+  LazyCreatePost,
+  LazyBootstrapAdmin
+} from "@/utils/simpleLazyLoading";
 
 // Critical pages loaded immediately for better performance
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
-
-// Static content pages - can be lazy loaded
-const Privacy = lazy(() => import("./pages/Privacy"));
-const Terms = lazy(() => import("./pages/Terms"));
-const Cookies = lazy(() => import("./pages/Cookies"));
-const Newsletter = lazy(() => import("./pages/Newsletter"));
-const RSSPage = lazy(() => import("./pages/RSSPage"));
-
-// Blog and admin components - lazy load for better performance
-const Blog = lazy(() => import("./pages/Blog"));
-const BlogPost = lazy(() => import("./pages/BlogPost"));
-const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
-const BootstrapAdmin = lazy(() => import("./pages/BootstrapAdmin"));
-const CreatePost = lazy(() => import("./pages/CreatePost"));
 
 // Loading fallback component - optimized for LCP
 const PageLoadingFallback = () => (
@@ -81,79 +79,80 @@ const queryClient = new QueryClient({
 const App = () => {
   console.log('App component rendering'); // Debug log
   
-  // Initialize critical resources first
+  // Initialize critical resources first - temporarily disabled for debugging
   useEffect(() => {
-    console.log('Initializing critical resources...');
-    try {
-      initCriticalResources();
-    } catch (error) {
-      console.error('Error initializing critical resources:', error);
-    }
+    console.log('App component mounted successfully');
+    // TODO: Re-enable performance optimizations after fixing runtime issues
+    // try {
+    //   initCriticalResources();
+    // } catch (error) {
+    //   console.error('Error initializing critical resources:', error);
+    // }
   }, []);
 
-  // Initialize performance monitoring only in development
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Initializing performance monitoring...');
-      try {
-        initWebVitals();
-        checkPerformanceBudget();
-        
-        // Log bundle info after page load stabilizes
-        const timeoutId = setTimeout(() => {
-          logBundleInfo();
-        }, 3000);
-        
-        return () => clearTimeout(timeoutId);
-      } catch (error) {
-        console.error('Error initializing performance monitoring:', error);
-      }
-    }
-  }, []);
+  // Initialize performance monitoring and preload optimization - temporarily disabled
+  // useEffect(() => {
+  //   if (process.env.NODE_ENV === 'development') {
+  //     console.log('Initializing performance monitoring...');
+  //     try {
+  //       initWebVitals();
+  //       checkPerformanceBudget();
+  //       
+  //       // Log bundle info after page load stabilizes
+  //       const timeoutId = setTimeout(() => {
+  //         logBundleInfo();
+  //       }, 3000);
+  //       
+  //       return () => clearTimeout(timeoutId);
+  //     } catch (error) {
+  //       console.error('Error initializing performance monitoring:', error);
+  //     }
+  //   }
+  // }, []);
 
-  // Initialize service worker and PWA features - simplified for debugging
-  useEffect(() => {
-    console.log('Service worker initialization...');
-    try {
-      // Only enable in production to avoid development issues
-      if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
-        registerServiceWorker({
-          onSuccess: () => {
-            console.log('App cached successfully for offline use');
-            toast({
-              title: "App Ready",
-              description: "The app is now available offline!",
-            });
-          },
-          onUpdate: () => {
-            console.log('New app version available');
-            toast({
-              title: "Update Available",
-              description: "A new version of the app is available. Refresh to update.",
-            });
-          },
-          onOffline: () => {
-            toast({
-              title: "You're Offline",
-              description: "The app will continue to work with cached content.",
-              variant: "destructive",
-            });
-          },
-          onOnline: () => {
-            toast({
-              title: "Back Online",
-              description: "Connection restored. Syncing data...",
-            });
-          },
-        });
-        promptPWAInstall();
-      } else {
-        console.log('Service worker skipped (development mode)');
-      }
-    } catch (error) {
-      console.error('Error with service worker:', error);
-    }
-  }, []);
+  // Initialize service worker and PWA features - temporarily disabled for debugging
+  // useEffect(() => {
+  //   console.log('Service worker initialization...');
+  //   try {
+  //     // Only enable in production to avoid development issues
+  //     if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+  //       registerServiceWorker({
+  //         onSuccess: () => {
+  //           console.log('App cached successfully for offline use');
+  //           toast({
+  //             title: "App Ready",
+  //             description: "The app is now available offline!",
+  //           });
+  //         },
+  //         onUpdate: () => {
+  //           console.log('New app version available');
+  //           toast({
+  //             title: "Update Available",
+  //             description: "A new version of the app is available. Refresh to update.",
+  //           });
+  //         },
+  //         onOffline: () => {
+  //           toast({
+  //             title: "You're Offline",
+  //             description: "The app will continue to work with cached content.",
+  //             variant: "destructive",
+  //           });
+  //         },
+  //         onOnline: () => {
+  //           toast({
+  //             title: "Back Online",
+  //             description: "Connection restored. Syncing data...",
+  //           });
+  //         },
+  //       });
+  //       promptPWAInstall();
+  //     } else {
+  //       console.log('Service worker skipped (development mode)');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error with service worker:', error);
+  //   }
+  // }, []);
 
   return (
     <ErrorBoundary
@@ -174,51 +173,21 @@ const App = () => {
                   <ComponentPreloader />
                   <Routes>
                   <Route path="/" element={<Index />} />
-                  <Route path="/blog" element={
-                    <Suspense fallback={<PageLoadingFallback />}>
-                      <Blog />
-                    </Suspense>
-                  } />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/privacy" element={
-                    <Suspense fallback={<PageLoadingFallback />}>
-                      <Privacy />
-                    </Suspense>
-                  } />
-                  <Route path="/terms" element={
-                    <Suspense fallback={<PageLoadingFallback />}>
-                      <Terms />
-                    </Suspense>
-                  } />
-                  <Route path="/cookies" element={
-                    <Suspense fallback={<PageLoadingFallback />}>
-                      <Cookies />
-                    </Suspense>
-                  } />
-                  <Route path="/newsletter" element={
-                    <Suspense fallback={<PageLoadingFallback />}>
-                      <Newsletter />
-                    </Suspense>
-                  } />
-                  <Route path="/rss" element={
-                    <Suspense fallback={<PageLoadingFallback />}>
-                      <RSSPage />
-                    </Suspense>
-                  } />
+                  <Route path="/blog" element={<LazyBlog />} />
+                  <Route path="/about" element={<LazyAbout />} />
+                  <Route path="/contact" element={<LazyContact />} />
+                  <Route path="/privacy" element={<LazyPrivacy />} />
+                  <Route path="/terms" element={<LazyTerms />} />
+                  <Route path="/cookies" element={<LazyCookies />} />
+                  <Route path="/newsletter" element={<LazyNewsletter />} />
+                  <Route path="/rss" element={<LazyRSSPage />} />
                   <Route path="/auth" element={<Auth />} />
-                  <Route path="/bootstrap" element={
-                    <Suspense fallback={<PageLoadingFallback />}>
-                      <BootstrapAdmin />
-                    </Suspense>
-                  } />
+                  <Route path="/bootstrap" element={<LazyBootstrapAdmin />} />
                   <Route 
                     path="/admin" 
                     element={
                       <ProtectedRoute requiredRole="admin">
-                        <Suspense fallback={<PageLoadingFallback />}>
-                          <AdminDashboard />
-                        </Suspense>
+                        <LazyAdminDashboard />
                       </ProtectedRoute>
                     } 
                   />
@@ -226,17 +195,11 @@ const App = () => {
                     path="/create-post" 
                     element={
                       <ProtectedRoute requiredRole="author">
-                        <Suspense fallback={<PageLoadingFallback />}>
-                          <CreatePost />
-                        </Suspense>
+                        <LazyCreatePost />
                       </ProtectedRoute>
                     } 
                   />
-                  <Route path="/post/:slug" element={
-                    <Suspense fallback={<PageLoadingFallback />}>
-                      <BlogPost />
-                    </Suspense>
-                  } />
+                  <Route path="/post/:slug" element={<LazyBlogPost />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>                </AuthProvider>

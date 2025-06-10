@@ -48,7 +48,7 @@ const Hero = memo(() => {
         }}>
           <Button 
             size="lg" 
-            className="w-full sm:w-auto bg-primary hover:bg-primary/90 glow-hover text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 min-h-[48px]"
+            className="btn-primary w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 min-h-[48px]"
             aria-label="Start reading articles"
           >
             Start Reading
@@ -56,7 +56,7 @@ const Hero = memo(() => {
           <Button 
             variant="outline" 
             size="lg" 
-            className="w-full sm:w-auto glass hover:glow-hover text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 min-h-[48px]"
+            className="btn-glass w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 min-h-[48px]"
             aria-label="Explore research articles"
           >
             Explore Research

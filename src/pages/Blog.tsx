@@ -6,8 +6,10 @@ import SearchWithFilters from '@/components/SearchWithFilters';
 import BlogCard from '@/components/BlogCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import ErrorFallback from '@/components/ErrorFallback';
+import BreadcrumbNav from '@/components/BreadcrumbNav';
 import { useSearchPosts, type SearchFilters } from '@/hooks/useSearchPosts';
 import { useCategories } from '@/hooks/usePosts';
+import { useAccessibility } from '@/hooks/useAccessibility';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +26,11 @@ const Blog = () => {
 
   const { data: categories = [] } = useCategories();
   const { data: posts, isLoading, error, refetch } = useSearchPosts(searchTerm, filters);
+
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Blog', href: '/blog' }
+  ];
 
   // Transform categories for SearchWithFilters component
   const transformedCategories = useMemo(() => 
@@ -42,13 +49,18 @@ const Blog = () => {
       
       <main id="main-content" className="container mx-auto px-4 sm:px-6 py-16 sm:py-20">
         <div className="max-w-7xl mx-auto">
+          {/* Breadcrumb Navigation */}
+          <div className="mb-8">
+            <BreadcrumbNav items={breadcrumbItems} />
+          </div>
+          
           {/* Page Header */}
           <div className="mb-8">
             <div className="flex items-center gap-4 mb-6">
               <Button
                 variant="ghost"
                 onClick={() => navigate('/')}
-                className="flex items-center gap-2"
+                className="btn-glass flex items-center gap-2"
                 aria-label="Back to home"
               >
                 <ArrowLeft className="w-4 h-4" />

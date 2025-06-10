@@ -150,7 +150,7 @@ const Analytics = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="glass">
+        <Card className="glass-panel">
           <CardHeader>
             <CardTitle>Post Views Over Time</CardTitle>
             <CardDescription>Views from published posts</CardDescription>
@@ -168,7 +168,7 @@ const Analytics = () => {
           </CardContent>
         </Card>
 
-        <Card className="glass">
+        <Card className="glass-panel">
           <CardHeader>
             <CardTitle>Content by Category</CardTitle>
             <CardDescription>Distribution of views across categories</CardDescription>
@@ -197,7 +197,7 @@ const Analytics = () => {
         </Card>
       </div>
 
-      <Card className="glass">
+      <Card className="glass-panel">
         <CardHeader>
           <CardTitle>Top Performing Posts</CardTitle>
           <CardDescription>Posts with the most views</CardDescription>

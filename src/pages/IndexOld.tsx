@@ -1,3 +1,4 @@
+
 import Background from '@/components/Background';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
@@ -64,6 +65,9 @@ const Index = () => {
       announce(`Found ${count} result${count !== 1 ? 's' : ''} for "${searchTerm}"`);
     }
   }, [searchResults, searchTerm, announce]);
+    }
+    return posts || [];
+  }, [searchTerm, filters, searchResults, posts]);
 
   const displayLoading = useMemo(() => {
     const hasActiveSearch = searchTerm.trim().length > 0;
@@ -75,23 +79,17 @@ const Index = () => {
     return isLoading;
   }, [searchTerm, filters, searchLoading, isLoading]);
 
-  const hasActiveSearchOrFilters = searchTerm.trim() || Object.values(filters).some(v => v && v !== 'all');
-
   return (
     <div className="min-h-screen w-full">
       <Background />
       <Header />
-      <AnnouncementRegion />
-      
       <main id="main-content">
         <Hero />
         <FeaturedPosts />
         
-        {/* Main Blog List Section */}
-        <section className="container mx-auto px-4 sm:px-6 py-16" aria-labelledby="latest-articles">
+        {/* Main Blog List */}
+        <section className="container mx-auto px-6 py-16" aria-labelledby="latest-articles">
           <div className="max-w-6xl mx-auto">
-            
-            {/* Section Header */}
             <div className="text-center mb-8">
               <h2 id="latest-articles" className="section-title">
                 Discover <span className="text-primary text-glow">Articles</span>
@@ -101,7 +99,7 @@ const Index = () => {
               </p>
             </div>
 
-            {/* Enhanced Search and Filters */}
+            {/* Search and Filters - Preview */}
             <div className="mb-8">
               <SearchWithFilters
                 searchTerm={searchTerm}
@@ -118,110 +116,112 @@ const Index = () => {
             {/* Quick Actions */}
             <div className="flex justify-center mb-8">
               <Link to="/blog">
-                <Button size="lg" className="btn-primary group touch-friendly">
-                  <BookOpen className="w-4 h-4 mr-2" />
+                <Button size="lg" className="btn-primary group">
                   <span>Explore All Articles</span>
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
             </div>
-
-            {/* Content Area with Enhanced Loading States */}
-            {displayLoading ? (
-              <div className="py-12">
-                <ContentSkeleton variant="card" count={6} />
-              </div>
-            ) : error ? (
-              <ErrorFallback 
-                error={error as Error}
-                resetError={() => refetch()}
-                title="Failed to load articles"
-                description="We couldn't load the latest articles. Please try again."
+          
+          {displayLoading ? (
+            <div className="py-12">
+              <LoadingSpinner 
+                size="lg" 
+                text="Loading articles..." 
+                variant="gradient"
+                showProgress={true}
+                progress={33}
               />
-            ) : displayPosts && displayPosts.length > 0 ? (
-              <div className="space-y-6">
-                {/* Results summary */}
-                {hasActiveSearchOrFilters && (
-                  <div className="text-center text-sm text-muted-foreground glass-panel p-3 rounded-lg">
-                    Found <span className="font-medium text-foreground">{displayPosts.length}</span> {displayPosts.length === 1 ? 'article' : 'articles'}
-                    {searchTerm && <span className="text-primary"> for "{searchTerm}"</span>}
-                  </div>
-                )}
-                
-                {/* Enhanced Blog Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {displayPosts.slice(0, 6).map((post, index) => (
-                    <div 
-                      key={post.id}
-                      className="animate-fade-in will-change-opacity"
-                      style={{ animationDelay: `${index * 0.1}s` }}
-                    >
-                      <BlogCard 
-                        title={post.title}
-                        excerpt={post.excerpt || 'No preview available...'}
-                        readTime={`${post.read_time || 5} min`}
-                        difficulty={post.difficulty_level as 'Beginner' | 'Intermediate' | 'Advanced' || 'Beginner'}
-                        tags={post.categories ? [post.categories.name] : ['General']}
-                        date={post.created_at}
-                        isRead={false}
-                        progress={0}
-                        slug={post.slug}
-                      />
-                    </div>
-                  ))}
+            </div>
+          ) : error ? (
+            <ErrorFallback 
+              error={error as Error}
+              resetError={() => refetch()}
+              title="Failed to load articles"
+              description="We couldn't load the latest articles. Please try again."
+            />
+          ) : displayPosts && displayPosts.length > 0 ? (
+            <div className="space-y-6">
+              {/* Results summary */}
+              {(searchTerm || Object.values(filters).some(v => v && v !== 'all')) && (
+                <div className="text-center text-sm text-muted-foreground">
+                  Found {displayPosts.length} {displayPosts.length === 1 ? 'article' : 'articles'}
+                  {searchTerm && ` for "${searchTerm}"`}
                 </div>
-                
-                {/* Show more link if there are more articles */}
-                {displayPosts.length > 6 && (
-                  <div className="text-center pt-8">
-                    <Link to="/blog" className="inline-block">
-                      <Button variant="outline" size="lg" className="btn-glass group touch-friendly">
-                        View {displayPosts.length - 6} More Articles
-                        <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                      </Button>
-                    </Link>
+              )}
+              
+              {/* Show limited results on home page */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {displayPosts.slice(0, 6).map((post, index) => (
+                  <div 
+                    key={post.id}
+                    className="animate-fade-in"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <BlogCard 
+                      title={post.title}
+                      excerpt={post.excerpt || ''}
+                      readTime={`${post.read_time || 5} min`}
+                      difficulty={post.difficulty_level as 'Beginner' | 'Intermediate' | 'Advanced' || 'Beginner'}
+                      tags={post.categories ? [post.categories.name] : []}
+                      date={new Date(post.created_at).toLocaleDateString()}
+                      isRead={false}
+                      progress={0}
+                      slug={post.slug}
+                    />
                   </div>
-                )}
+                ))}
               </div>
-            ) : (
-              /* Enhanced Empty State */
-              <div className="text-center py-16">
-                <div className="max-w-md mx-auto glass-panel p-8 rounded-xl">
-                  <div className="text-6xl mb-4 opacity-50">📚</div>
-                  <h3 className="text-xl font-semibold mb-2">
-                    {hasActiveSearchOrFilters 
-                      ? 'No matching articles' 
-                      : 'No articles found'
-                    }
-                  </h3>
-                  <p className="text-muted-foreground mb-6">
-                    {hasActiveSearchOrFilters
-                      ? "Try different search terms or adjust your filters."
-                      : "No articles have been published yet. Check back soon!"
-                    }
-                  </p>
-                  {hasActiveSearchOrFilters && (
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setSearchTerm('');
-                        setFilters({
-                          category: 'all',
-                          difficulty: 'all',
-                          sortBy: 'newest',
-                          readTime: 'all'
-                        });
-                      }}
-                      className="touch-friendly"
-                    >
-                      Clear search and filters
+              
+              {/* Show more link if there are more articles */}
+              {displayPosts.length > 6 && (
+                <div className="text-center pt-8">
+                  <Link to="/blog">
+                    <Button variant="outline" size="lg" className="btn-glass group">
+                      View {displayPosts.length - 6} More Articles
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                     </Button>
-                  )}
+                  </Link>
                 </div>
+              )}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="max-w-md mx-auto">
+                <div className="text-6xl mb-4">📚</div>
+                <h3 className="text-xl font-semibold mb-2">
+                  {searchTerm || Object.values(filters).some(v => v && v !== 'all') 
+                    ? 'No matching articles' 
+                    : 'No articles found'
+                  }
+                </h3>
+                <p className="text-muted-foreground mb-6">
+                  {searchTerm || Object.values(filters).some(v => v && v !== 'all')
+                    ? "Try different search terms or adjust your filters."
+                    : "No articles have been published yet. Check back soon!"
+                  }
+                </p>
+                {(searchTerm || Object.values(filters).some(v => v && v !== 'all')) && (
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setSearchTerm('');
+                      setFilters({
+                        category: 'all',
+                        difficulty: 'all',
+                        sortBy: 'newest',
+                        readTime: 'all'
+                      });
+                    }}
+                  >
+                    Clear search and filters
+                  </Button>
+                )}
               </div>
-            )}
-          </div>
-        </section>
+            </div>
+          )}
+        </div>
+      </section>
       </main>
       
       <Footer />

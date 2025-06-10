@@ -1,11 +1,18 @@
 import Background from '@/components/Background';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import BreadcrumbNav from '@/components/BreadcrumbNav';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Brain, Lightbulb, Users, Target, Rocket, Shield } from 'lucide-react';
+import { useAccessibility } from '@/hooks/useAccessibility';
 
 const About = () => {
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'About', href: '/about' }
+  ];
+
   return (
     <div className="min-h-screen w-full">
       <Background />
@@ -13,10 +20,14 @@ const About = () => {
       
       <main className="container mx-auto px-4 sm:px-6 py-16 sm:py-20">
         <div className="max-w-4xl mx-auto">
+          {/* Breadcrumb Navigation */}
+          <div className="mb-8">
+            <BreadcrumbNav items={breadcrumbItems} />
+          </div>
           {/* Hero Section */}
           <div className="text-center mb-12 sm:mb-16">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight px-2 sm:px-0">
-              About <span className="text-primary">NextNode</span>
+              About <span className="text-primary text-glow">NextNode</span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto px-2 sm:px-0">
               We're building the future of knowledge sharing through AI-powered insights, 
@@ -26,7 +37,7 @@ const About = () => {
           </div>
 
           {/* Mission Section */}
-          <Card className="glass mb-8 sm:mb-12">
+          <Card className="glass-panel mb-8 sm:mb-12">
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-lg sm:text-xl">
                 <Target className="w-5 h-5 sm:w-6 sm:h-6 text-primary" aria-hidden="true" />
@@ -49,7 +60,7 @@ const About = () => {
 
           {/* Values Section */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
-            <Card className="glass">
+            <Card className="glass-panel glass-panel-hover">
               <CardHeader>
                 <Brain className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-2" aria-hidden="true" />
                 <CardTitle className="text-base sm:text-lg">Knowledge First</CardTitle>
@@ -61,7 +72,7 @@ const About = () => {
               </CardContent>
             </Card>
 
-            <Card className="glass">
+            <Card className="glass-panel glass-panel-hover">
               <CardHeader>
                 <Lightbulb className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-2" aria-hidden="true" />
                 <CardTitle className="text-base sm:text-lg">Innovation Focus</CardTitle>
@@ -73,7 +84,7 @@ const About = () => {
               </CardContent>
             </Card>
 
-            <Card className="glass sm:col-span-2 lg:col-span-1">
+            <Card className="glass-panel glass-panel-hover sm:col-span-2 lg:col-span-1">
               <CardHeader>
                 <Users className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-2" aria-hidden="true" />
                 <CardTitle className="text-base sm:text-lg">Community Driven</CardTitle>
@@ -87,7 +98,7 @@ const About = () => {
           </div>
 
           {/* What We Cover */}
-          <Card className="glass mb-8 sm:mb-12">
+          <Card className="glass-panel mb-8 sm:mb-12">
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-lg sm:text-xl">
                 <Rocket className="w-5 h-5 sm:w-6 sm:h-6 text-primary" aria-hidden="true" />
@@ -112,7 +123,7 @@ const About = () => {
           </Card>
 
           {/* Quality Promise */}
-          <Card className="glass">
+          <Card className="glass-panel">
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-lg sm:text-xl">
                 <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-primary" aria-hidden="true" />

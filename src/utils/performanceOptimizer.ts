@@ -1,6 +1,9 @@
 /**
- * Performance optimization utilities
+ * Performance optimization utilities for NextNode platform
+ * Implements critical performance improvements for faster loading
  */
+
+import { startTransition } from 'react';
 
 // Debounce function for expensive operations
 export const debounce = <T extends (...args: any[]) => any>(
@@ -177,5 +180,206 @@ export const logBundleInfo = () => {
     } else {
       setTimeout(analyzeBundle, 3000);
     }
+  }
+};
+
+// Critical resource prioritization
+export const initPerformanceOptimizations = () => {
+  // Preload critical resources
+  preloadCriticalResources();
+  
+  // Initialize service worker for caching
+  initServiceWorker();
+  
+  // Setup performance monitoring
+  initPerformanceMonitoring();
+  
+  // Optimize images loading
+  initImageOptimizations();
+  
+  // Setup connection optimizations
+  initConnectionOptimizations();
+};
+
+// Preload critical resources
+const preloadCriticalResources = () => {
+  // Preload critical fonts
+  const fontPreload = document.createElement('link');
+  fontPreload.rel = 'preload';
+  fontPreload.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap';
+  fontPreload.as = 'style';
+  fontPreload.onload = () => {
+    fontPreload.rel = 'stylesheet';
+  };
+  document.head.appendChild(fontPreload);
+  
+  // Preconnect to critical domains
+  const domains = ['https://fonts.googleapis.com', 'https://fonts.gstatic.com'];
+  domains.forEach(domain => {
+    const link = document.createElement('link');
+    link.rel = 'preconnect';
+    link.href = domain;
+    link.crossOrigin = 'anonymous';
+    document.head.appendChild(link);
+  });
+};
+
+// Service Worker initialization
+const initServiceWorker = () => {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(registration => {
+          console.log('SW registered: ', registration);
+        })
+        .catch(registrationError => {
+          console.log('SW registration failed: ', registrationError);
+        });
+    });
+  }
+};
+
+// Performance monitoring
+const initPerformanceMonitoring = () => {
+  // Monitor Core Web Vitals using native Performance API
+  if (typeof window !== 'undefined' && 'performance' in window) {
+    // Monitor Largest Contentful Paint
+    const observer = new PerformanceObserver((list) => {
+      const entries = list.getEntries();
+      const lastEntry = entries[entries.length - 1];
+      console.log('LCP:', lastEntry.startTime);
+    });
+    
+    try {
+      observer.observe({ type: 'largest-contentful-paint', buffered: true });
+    } catch (e) {
+      // Fallback for browsers that don't support LCP
+      console.log('LCP monitoring not supported');
+    }
+    
+    // Monitor First Input Delay
+    const fidObserver = new PerformanceObserver((list) => {
+      const entries = list.getEntries() as any[];
+      entries.forEach((entry) => {
+        console.log('FID:', entry.processingStart - entry.startTime);
+      });
+    });
+    
+    try {
+      fidObserver.observe({ type: 'first-input', buffered: true });
+    } catch (e) {
+      console.log('FID monitoring not supported');
+    }
+  }
+  
+  // Monitor bundle loading times
+  if (typeof PerformanceObserver !== 'undefined') {
+    const observer = new PerformanceObserver((list) => {
+      list.getEntries().forEach((entry) => {
+        if (entry.entryType === 'measure') {
+          console.log(`${entry.name}: ${entry.duration}ms`);
+        }
+      });
+    });
+    observer.observe({ entryTypes: ['measure'] });
+  }
+};
+
+// Enhanced image optimization
+const initImageOptimizations = () => {
+  // Lazy load images using Intersection Observer
+  if (typeof IntersectionObserver !== 'undefined') {
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target as HTMLImageElement;
+          if (img.dataset.src) {
+            img.src = img.dataset.src;
+            img.classList.remove('lazy');
+            observer.unobserve(img);
+          }
+        }
+      });
+    }, {
+      rootMargin: '50px'
+    });
+    
+    // Observe all lazy images
+    document.querySelectorAll('img[data-src]').forEach(img => {
+      imageObserver.observe(img);
+    });
+  }
+};
+
+// Connection optimizations
+const initConnectionOptimizations = () => {
+  // Prefetch likely next pages
+  const prefetchLinks = ['/blog', '/about', '/contact'];
+  
+  prefetchLinks.forEach(href => {
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.href = href;
+    document.head.appendChild(link);
+  });
+};
+
+// Bundle optimization utilities
+export const optimizeBundle = {
+  // Dynamic imports with error handling
+  dynamicImport: async <T>(importFunc: () => Promise<T>): Promise<T> => {
+    try {
+      return await importFunc();
+    } catch (error) {
+      console.error('Dynamic import failed:', error);
+      throw error;
+    }
+  },
+  
+  // Preload modules
+  preloadModule: (moduleId: string) => {
+    const link = document.createElement('link');
+    link.rel = 'modulepreload';
+    link.href = moduleId;
+    document.head.appendChild(link);
+  }
+};
+
+// CSS optimization
+export const optimizeCSS = {
+  // Inline critical CSS
+  inlineCriticalCSS: (css: string) => {
+    const style = document.createElement('style');
+    style.textContent = css;
+    document.head.appendChild(style);
+  },
+  
+  // Load non-critical CSS asynchronously
+  loadNonCriticalCSS: (href: string) => {
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.href = href;
+    link.as = 'style';
+    link.onload = () => {
+      link.rel = 'stylesheet';
+    };
+    document.head.appendChild(link);
+  }
+};
+
+// React performance utilities
+export const reactOptimizations = {
+  // Wrap state updates in transitions
+  transitionUpdate: (updateFunc: () => void) => {
+    startTransition(() => {
+      updateFunc();
+    });
+  },
+  
+  // Batch DOM updates
+  batchUpdates: (updates: (() => void)[]) => {
+    startTransition(() => {
+      updates.forEach(update => update());
+    });
   }
 };

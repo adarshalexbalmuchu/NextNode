@@ -141,7 +141,7 @@ const PostManagement = () => {
   }
 
   return (
-    <Card className="glass">
+    <Card className="glass-panel">
       <CardHeader>
         <CardTitle>Post Management</CardTitle>
         <CardDescription>
@@ -159,7 +159,7 @@ const PostManagement = () => {
               className="pl-10"
             />
           </div>
-          <Button className="ml-4">
+          <Button className="btn-primary ml-4">
             <Plus className="w-4 h-4 mr-2" />
             New Post
           </Button>

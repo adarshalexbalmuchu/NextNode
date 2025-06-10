@@ -73,8 +73,8 @@ const Cookies = () => {
                   <h2 className="text-2xl font-semibold mb-4">Contact Us</h2>
                   <p className="text-muted-foreground">
                     If you have questions about our use of cookies, please contact us at{' '}
-                    <a href="mailto:privacy@nextnode.ai" className="text-primary hover:underline">
-                      privacy@nextnode.ai
+                    <a href="mailto:nextnode.ai@gmail.com" className="text-primary hover:underline">
+                      nextnode.ai@gmail.com
                     </a>
                   </p>
                 </section>
