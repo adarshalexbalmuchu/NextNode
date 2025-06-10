@@ -183,11 +183,11 @@ const Contact = () => {
                     <div>
                       <p className="font-medium text-sm sm:text-base">Email</p>
                       <a 
-                        href="mailto:hello@neural.ai" 
+                        href="mailto:hello@nextnode.ai" 
                         className="text-muted-foreground text-sm hover:text-primary transition-colors"
-                        aria-label="Send email to hello@neural.ai"
+                        aria-label="Send email to hello@nextnode.ai"
                       >
-                        hello@neural.ai
+                        hello@nextnode.ai
                       </a>
                     </div>
                   </div>
@@ -235,17 +235,17 @@ const Contact = () => {
                 <CardContent className="space-y-3">
                   <div>
                     <p className="font-medium mb-1">Partnership Inquiries</p>
-                    <p className="text-muted-foreground text-sm">partnerships@neural.ai</p>
+                    <p className="text-muted-foreground text-sm">partnerships@nextnode.ai</p>
                   </div>
                   
                   <div>
                     <p className="font-medium mb-1">Media Relations</p>
-                    <p className="text-muted-foreground text-sm">press@neural.ai</p>
+                    <p className="text-muted-foreground text-sm">press@nextnode.ai</p>
                   </div>
 
                   <div>
                     <p className="font-medium mb-1">Research Submissions</p>
-                    <p className="text-muted-foreground text-sm">research@neural.ai</p>
+                    <p className="text-muted-foreground text-sm">research@nextnode.ai</p>
                   </div>
                 </CardContent>
               </Card>

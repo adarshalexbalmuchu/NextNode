@@ -27,7 +27,7 @@ export function ThemeProvider({ children }: DarkModeProviderProps) {
     root.classList.add('dark');
     
     // Remove any stored theme preferences since we only use dark mode
-    localStorage.removeItem('neural-ui-theme');
+    localStorage.removeItem('nextnode-ui-theme');
   }, []);
 
   const value = {

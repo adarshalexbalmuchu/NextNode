@@ -18,7 +18,7 @@ test.describe('Homepage and Navigation', () => {
     await expect(page.locator('header')).toBeVisible();
     
     // Check page title
-    await expect(page).toHaveTitle(/Quantum Read Flow/);
+    await expect(page).toHaveTitle(/NextNode/);
   });
 
   test('should have working navigation menu', async ({ page }) => {

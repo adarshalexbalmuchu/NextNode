@@ -38,7 +38,7 @@ const Terms = () => {
                 <section>
                   <h2 className="text-2xl font-semibold mb-4">Acceptance of Terms</h2>
                   <p className="text-muted-foreground">
-                    By accessing and using Neural, you accept and agree to be bound by the terms 
+                    By accessing and using NextNode, you accept and agree to be bound by the terms 
                     and provision of this agreement.
                   </p>
                 </section>
@@ -46,7 +46,7 @@ const Terms = () => {
                 <section>
                   <h2 className="text-2xl font-semibold mb-4">Use License</h2>
                   <p className="text-muted-foreground">
-                    Permission is granted to temporarily access the materials on Neural for personal, 
+                    Permission is granted to temporarily access the materials on NextNode for personal, 
                     non-commercial transitory viewing only.
                   </p>
                 </section>
@@ -71,8 +71,8 @@ const Terms = () => {
                   <h2 className="text-2xl font-semibold mb-4">Contact Information</h2>
                   <p className="text-muted-foreground">
                     Questions about the Terms of Service should be sent to us at{' '}
-                    <a href="mailto:legal@neural.ai" className="text-primary hover:underline">
-                      legal@neural.ai
+                    <a href="mailto:legal@nextnode.ai" className="text-primary hover:underline">
+                      legal@nextnode.ai
                     </a>
                   </p>
                 </section>

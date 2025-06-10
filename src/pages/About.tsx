@@ -16,7 +16,7 @@ const About = () => {
           {/* Hero Section */}
           <div className="text-center mb-12 sm:mb-16">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight px-2 sm:px-0">
-              About <span className="text-primary">Neural</span>
+              About <span className="text-primary">NextNode</span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto px-2 sm:px-0">
               We're building the future of knowledge sharing through AI-powered insights, 
@@ -38,7 +38,7 @@ const About = () => {
             </CardHeader>
             <CardContent className="prose prose-neutral dark:prose-invert max-w-none">
               <p className="text-base sm:text-lg leading-relaxed">
-                Neural exists to bridge the gap between complex AI research and practical understanding. 
+                NextNode exists to bridge the gap between complex AI research and practical understanding. 
                 We believe that the future of technology should be accessible to everyone, not just experts. 
                 <br className="hidden sm:block" />
                 Through carefully crafted articles, deep-dive research papers, and community discussions, 

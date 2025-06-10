@@ -1,6 +1,6 @@
 {
-  "name": "Quantum Read Flow",
-  "short_name": "Neural",
+  "name": "NextNode - AI Research Platform",
+  "short_name": "NextNode",
   "description": "AI-powered blog platform for researchers and enthusiasts",
   "start_url": "/",
   "display": "standalone",
@@ -11,11 +11,6 @@
   "lang": "en",
   "categories": ["education", "news", "productivity"],
   "icons": [
-    {
-      "src": "/favicon.ico",
-      "sizes": "48x48",
-      "type": "image/x-icon"
-    },
     {
       "src": "/icons/icon-192x192.svg",
       "sizes": "192x192",
@@ -61,7 +56,7 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Quantum Read Flow homepage showing latest AI research posts"
+      "label": "NextNode homepage showing latest AI research posts"
     },
     {
       "src": "/screenshot-2.png",

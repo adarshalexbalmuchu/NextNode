@@ -71,12 +71,12 @@ const Auth = () => {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center glow">
               <BookOpen className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="text-2xl font-semibold text-glow">Neural</span>
+            <span className="text-2xl font-semibold text-glow">NextNode</span>
           </div>
 
           <Card className="glass">
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl">Welcome to Neural</CardTitle>
+              <CardTitle className="text-2xl">Welcome to NextNode</CardTitle>
               <CardDescription>
                 Join our community of AI enthusiasts and researchers
               </CardDescription>

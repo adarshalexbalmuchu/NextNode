@@ -34,7 +34,7 @@ const RSSPage = () => {
             <CardHeader className="text-center">
               <CardTitle className="flex items-center justify-center gap-3">
                 <Rss className="w-6 h-6 text-primary" />
-                Neural RSS Feed
+                NextNode RSS Feed
               </CardTitle>
               <CardDescription>
                 Subscribe to get automatic updates of new content

@@ -92,7 +92,7 @@ INSERT INTO notifications (user_id, type, title, message, action_url, metadata)
 SELECT 
     auth.uid(),
     'system',
-    'Welcome to Quantum Read Flow!',
+    'Welcome to NextNode!',
     'Thank you for joining our AI-powered blog platform. Explore the latest articles and join the conversation.',
     '/blog',
     '{"priority": "high", "category": "onboarding"}'::jsonb
