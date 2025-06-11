@@ -23,6 +23,11 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // Force lodash to use ES6 modules (lodash-es) for better compatibility
+      "lodash/get": "lodash-es/get",
+      "lodash/isString": "lodash-es/isString", 
+      "lodash/isNaN": "lodash-es/isNaN",
+      "lodash/isNumber": "lodash-es/isNumber",
     },
   },
   build: {
@@ -132,11 +137,14 @@ export default defineConfig(({ mode }) => ({
       'react-dom',
       'react-router-dom',
       '@tanstack/react-query',
-      '@radix-ui/react-slot'
+      '@radix-ui/react-slot',
+      'lodash/get',
+      'lodash/isString',
+      'lodash/isNaN',
+      'lodash/isNumber'
     ],
     exclude: [
-      // Exclude heavy libraries from pre-bundling
-      'recharts'
+      // Keep recharts in exclude to avoid pre-bundling issues
     ]
   },
   

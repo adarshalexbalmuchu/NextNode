@@ -11,13 +11,50 @@ import Background from '@/components/Background';
 import Header from '@/components/Header';
 import UserManagement from '@/components/admin/UserManagement';
 import PostManagement from '@/components/admin/PostManagement';
-import Analytics from '@/components/admin/Analytics';
+import AnalyticsSimple from '@/components/admin/AnalyticsSimple';
 import { SkeletonDashboard } from '@/components/ui/skeleton';
 
 const AdminDashboard = () => {
-  const { user, userRole, hasRole } = useAuth();
+  const { user, userRole, hasRole, loading } = useAuth();
   const { stats, recentActivities, refetch } = useDashboardStats();
   const [activeTab, setActiveTab] = useState('overview');
+
+  // Debug logging
+  console.log('AdminDashboard debug:', {
+    user: user?.id,
+    userRole,
+    hasAdminRole: hasRole('admin'),
+    authLoading: loading,
+    statsLoading: stats.loading,
+    statsError: stats.error
+  });
+
+  if (loading) {
+    return (
+      <div className="min-h-screen w-full">
+        <Background />
+        <Header />
+        <main className="container mx-auto px-4 sm:px-6 py-16 sm:py-20 text-center" role="main">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="text-muted-foreground text-sm sm:text-base mt-4">Checking authentication...</p>
+        </main>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen w-full">
+        <Background />
+        <Header />
+        <main className="container mx-auto px-4 sm:px-6 py-16 sm:py-20 text-center" role="main">
+          <Shield className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-muted-foreground" aria-hidden="true" />
+          <h1 className="text-xl sm:text-2xl font-bold mb-4">Authentication Required</h1>
+          <p className="text-muted-foreground text-sm sm:text-base">Please log in to access this page.</p>
+        </main>
+      </div>
+    );
+  }
 
   if (!hasRole('admin')) {
     return (
@@ -27,7 +64,9 @@ const AdminDashboard = () => {
         <main className="container mx-auto px-4 sm:px-6 py-16 sm:py-20 text-center" role="main">
           <Shield className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-muted-foreground" aria-hidden="true" />
           <h1 className="text-xl sm:text-2xl font-bold mb-4">Access Denied</h1>
-          <p className="text-muted-foreground text-sm sm:text-base">You don't have permission to access this page.</p>
+          <p className="text-muted-foreground text-sm sm:text-base">
+            You don't have permission to access this page. Current role: {userRole || 'none'}
+          </p>
         </main>
       </div>
     );
@@ -228,7 +267,7 @@ const AdminDashboard = () => {
           </TabsContent>
 
           <TabsContent value="analytics" role="tabpanel" aria-labelledby="analytics-tab">
-            <Analytics />
+            <AnalyticsSimple />
           </TabsContent>
         </Tabs>
       </main>
