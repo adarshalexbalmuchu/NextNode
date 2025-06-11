@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { visualizer } from "rollup-plugin-visualizer";
@@ -11,10 +11,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    react({
-      // Use SWC for faster compilation - simplified config
-      jsxImportSource: 'react'
-    }),
+    react(),
     mode === 'development' && componentTagger(),
     mode === 'analyze' && visualizer({
       filename: 'dist/stats.html',
