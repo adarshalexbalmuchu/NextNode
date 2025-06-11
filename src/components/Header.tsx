@@ -107,19 +107,25 @@ const Header = () => {
                 to="/blog" 
                 className="text-sm font-medium hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-2 py-1"
               >
-                Blog
+                Guides
+              </Link>
+              <Link 
+                to="/resources" 
+                className="text-sm font-medium hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-2 py-1"
+              >
+                Resources
+              </Link>
+              <Link 
+                to="/career-tools" 
+                className="text-sm font-medium hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-2 py-1"
+              >
+                Career Tools
               </Link>
               <Link 
                 to="/about" 
                 className="text-sm font-medium hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-2 py-1"
               >
                 About
-              </Link>
-              <Link 
-                to="/contact" 
-                className="text-sm font-medium hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-2 py-1"
-              >
-                Contact
               </Link>
             </nav>
 
@@ -244,7 +250,23 @@ const Header = () => {
                     onClick={handleMobileMenuClick}
                   >
                     <FileText className="w-5 h-5" />
-                    <span>Blog</span>
+                    <span>Guides</span>
+                  </Link>
+                  <Link 
+                    to="/resources" 
+                    className="mobile-nav-item"
+                    onClick={handleMobileMenuClick}
+                  >
+                    <BookOpen className="w-5 h-5" />
+                    <span>Resources</span>
+                  </Link>
+                  <Link 
+                    to="/career-tools" 
+                    className="mobile-nav-item"
+                    onClick={handleMobileMenuClick}
+                  >
+                    <Settings className="w-5 h-5" />
+                    <span>Career Tools</span>
                   </Link>
                   <Link 
                     to="/about" 
@@ -253,14 +275,6 @@ const Header = () => {
                   >
                     <User className="w-5 h-5" />
                     <span>About</span>
-                  </Link>
-                  <Link 
-                    to="/contact" 
-                    className="mobile-nav-item"
-                    onClick={handleMobileMenuClick}
-                  >
-                    <FileText className="w-5 h-5" />
-                    <span>Contact</span>
                   </Link>
                 </nav>
 

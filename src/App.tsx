@@ -28,7 +28,9 @@ import {
   LazyRSSPage,
   LazyAdminDashboard,
   LazyCreatePost,
-  LazyBootstrapAdmin
+  LazyBootstrapAdmin,
+  LazyResources,
+  LazyCareerTools
 } from "@/utils/simpleLazyLoading";
 
 // Critical pages loaded immediately for better performance
@@ -174,6 +176,8 @@ const App = () => {
                   <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/blog" element={<LazyBlog />} />
+                  <Route path="/resources" element={<LazyResources />} />
+                  <Route path="/career-tools" element={<LazyCareerTools />} />
                   <Route path="/about" element={<LazyAbout />} />
                   <Route path="/contact" element={<LazyContact />} />
                   <Route path="/privacy" element={<LazyPrivacy />} />

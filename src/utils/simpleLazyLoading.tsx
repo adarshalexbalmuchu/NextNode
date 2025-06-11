@@ -37,3 +37,5 @@ export const LazyRSSPage = createLazyComponent(() => import('@/pages/RSSPage' as
 export const LazyAdminDashboard = createLazyComponent(() => import('@/pages/AdminDashboard' as any));
 export const LazyCreatePost = createLazyComponent(() => import('@/pages/CreatePost' as any));
 export const LazyBootstrapAdmin = createLazyComponent(() => import('@/pages/BootstrapAdmin' as any));
+export const LazyResources = createLazyComponent(() => import('@/pages/Resources' as any));
+export const LazyCareerTools = createLazyComponent(() => import('@/pages/CareerTools' as any));

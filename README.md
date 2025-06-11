@@ -1,19 +1,21 @@
-# NextNode - AI-Powered Blog Platform
+# NextNode - AI Tools, Careers & Practical Guides
 
 ![Performance Optimized](https://img.shields.io/badge/Performance-Optimized-brightgreen)
 ![Bundle Size](https://img.shields.io/badge/Main%20Bundle-39KB-success)
 ![LCP](https://img.shields.io/badge/LCP-%3C2.5s-success)
 ![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen)
 
-A modern, futuristic blog platform built with React, TypeScript, and Supabase featuring comprehensive authentication, role-based access control, and AI-powered content management. **Optimized for exceptional performance with 99% bundle size reduction and sub-second load times.**
+A modern platform empowering students and professionals with AI tools, career insights, and practical guides for accelerated growth. Built with React, TypeScript, and Supabase featuring comprehensive authentication, role-based access control, and AI-powered content management. **Optimized for exceptional performance with 99% bundle size reduction and sub-second load times.**
 
 ## ✨ Features
 
 - **🔐 Complete Authentication System**: Login/signup with automatic profile creation
 - **👥 Role-Based Access Control**: Admin, Author, and User roles with proper permissions
-- **📝 Content Management**: Create, edit, and manage blog posts with markdown support
-- **💬 Comments System**: Nested comments and replies for user engagement
-- **📊 Admin Dashboard**: User management, post management, and analytics
+- **📝 Content Management**: Create, edit, and manage guides with markdown support
+- **🎯 Student & Professional Focus**: Tailored content for students and working professionals
+- **🤖 AI Tools Integration**: Comprehensive guides for ChatGPT, AI automation, and productivity
+- **💼 Career Acceleration**: Resume building, interview prep, and career transition guides
+- **📊 Admin Dashboard**: User management, content management, and analytics
 - **🛡️ Security**: Row-level security policies and protected routes
 - **📱 Responsive Design**: Modern UI with Tailwind CSS and shadcn/ui components
 - **⚡ Performance Optimized**: 99% bundle size reduction, lazy loading, and sub-second load times

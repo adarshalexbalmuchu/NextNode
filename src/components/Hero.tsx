@@ -17,7 +17,7 @@ const Hero = memo(() => {
           aria-label="Platform tagline"
         >
           <div className="w-2 h-2 bg-primary rounded-full mr-2 animate-pulse-glow" aria-hidden="true" />
-          The future of intelligent discourse
+          AI Tools, Careers & Practical Guides
         </div>
 
         {/* Main Heading - Critical content, no animation delay for LCP */}
@@ -25,10 +25,10 @@ const Hero = memo(() => {
           id="hero-heading"
           className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 animate-fade-in leading-tight"
         >
-          Where{' '}
-          <span className="text-primary text-glow">Intelligence</span>
+          Your{' '}
+          <span className="text-primary text-glow">AI-Powered</span>
           <br />
-          Meets Innovation
+          Career Hub
         </h1>
 
         {/* Subtitle */}
@@ -36,9 +36,9 @@ const Hero = memo(() => {
           className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground mb-8 sm:mb-12 leading-relaxed animate-fade-in px-2 sm:px-4 lg:px-0 max-w-3xl mx-auto" 
           style={{ animationDelay: '0.1s' }}
         >
-          Discover cutting-edge insights on AI, emerging technologies, and the future that's being built today.
+          Master AI tools, accelerate your career, and gain practical skills for students and working professionals.
           <br className="hidden sm:block" />
-          <span className="text-sm sm:text-base block sm:inline mt-2 sm:mt-0">No noise. No ads. Just pure knowledge.</span>
+          <span className="text-sm sm:text-base block sm:inline mt-2 sm:mt-0">Real tools. Real results. Real growth.</span>
         </p>
 
         {/* CTA Buttons - Responsive and accessible */}
@@ -49,17 +49,17 @@ const Hero = memo(() => {
           <Button 
             size="lg" 
             className="btn-primary w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 min-h-[48px]"
-            aria-label="Start reading articles"
+            aria-label="Explore AI tools and guides"
           >
-            Start Reading
+            Explore AI Tools
           </Button>
           <Button 
             variant="outline" 
             size="lg" 
             className="btn-glass w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 min-h-[48px]"
-            aria-label="Explore research articles"
+            aria-label="Browse career resources"
           >
-            Explore Research
+            Career Resources
           </Button>
         </div>
 

@@ -30,9 +30,9 @@ const About = () => {
               About <span className="text-primary text-glow">NextNode</span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto px-2 sm:px-0">
-              We're building the future of knowledge sharing through AI-powered insights, 
+              We're empowering students and professionals to thrive in the AI era through practical tools, 
               <br className="hidden sm:block" />
-              cutting-edge research, and community-driven innovation.
+              career insights, and actionable guides that deliver real results.
             </p>
           </div>
 
@@ -44,16 +44,18 @@ const About = () => {
                 Our Mission
               </CardTitle>
               <CardDescription className="text-sm sm:text-base">
-                Democratizing access to AI knowledge and innovation
+                Empowering careers through AI mastery and practical skills
               </CardDescription>
             </CardHeader>
             <CardContent className="prose prose-neutral dark:prose-invert max-w-none">
               <p className="text-base sm:text-lg leading-relaxed">
-                NextNode exists to bridge the gap between complex AI research and practical understanding. 
-                We believe that the future of technology should be accessible to everyone, not just experts. 
-                <br className="hidden sm:block" />
-                Through carefully crafted articles, deep-dive research papers, and community discussions, 
-                we're creating a platform where curiosity meets cutting-edge innovation.
+                At NextNode, we believe that the future belongs to those who can effectively leverage AI tools 
+                and adapt to the rapidly evolving professional landscape. Our mission is to bridge the gap between 
+                cutting-edge AI technology and practical career advancement for students and working professionals.
+              </p>
+              <p className="text-base sm:text-lg leading-relaxed mt-4">
+                We provide comprehensive guides, tool reviews, and career strategies that help you master AI tools, 
+                enhance your productivity, and accelerate your professional growth in any field.
               </p>
             </CardContent>
           </Card>
@@ -63,11 +65,11 @@ const About = () => {
             <Card className="glass-panel glass-panel-hover">
               <CardHeader>
                 <Brain className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-2" aria-hidden="true" />
-                <CardTitle className="text-base sm:text-lg">Knowledge First</CardTitle>
+                <CardTitle className="text-base sm:text-lg">Practical First</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground text-sm sm:text-base">
-                  We prioritize accuracy, depth, and clarity in every piece of content we publish.
+                  We focus on actionable insights and tools that deliver real-world results for your career.
                 </p>
               </CardContent>
             </Card>
@@ -75,11 +77,11 @@ const About = () => {
             <Card className="glass-panel glass-panel-hover">
               <CardHeader>
                 <Lightbulb className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-2" aria-hidden="true" />
-                <CardTitle className="text-base sm:text-lg">Innovation Focus</CardTitle>
+                <CardTitle className="text-base sm:text-lg">Career Focused</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground text-sm sm:text-base">
-                  We spotlight breakthrough technologies and emerging trends that shape tomorrow.
+                  Every guide is designed to accelerate your professional growth and enhance your skill set.
                 </p>
               </CardContent>
             </Card>
@@ -87,11 +89,11 @@ const About = () => {
             <Card className="glass-panel glass-panel-hover sm:col-span-2 lg:col-span-1">
               <CardHeader>
                 <Users className="w-6 h-6 sm:w-8 sm:h-8 text-primary mb-2" aria-hidden="true" />
-                <CardTitle className="text-base sm:text-lg">Community Driven</CardTitle>
+                <CardTitle className="text-base sm:text-lg">Student & Pro Focused</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground text-sm sm:text-base">
-                  Our platform thrives on diverse perspectives and collaborative learning.
+                  Tailored content for both students starting their journey and professionals advancing their careers.
                 </p>
               </CardContent>
             </Card>
@@ -105,19 +107,19 @@ const About = () => {
                 What We Cover
               </CardTitle>
               <CardDescription className="text-sm sm:text-base">
-                Exploring the frontiers of artificial intelligence and technology
+                AI tools, career insights, and practical guides for professional growth
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
-                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">Machine Learning</Badge>
-                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">Neural Networks</Badge>
-                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">Quantum Computing</Badge>
-                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">AI Ethics</Badge>
-                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">Deep Learning</Badge>
-                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">Computer Vision</Badge>
-                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">NLP</Badge>
-                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">Robotics</Badge>
+                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">AI Tools</Badge>
+                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">Career Guides</Badge>
+                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">Resume Building</Badge>
+                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">Interview Prep</Badge>
+                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">Student Resources</Badge>
+                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">Productivity Hacks</Badge>
+                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">ChatGPT Tips</Badge>
+                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">Skill Development</Badge>
               </div>
             </CardContent>
           </Card>

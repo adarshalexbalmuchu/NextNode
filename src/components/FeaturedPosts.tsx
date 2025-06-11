@@ -18,10 +18,10 @@ const FeaturedPosts = () => {
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Latest <span className="text-primary text-glow">Research</span>
+              Featured <span className="text-primary text-glow">Guides</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Dive deep into cutting-edge AI research, emerging technologies, and the innovations shaping our future.
+              Practical AI tools, career strategies, and step-by-step guides to accelerate your professional growth.
             </p>
           </div>
           
@@ -40,7 +40,7 @@ const FeaturedPosts = () => {
           <div className="text-center mt-16">
             <LoadingSpinner 
               size="md" 
-              text="Loading featured articles..." 
+              text="Loading featured guides..." 
               variant="gradient"
               timeout={10000}
             />
@@ -56,18 +56,18 @@ const FeaturedPosts = () => {
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Latest <span className="text-primary text-glow">Research</span>
+              Featured <span className="text-primary text-glow">Guides</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Dive deep into cutting-edge AI research, emerging technologies, and the innovations shaping our future.
+              Practical AI tools, career strategies, and step-by-step guides to accelerate your professional growth.
             </p>
           </div>
           
           <ErrorFallback
             error={error as Error}
             resetError={() => window.location.reload()}
-            title="Failed to load featured articles"
-            description="We couldn't load the featured articles. Please try again."
+            title="Failed to load featured guides"
+            description="We couldn't load the featured guides. Please try again."
           />
         </div>
       </section>
@@ -80,10 +80,10 @@ const FeaturedPosts = () => {
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Latest <span className="text-primary text-glow">Research</span>
+            Featured <span className="text-primary text-glow">Guides</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Dive deep into cutting-edge AI research, emerging technologies, and the innovations shaping our future.
+            Practical AI tools, career strategies, and step-by-step guides to accelerate your professional growth.
           </p>
         </div>
 
@@ -114,7 +114,7 @@ const FeaturedPosts = () => {
         <div className="text-center mt-16">
           <Link to="/blog">
             <Button size="lg" className="btn-primary group">
-              <span>Explore All Articles</span>
+              <span>Explore All Guides</span>
               <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
