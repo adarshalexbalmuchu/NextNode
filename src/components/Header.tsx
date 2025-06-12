@@ -87,7 +87,7 @@ const Header = () => {
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2 group" aria-label="NextNode - Home">
-              <img src="/nextnode-logo.png" alt="NextNode Logo" className="w-44 h-auto" style={{maxHeight: '56px'}} />
+              <img src="/NextNode-Logo.svg" alt="NextNode Logo" className="w-44 h-auto" style={{maxHeight: '56px'}} />
             </Link>
 
             {/* Desktop Navigation */}
