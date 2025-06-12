@@ -63,7 +63,7 @@ describe('Component', () => {
   it('handles user interactions', async () => {
     const user = userEvent.setup()
     render(<Component />)
-    
+
     await user.click(screen.getByRole('button'))
     expect(screen.getByText('Clicked')).toBeInTheDocument()
   })
@@ -73,25 +73,25 @@ describe('Component', () => {
 ### Hook Testing
 
 ```typescript
-import { renderHook, act } from '@testing-library/react'
-import { useCustomHook } from './useCustomHook'
+import { renderHook, act } from '@testing-library/react';
+import { useCustomHook } from './useCustomHook';
 
 describe('useCustomHook', () => {
   it('returns initial state', () => {
-    const { result } = renderHook(() => useCustomHook())
-    expect(result.current.value).toBe(0)
-  })
+    const { result } = renderHook(() => useCustomHook());
+    expect(result.current.value).toBe(0);
+  });
 
   it('updates state on action', () => {
-    const { result } = renderHook(() => useCustomHook())
-    
+    const { result } = renderHook(() => useCustomHook());
+
     act(() => {
-      result.current.increment()
-    })
-    
-    expect(result.current.value).toBe(1)
-  })
-})
+      result.current.increment();
+    });
+
+    expect(result.current.value).toBe(1);
+  });
+});
 ```
 
 ### Context Testing
@@ -117,27 +117,27 @@ describe('Component with context', () => {
 Supabase is automatically mocked in the test setup. You can override specific methods:
 
 ```typescript
-import { vi } from 'vitest'
-import { supabase } from '@/integrations/supabase/client'
+import { vi } from 'vitest';
+import { supabase } from '@/integrations/supabase/client';
 
 vi.mocked(supabase.auth.signIn).mockResolvedValue({
   data: { user: mockUser, session: mockSession },
-  error: null
-})
+  error: null,
+});
 ```
 
 ### Router Mocking
 
 ```typescript
-const mockNavigate = vi.fn()
+const mockNavigate = vi.fn();
 
 vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom')
+  const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
     useNavigate: () => mockNavigate,
-  }
-})
+  };
+});
 ```
 
 ## Performance Testing
@@ -145,12 +145,12 @@ vi.mock('react-router-dom', async () => {
 Use the performance monitor hook in components:
 
 ```typescript
-import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor'
+import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 
 const Component = () => {
-  usePerformanceMonitor('ComponentName')
+  usePerformanceMonitor('ComponentName');
   // Component logic
-}
+};
 ```
 
 ## Best Practices
@@ -172,6 +172,7 @@ const Component = () => {
 ## Continuous Integration
 
 Tests run automatically on:
+
 - Pre-commit hooks (via Husky)
 - Pull request validation
 - Deployment pipelines
@@ -210,11 +211,11 @@ import userEvent from '@testing-library/user-event'
 it('submits form with valid data', async () => {
   const user = userEvent.setup()
   render(<ContactForm />)
-  
+
   await user.type(screen.getByLabelText(/email/i), 'test@example.com')
   await user.type(screen.getByLabelText(/message/i), 'Hello world')
   await user.click(screen.getByRole('button', { name: /submit/i }))
-  
+
   expect(screen.getByText(/success/i)).toBeInTheDocument()
 })
 ```
@@ -226,7 +227,7 @@ import { waitFor } from '@testing-library/react'
 
 it('loads data on mount', async () => {
   render(<DataComponent />)
-  
+
   await waitFor(() => {
     expect(screen.getByText('Loaded data')).toBeInTheDocument()
   })
@@ -238,9 +239,9 @@ it('loads data on mount', async () => {
 ```typescript
 it('shows error message on failure', async () => {
   vi.mocked(api.getData).mockRejectedValue(new Error('API Error'))
-  
+
   render(<DataComponent />)
-  
+
   await waitFor(() => {
     expect(screen.getByText(/error/i)).toBeInTheDocument()
   })

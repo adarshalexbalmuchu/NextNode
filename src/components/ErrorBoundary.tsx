@@ -43,7 +43,7 @@ class ErrorBoundary extends Component<Props, State> {
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log error details
     console.error('ErrorBoundary caught an error:', error, errorInfo);
-    
+
     // Update state with error info
     this.setState({
       error,
@@ -131,7 +131,7 @@ ${errorInfo?.componentStack}
 
 Please describe what you were doing when this error occurred:
     `);
-    
+
     window.open(`mailto:support@quantumreadflow.com?subject=${subject}&body=${body}`);
   };
 
@@ -155,7 +155,7 @@ Please describe what you were doing when this error occurred:
                 We're sorry, but something unexpected happened. Our team has been notified.
               </CardDescription>
             </CardHeader>
-            
+
             <CardContent className="space-y-4">
               {this.props.showDetails && this.state.error && (
                 <Alert>
@@ -270,7 +270,7 @@ export class AsyncErrorBoundary extends Component<Props, State> {
   private handleUnhandledRejection = (event: PromiseRejectionEvent) => {
     const error = new Error(event.reason?.message || 'Unhandled promise rejection');
     error.stack = event.reason?.stack || error.stack;
-    
+
     this.setState({
       hasError: true,
       error,
@@ -292,7 +292,7 @@ export class AsyncErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('AsyncErrorBoundary caught an error:', error, errorInfo);
-    
+
     this.setState({
       error,
       errorInfo,

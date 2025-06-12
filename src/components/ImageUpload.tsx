@@ -1,4 +1,3 @@
-
 import { useState, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -15,12 +14,12 @@ interface ImageUploadProps {
   maxSize?: number; // in MB
 }
 
-const ImageUpload = ({ 
-  onImageUploaded, 
-  onImageRemoved, 
-  currentImage, 
-  label = "Upload Image",
-  maxSize = 50 
+const ImageUpload = ({
+  onImageUploaded,
+  onImageRemoved,
+  currentImage,
+  label = 'Upload Image',
+  maxSize = 50,
 }: ImageUploadProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
@@ -33,9 +32,9 @@ const ImageUpload = ({
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
     if (!allowedTypes.includes(file.type)) {
       toast({
-        title: "Invalid file type",
-        description: "Please upload a valid image file (JPEG, PNG, GIF, WebP, or SVG)",
-        variant: "destructive",
+        title: 'Invalid file type',
+        description: 'Please upload a valid image file (JPEG, PNG, GIF, WebP, or SVG)',
+        variant: 'destructive',
       });
       return;
     }
@@ -44,9 +43,9 @@ const ImageUpload = ({
     const maxSizeBytes = maxSize * 1024 * 1024;
     if (file.size > maxSizeBytes) {
       toast({
-        title: "File too large",
+        title: 'File too large',
         description: `Please upload an image smaller than ${maxSize}MB`,
-        variant: "destructive",
+        variant: 'destructive',
       });
       return;
     }
@@ -66,21 +65,21 @@ const ImageUpload = ({
       if (uploadError) throw uploadError;
 
       // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('blog-images')
-        .getPublicUrl(filePath);
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from('blog-images').getPublicUrl(filePath);
 
       onImageUploaded(publicUrl);
-      
+
       toast({
-        title: "Success",
-        description: "Image uploaded successfully",
+        title: 'Success',
+        description: 'Image uploaded successfully',
       });
     } catch (error: any) {
       toast({
-        title: "Upload failed",
-        description: error.message || "Failed to upload image",
-        variant: "destructive",
+        title: 'Upload failed',
+        description: error.message || 'Failed to upload image',
+        variant: 'destructive',
       });
     } finally {
       setIsUploading(false);
@@ -90,9 +89,9 @@ const ImageUpload = ({
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
+    if (e.type === 'dragenter' || e.type === 'dragover') {
       setDragActive(true);
-    } else if (e.type === "dragleave") {
+    } else if (e.type === 'dragleave') {
       setDragActive(false);
     }
   };
@@ -101,7 +100,7 @@ const ImageUpload = ({
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    
+
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       handleFileUpload(e.dataTransfer.files[0]);
     }
@@ -123,7 +122,7 @@ const ImageUpload = ({
   return (
     <div className="space-y-2">
       <Label>{label}</Label>
-      
+
       {currentImage ? (
         <Card className="relative">
           <CardContent className="p-4">
@@ -145,7 +144,7 @@ const ImageUpload = ({
           </CardContent>
         </Card>
       ) : (
-        <Card 
+        <Card
           className={`border-2 border-dashed transition-colors ${
             dragActive ? 'border-primary bg-primary/5' : 'border-muted-foreground/25'
           }`}
@@ -178,7 +177,7 @@ const ImageUpload = ({
           </CardContent>
         </Card>
       )}
-      
+
       <input
         ref={fileInputRef}
         type="file"

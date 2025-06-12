@@ -1,5 +1,5 @@
-import { useLocation, Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useLocation, Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import Background from '@/components/Background';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -11,17 +11,14 @@ const NotFound = () => {
   const location = useLocation();
 
   useEffect(() => {
-    console.error(
-      "404 Error: User attempted to access non-existent route:",
-      location.pathname
-    );
+    console.error('404 Error: User attempted to access non-existent route:', location.pathname);
   }, [location.pathname]);
 
   return (
     <div className="min-h-screen w-full">
       <Background />
       <Header />
-      
+
       <main className="container mx-auto px-4 sm:px-6 py-20">
         <div className="max-w-2xl mx-auto text-center">
           <div className="mb-8">
@@ -29,14 +26,12 @@ const NotFound = () => {
             <div className="text-6xl sm:text-8xl md:text-9xl font-bold text-primary/20 mb-4">
               404
             </div>
-            
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
-              Page Not Found
-            </h1>
-            
+
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">Page Not Found</h1>
+
             <p className="text-lg sm:text-xl text-muted-foreground mb-8 leading-relaxed">
-              The page you're looking for doesn't exist or has been moved.
-              Don't worry, let's get you back on track.
+              The page you're looking for doesn't exist or has been moved. Don't worry, let's get
+              you back on track.
             </p>
           </div>
 
@@ -50,19 +45,28 @@ const NotFound = () => {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Link to="/">
-                  <Button variant="outline" className="w-full h-auto p-4 flex flex-col items-center gap-2">
+                  <Button
+                    variant="outline"
+                    className="w-full h-auto p-4 flex flex-col items-center gap-2"
+                  >
                     <Home className="w-6 h-6" />
                     <span>Go Home</span>
                   </Button>
                 </Link>
-                
-                <Button variant="outline" className="w-full h-auto p-4 flex flex-col items-center gap-2">
+
+                <Button
+                  variant="outline"
+                  className="w-full h-auto p-4 flex flex-col items-center gap-2"
+                >
                   <Search className="w-6 h-6" />
                   <span>Search Articles</span>
                 </Button>
-                
+
                 <Link to="/about">
-                  <Button variant="outline" className="w-full h-auto p-4 flex flex-col items-center gap-2">
+                  <Button
+                    variant="outline"
+                    className="w-full h-auto p-4 flex flex-col items-center gap-2"
+                  >
                     <FileText className="w-6 h-6" />
                     <span>About Us</span>
                   </Button>
@@ -76,7 +80,7 @@ const NotFound = () => {
               <ArrowLeft className="w-4 h-4 mr-2" />
               Go Back
             </Button>
-            
+
             <Link to="/">
               <Button className="bg-primary hover:bg-primary/90">
                 <Home className="w-4 h-4 mr-2" />
@@ -100,7 +104,7 @@ const NotFound = () => {
           )}
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );

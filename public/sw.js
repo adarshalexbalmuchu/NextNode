@@ -13,35 +13,18 @@ const CRITICAL_ASSETS = [
 ];
 
 // Resources to cache on first visit
-const STATIC_ASSETS = [
-  '/about',
-  '/blog',
-  '/contact',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
-];
+const STATIC_ASSETS = ['/about', '/blog', '/contact', '/icons/icon-192.png', '/icons/icon-512.png'];
 
 // Network-first resources (always try network first)
-const NETWORK_FIRST = [
-  '/api/',
-  '/blog/',
-  '/admin/',
-];
+const NETWORK_FIRST = ['/api/', '/blog/', '/admin/'];
 
 // Cache-first resources (static assets)
-const CACHE_FIRST = [
-  '/icons/',
-  '/images/',
-  '.css',
-  '.js',
-  '.woff2',
-  '.woff',
-];
+const CACHE_FIRST = ['/icons/', '/images/', '.css', '.js', '.woff2', '.woff'];
 
 // Install event - cache critical resources
-self.addEventListener('install', (event) => {
+self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(STATIC_CACHE).then((cache) => {
+    caches.open(STATIC_CACHE).then(cache => {
       return cache.addAll(CRITICAL_ASSETS);
     })
   );
@@ -50,11 +33,11 @@ self.addEventListener('install', (event) => {
 });
 
 // Activate event - clean up old caches
-self.addEventListener('activate', (event) => {
+self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
+    caches.keys().then(cacheNames => {
       return Promise.all(
-        cacheNames.map((cacheName) => {
+        cacheNames.map(cacheName => {
           if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
             return caches.delete(cacheName);
           }
@@ -67,7 +50,7 @@ self.addEventListener('activate', (event) => {
 });
 
 // Fetch event - implement caching strategies
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
 
@@ -88,7 +71,9 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Cache-first strategy for static assets
-  if (CACHE_FIRST.some(pattern => url.pathname.includes(pattern) || url.pathname.endsWith(pattern))) {
+  if (
+    CACHE_FIRST.some(pattern => url.pathname.includes(pattern) || url.pathname.endsWith(pattern))
+  ) {
     event.respondWith(cacheFirst(request));
     return;
   }
@@ -144,22 +129,24 @@ async function staleWhileRevalidate(request) {
   const cache = await caches.open(DYNAMIC_CACHE);
   const cachedResponse = await cache.match(request);
 
-  const fetchPromise = fetch(request).then((networkResponse) => {
-    if (networkResponse.ok) {
-      cache.put(request, networkResponse.clone());
-    }
-    return networkResponse;
-  }).catch(() => {
-    // Network failed, return cached version if available
-    return cachedResponse;
-  });
+  const fetchPromise = fetch(request)
+    .then(networkResponse => {
+      if (networkResponse.ok) {
+        cache.put(request, networkResponse.clone());
+      }
+      return networkResponse;
+    })
+    .catch(() => {
+      // Network failed, return cached version if available
+      return cachedResponse;
+    });
 
   // Return cached version immediately if available, otherwise wait for network
   return cachedResponse || fetchPromise;
 }
 
 // Background sync for offline actions
-self.addEventListener('sync', (event) => {
+self.addEventListener('sync', event => {
   if (event.tag === 'background-sync') {
     event.waitUntil(doBackgroundSync());
   }
@@ -171,35 +158,31 @@ async function doBackgroundSync() {
 }
 
 // Push notifications (for future use)
-self.addEventListener('push', (event) => {
+self.addEventListener('push', event => {
   const options = {
     body: event.data ? event.data.text() : 'New update available!',
     icon: '/icons/icon-192.png',
     badge: '/icons/icon-192.png',
   };
 
-  event.waitUntil(
-    self.registration.showNotification('NextNode', options)
-  );
+  event.waitUntil(self.registration.showNotification('NextNode', options));
 });
 
 // Notification click handling
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener('notificationclick', event => {
   event.notification.close();
-  event.waitUntil(
-    clients.openWindow('/')
-  );
+  event.waitUntil(clients.openWindow('/'));
 });
 
 // Message handling for cache updates
-self.addEventListener('message', (event) => {
+self.addEventListener('message', event => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
-  
+
   if (event.data && event.data.type === 'CACHE_URLS') {
     event.waitUntil(
-      caches.open(DYNAMIC_CACHE).then((cache) => {
+      caches.open(DYNAMIC_CACHE).then(cache => {
         return cache.addAll(event.data.payload);
       })
     );

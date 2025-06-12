@@ -10,7 +10,7 @@ export const useAccessibility = () => {
     if (announceRef.current) {
       announceRef.current.setAttribute('aria-live', priority);
       announceRef.current.textContent = message;
-      
+
       // Clear after announcement to allow for repeated messages
       setTimeout(() => {
         if (announceRef.current) {
@@ -24,36 +24,34 @@ export const useAccessibility = () => {
     const element = document.querySelector(selector) as HTMLElement;
     if (element) {
       element.focus();
-      element.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'center' 
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
       });
     }
   };
 
   const AnnouncementRegion = () => (
-    <div
-      ref={announceRef}
-      className="sr-only"
-      aria-live="polite"
-      aria-atomic="true"
-    />
+    <div ref={announceRef} className="sr-only" aria-live="polite" aria-atomic="true" />
   );
 
   return {
     announce,
     focusElement,
-    AnnouncementRegion
+    AnnouncementRegion,
   };
 };
 
 /**
  * Hook for managing keyboard navigation in complex components
  */
-export const useKeyboardNavigation = (items: HTMLElement[], options?: {
-  loop?: boolean;
-  orientation?: 'horizontal' | 'vertical';
-}) => {
+export const useKeyboardNavigation = (
+  items: HTMLElement[],
+  options?: {
+    loop?: boolean;
+    orientation?: 'horizontal' | 'vertical';
+  }
+) => {
   const { loop = true, orientation = 'vertical' } = options || {};
 
   const handleKeyDown = (event: KeyboardEvent, currentIndex: number) => {
@@ -64,13 +62,15 @@ export const useKeyboardNavigation = (items: HTMLElement[], options?: {
     switch (event.key) {
       case nextKey:
         event.preventDefault();
-        const nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : (loop ? 0 : currentIndex);
+        const nextIndex =
+          currentIndex < items.length - 1 ? currentIndex + 1 : loop ? 0 : currentIndex;
         items[nextIndex]?.focus();
         break;
 
       case prevKey:
         event.preventDefault();
-        const prevIndex = currentIndex > 0 ? currentIndex - 1 : (loop ? items.length - 1 : currentIndex);
+        const prevIndex =
+          currentIndex > 0 ? currentIndex - 1 : loop ? items.length - 1 : currentIndex;
         items[prevIndex]?.focus();
         break;
 

@@ -3,7 +3,13 @@ import { Search, X, Filter } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import LoadingSpinner from './LoadingSpinner';
 import { cn } from '@/lib/utils';
@@ -34,7 +40,7 @@ const SearchWithFilters = ({
   isLoading = false,
   searchLoading = false,
   resultCount,
-  className
+  className,
 }: SearchWithFiltersProps) => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [debouncedSearch, setDebouncedSearch] = useState(searchTerm);
@@ -63,7 +69,7 @@ const SearchWithFilters = ({
       category: 'all',
       difficulty: 'all',
       sortBy: 'newest',
-      readTime: 'all'
+      readTime: 'all',
     });
   };
 
@@ -82,7 +88,7 @@ const SearchWithFilters = ({
   const hasActiveSearchOrFilters = debouncedSearch.trim() || activeFiltersCount > 0;
 
   return (
-    <div className={cn("space-y-4", className)}>
+    <div className={cn('space-y-4', className)}>
       {/* Enhanced Search Bar */}
       <div className="relative">
         <div className="relative">
@@ -91,7 +97,7 @@ const SearchWithFilters = ({
             type="text"
             placeholder="Search articles, topics, or keywords..."
             value={debouncedSearch}
-            onChange={(e) => {
+            onChange={e => {
               setDebouncedSearch(e.target.value);
               if (e.target.value.trim()) {
                 setHasSearched(true);
@@ -100,13 +106,11 @@ const SearchWithFilters = ({
             className="pl-10 pr-24 h-12 text-base focus:ring-2 focus:ring-primary/50 touch-friendly"
             aria-label="Search articles"
           />
-          
+
           {/* Action buttons */}
           <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
-            {searchLoading && (
-              <LoadingSpinner size="sm" variant="spinner" className="mr-1" />
-            )}
-            
+            {searchLoading && <LoadingSpinner size="sm" variant="spinner" className="mr-1" />}
+
             {debouncedSearch && (
               <Button
                 variant="ghost"
@@ -125,9 +129,9 @@ const SearchWithFilters = ({
               size="sm"
               onClick={() => setIsFiltersOpen(!isFiltersOpen)}
               className={cn(
-                "h-8 px-2 gap-1 touch-friendly",
-                activeFiltersCount > 0 && "bg-primary/20 text-primary",
-                isFiltersOpen && "bg-primary/10"
+                'h-8 px-2 gap-1 touch-friendly',
+                activeFiltersCount > 0 && 'bg-primary/20 text-primary',
+                isFiltersOpen && 'bg-primary/10'
               )}
               aria-label={`${isFiltersOpen ? 'Hide' : 'Show'} filters`}
               aria-expanded={isFiltersOpen}
@@ -156,15 +160,14 @@ const SearchWithFilters = ({
               <span>
                 {resultCount !== undefined ? (
                   <>
-                    Found <span className="font-medium text-foreground">{resultCount}</span> result{resultCount !== 1 ? 's' : ''}
+                    Found <span className="font-medium text-foreground">{resultCount}</span> result
+                    {resultCount !== 1 ? 's' : ''}
                   </>
                 ) : (
                   'Search results'
                 )}
                 {debouncedSearch && (
-                  <span className="text-primary ml-1">
-                    for "{debouncedSearch}"
-                  </span>
+                  <span className="text-primary ml-1">for "{debouncedSearch}"</span>
                 )}
                 {activeFiltersCount > 0 && (
                   <span className="text-primary ml-1">
@@ -174,7 +177,7 @@ const SearchWithFilters = ({
               </span>
             )}
           </div>
-          
+
           {hasActiveSearchOrFilters && (
             <Button
               variant="ghost"
@@ -195,12 +198,7 @@ const SearchWithFilters = ({
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg">Filter Results</CardTitle>
               {activeFiltersCount > 0 && (
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={clearFilters}
-                  className="text-xs"
-                >
+                <Button variant="outline" size="sm" onClick={clearFilters} className="text-xs">
                   Clear filters
                 </Button>
               )}
@@ -213,17 +211,17 @@ const SearchWithFilters = ({
                 <label className="text-sm font-medium">Category</label>
                 <Select
                   value={filters.category || 'all'}
-                  onValueChange={(value) => onFiltersChange({ ...filters, category: value })}
+                  onValueChange={value => onFiltersChange({ ...filters, category: value })}
                 >
                   <SelectTrigger className="w-full touch-friendly">
                     <SelectValue placeholder="All Categories" />
                   </SelectTrigger>
                   <SelectContent className="glass-panel">
                     <SelectItem value="all">All Categories</SelectItem>
-                    {categories.map((category) => (
+                    {categories.map(category => (
                       <SelectItem key={category.id} value={category.id}>
                         <div className="flex items-center gap-2">
-                          <div 
+                          <div
                             className="w-3 h-3 rounded-full"
                             style={{ backgroundColor: category.color }}
                           />
@@ -240,7 +238,7 @@ const SearchWithFilters = ({
                 <label className="text-sm font-medium">Difficulty</label>
                 <Select
                   value={filters.difficulty || 'all'}
-                  onValueChange={(value) => onFiltersChange({ ...filters, difficulty: value })}
+                  onValueChange={value => onFiltersChange({ ...filters, difficulty: value })}
                 >
                   <SelectTrigger className="w-full touch-friendly">
                     <SelectValue placeholder="All Levels" />
@@ -259,7 +257,7 @@ const SearchWithFilters = ({
                 <label className="text-sm font-medium">Sort By</label>
                 <Select
                   value={filters.sortBy || 'newest'}
-                  onValueChange={(value) => onFiltersChange({ ...filters, sortBy: value })}
+                  onValueChange={value => onFiltersChange({ ...filters, sortBy: value })}
                 >
                   <SelectTrigger className="w-full touch-friendly">
                     <SelectValue placeholder="Sort By" />
@@ -278,7 +276,7 @@ const SearchWithFilters = ({
                 <label className="text-sm font-medium">Read Time</label>
                 <Select
                   value={filters.readTime || 'all'}
-                  onValueChange={(value) => onFiltersChange({ ...filters, readTime: value })}
+                  onValueChange={value => onFiltersChange({ ...filters, readTime: value })}
                 >
                   <SelectTrigger className="w-full touch-friendly">
                     <SelectValue placeholder="Any Length" />
@@ -300,17 +298,17 @@ const SearchWithFilters = ({
                   <span className="text-sm font-medium text-muted-foreground">Active filters:</span>
                   {Object.entries(filters).map(([key, value]) => {
                     if (!value || value === 'all') return null;
-                    
+
                     let displayValue = value;
                     if (key === 'category') {
                       const category = categories.find(c => c.id === value);
                       displayValue = category?.name || value;
                     }
-                    
+
                     return (
-                      <Badge 
-                        key={key} 
-                        variant="secondary" 
+                      <Badge
+                        key={key}
+                        variant="secondary"
                         className="flex items-center gap-1 glass-panel"
                       >
                         {displayValue}

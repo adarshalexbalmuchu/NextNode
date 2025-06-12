@@ -9,7 +9,7 @@ const Privacy = () => {
     <div className="min-h-screen w-full">
       <Background />
       <Header />
-      
+
       <main className="container mx-auto px-6 py-20">
         <div className="max-w-4xl mx-auto">
           {/* Hero Section */}
@@ -29,33 +29,31 @@ const Privacy = () => {
                 <Shield className="w-6 h-6 text-primary" />
                 Privacy Policy
               </CardTitle>
-              <CardDescription>
-                Last updated: June 2024
-              </CardDescription>
+              <CardDescription>Last updated: June 2024</CardDescription>
             </CardHeader>
             <CardContent className="prose prose-neutral dark:prose-invert max-w-none">
               <div className="space-y-6">
                 <section>
                   <h2 className="text-2xl font-semibold mb-4">Information We Collect</h2>
                   <p className="text-muted-foreground">
-                    We collect information you provide directly to us, such as when you create an account, 
-                    subscribe to our newsletter, or contact us for support.
+                    We collect information you provide directly to us, such as when you create an
+                    account, subscribe to our newsletter, or contact us for support.
                   </p>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-semibold mb-4">How We Use Your Information</h2>
                   <p className="text-muted-foreground">
-                    We use the information we collect to provide, maintain, and improve our services, 
-                    communicate with you, and comply with legal obligations.
+                    We use the information we collect to provide, maintain, and improve our
+                    services, communicate with you, and comply with legal obligations.
                   </p>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-semibold mb-4">Information Sharing</h2>
                   <p className="text-muted-foreground">
-                    We do not sell, trade, or otherwise transfer your personal information to third parties 
-                    without your consent, except as described in this policy.
+                    We do not sell, trade, or otherwise transfer your personal information to third
+                    parties without your consent, except as described in this policy.
                   </p>
                 </section>
 
@@ -73,7 +71,7 @@ const Privacy = () => {
           </Card>
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );

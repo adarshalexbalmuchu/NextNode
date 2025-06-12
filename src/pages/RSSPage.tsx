@@ -15,7 +15,7 @@ const RSSPage = () => {
     <div className="min-h-screen w-full">
       <Background />
       <Header />
-      
+
       <main className="container mx-auto px-6 py-20">
         <div className="max-w-4xl mx-auto">
           {/* Hero Section */}
@@ -24,8 +24,8 @@ const RSSPage = () => {
               RSS <span className="text-primary text-glow">Feed</span>
             </h1>
             <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              Stay updated with our latest articles and research through RSS feeds. 
-              Perfect for your favorite RSS reader.
+              Stay updated with our latest articles and research through RSS feeds. Perfect for your
+              favorite RSS reader.
             </p>
           </div>
 
@@ -36,17 +36,17 @@ const RSSPage = () => {
                 <Rss className="w-6 h-6 text-primary" />
                 NextNode RSS Feed
               </CardTitle>
-              <CardDescription>
-                Subscribe to get automatic updates of new content
-              </CardDescription>
+              <CardDescription>Subscribe to get automatic updates of new content</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="bg-muted/50 rounded-lg p-4">
                 <p className="text-sm font-mono text-center break-all">
-                  {typeof window !== 'undefined' ? `${window.location.origin}/rss.xml` : 'https://neural.ai/rss.xml'}
+                  {typeof window !== 'undefined'
+                    ? `${window.location.origin}/rss.xml`
+                    : 'https://neural.ai/rss.xml'}
                 </p>
               </div>
-              
+
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button onClick={handleCopyRSSLink} className="flex-1">
                   Copy RSS URL
@@ -71,7 +71,7 @@ const RSSPage = () => {
                   </p>
                 </CardContent>
               </Card>
-              
+
               <Card className="glass">
                 <CardContent className="pt-6 text-center">
                   <h3 className="font-semibold mb-2">Inoreader</h3>
@@ -80,7 +80,7 @@ const RSSPage = () => {
                   </p>
                 </CardContent>
               </Card>
-              
+
               <Card className="glass">
                 <CardContent className="pt-6 text-center">
                   <h3 className="font-semibold mb-2">NewsBlur</h3>
@@ -89,7 +89,7 @@ const RSSPage = () => {
                   </p>
                 </CardContent>
               </Card>
-              
+
               <Card className="glass">
                 <CardContent className="pt-6 text-center">
                   <h3 className="font-semibold mb-2">The Old Reader</h3>
@@ -117,21 +117,21 @@ const RSSPage = () => {
                     All new blog posts and articles as soon as they're published.
                   </p>
                 </div>
-                
+
                 <div>
                   <h3 className="font-semibold mb-2">Research Updates</h3>
                   <p className="text-sm text-muted-foreground">
                     New research findings and breakthrough discoveries in AI.
                   </p>
                 </div>
-                
+
                 <div>
                   <h3 className="font-semibold mb-2">Full Content</h3>
                   <p className="text-sm text-muted-foreground">
                     Complete article content, not just excerpts or summaries.
                   </p>
                 </div>
-                
+
                 <div>
                   <h3 className="font-semibold mb-2">Structured Data</h3>
                   <p className="text-sm text-muted-foreground">
@@ -143,7 +143,7 @@ const RSSPage = () => {
           </Card>
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );

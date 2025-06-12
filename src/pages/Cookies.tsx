@@ -9,7 +9,7 @@ const Cookies = () => {
     <div className="min-h-screen w-full">
       <Background />
       <Header />
-      
+
       <main className="container mx-auto px-6 py-20">
         <div className="max-w-4xl mx-auto">
           {/* Hero Section */}
@@ -29,16 +29,14 @@ const Cookies = () => {
                 <Cookie className="w-6 h-6 text-primary" />
                 Cookie Policy
               </CardTitle>
-              <CardDescription>
-                Last updated: June 2024
-              </CardDescription>
+              <CardDescription>Last updated: June 2024</CardDescription>
             </CardHeader>
             <CardContent className="prose prose-neutral dark:prose-invert max-w-none">
               <div className="space-y-6">
                 <section>
                   <h2 className="text-2xl font-semibold mb-4">What Are Cookies</h2>
                   <p className="text-muted-foreground">
-                    Cookies are small text files that are stored on your computer or mobile device 
+                    Cookies are small text files that are stored on your computer or mobile device
                     when you visit our website. They help us provide you with a better experience.
                   </p>
                 </section>
@@ -46,25 +44,36 @@ const Cookies = () => {
                 <section>
                   <h2 className="text-2xl font-semibold mb-4">How We Use Cookies</h2>
                   <p className="text-muted-foreground">
-                    We use cookies to understand how you use our site, remember your preferences, 
-                    and improve our services. This includes both first-party and third-party cookies.
+                    We use cookies to understand how you use our site, remember your preferences,
+                    and improve our services. This includes both first-party and third-party
+                    cookies.
                   </p>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-semibold mb-4">Types of Cookies We Use</h2>
                   <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-                    <li><strong>Essential Cookies:</strong> Required for the website to function properly</li>
-                    <li><strong>Analytics Cookies:</strong> Help us understand how visitors interact with our website</li>
-                    <li><strong>Preference Cookies:</strong> Remember your settings and preferences</li>
-                    <li><strong>Marketing Cookies:</strong> Used to deliver relevant advertisements</li>
+                    <li>
+                      <strong>Essential Cookies:</strong> Required for the website to function
+                      properly
+                    </li>
+                    <li>
+                      <strong>Analytics Cookies:</strong> Help us understand how visitors interact
+                      with our website
+                    </li>
+                    <li>
+                      <strong>Preference Cookies:</strong> Remember your settings and preferences
+                    </li>
+                    <li>
+                      <strong>Marketing Cookies:</strong> Used to deliver relevant advertisements
+                    </li>
                   </ul>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-semibold mb-4">Managing Cookies</h2>
                   <p className="text-muted-foreground">
-                    You can control and manage cookies in various ways. Most browsers allow you to 
+                    You can control and manage cookies in various ways. Most browsers allow you to
                     refuse cookies or delete existing ones through their settings.
                   </p>
                 </section>
@@ -83,7 +92,7 @@ const Cookies = () => {
           </Card>
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );

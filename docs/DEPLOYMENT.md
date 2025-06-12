@@ -5,7 +5,8 @@ This guide covers production deployment strategies for the NextNode blog platfor
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18+
 - npm or yarn
 - Supabase account
 - Domain name (optional)
@@ -13,6 +14,7 @@ This guide covers production deployment strategies for the NextNode blog platfor
 ### Environment Setup
 
 1. **Create Production Environment Variables**
+
 ```bash
 # Create .env.production
 VITE_SUPABASE_URL=your_production_supabase_url
@@ -24,6 +26,7 @@ VITE_ENABLE_ANALYTICS=true
 ```
 
 2. **Build for Production**
+
 ```bash
 npm run build
 npm run build:analyze  # Check bundle size
@@ -34,24 +37,25 @@ npm run build:analyze  # Check bundle size
 ### Vercel (Recommended)
 
 1. **Install Vercel CLI**
+
 ```bash
 npm i -g vercel
 ```
 
 2. **Deploy**
+
 ```bash
 vercel --prod
 ```
 
 3. **Configure vercel.json**
+
 ```json
 {
   "framework": "vite",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
   "headers": [
     {
       "source": "/sw.js",
@@ -78,16 +82,19 @@ vercel --prod
 ### Netlify
 
 1. **Build Settings**
+
    - Build command: `npm run build`
    - Publish directory: `dist`
 
-2. **Configure _redirects**
+2. **Configure \_redirects**
+
 ```
 /*    /index.html   200
 /sw.js    /sw.js   200
 ```
 
 3. **Configure netlify.toml**
+
 ```toml
 [build]
   command = "npm run build"
@@ -107,6 +114,7 @@ vercel --prod
 ### Docker Deployment
 
 1. **Create Dockerfile**
+
 ```dockerfile
 # Build stage
 FROM node:18-alpine AS builder
@@ -133,6 +141,7 @@ CMD ["nginx", "-g", "daemon off;"]
 ```
 
 2. **Create nginx.conf**
+
 ```nginx
 events {
   worker_connections 1024;
@@ -140,27 +149,27 @@ events {
 
 http {
   include /etc/nginx/mime.types;
-  
+
   server {
     listen 80;
     server_name localhost;
     root /usr/share/nginx/html;
     index index.html;
-    
+
     # Gzip compression
     gzip on;
     gzip_types text/plain text/css application/json application/javascript;
-    
+
     # Service Worker
     location /sw.js {
       add_header Cache-Control "public, max-age=0, must-revalidate";
     }
-    
+
     # Static assets
     location /static/ {
       add_header Cache-Control "public, max-age=31536000, immutable";
     }
-    
+
     # SPA routing
     location / {
       try_files $uri $uri/ /index.html;
@@ -170,6 +179,7 @@ http {
 ```
 
 3. **Build and Run**
+
 ```bash
 docker build -t quantum-read-flow .
 docker run -p 80:80 quantum-read-flow
@@ -178,6 +188,7 @@ docker run -p 80:80 quantum-read-flow
 ## 🔧 Production Optimizations
 
 ### 1. Performance Budget
+
 ```json
 {
   "budget": [
@@ -197,6 +208,7 @@ docker run -p 80:80 quantum-read-flow
 ### 2. CDN Configuration
 
 #### Cloudflare
+
 - Enable "Auto Minify" for CSS, JS, HTML
 - Enable "Brotli" compression
 - Set caching rules:
@@ -205,6 +217,7 @@ docker run -p 80:80 quantum-read-flow
   - `/*.html`: Edge TTL: 4 hours
 
 #### AWS CloudFront
+
 ```json
 {
   "DistributionConfig": {
@@ -228,16 +241,19 @@ docker run -p 80:80 quantum-read-flow
 ### 3. Environment-Specific Builds
 
 **Development**
+
 ```bash
 npm run build:dev  # Source maps, detailed errors
 ```
 
 **Staging**
+
 ```bash
 VITE_ENVIRONMENT=staging npm run build
 ```
 
 **Production**
+
 ```bash
 VITE_ENVIRONMENT=production npm run build
 ```
@@ -245,19 +261,21 @@ VITE_ENVIRONMENT=production npm run build
 ## 📊 Monitoring & Analytics
 
 ### 1. Error Tracking
+
 ```typescript
 // Add to App.tsx
-import * as Sentry from "@sentry/react";
+import * as Sentry from '@sentry/react';
 
 if (import.meta.env.PROD) {
   Sentry.init({
-    dsn: "YOUR_SENTRY_DSN",
+    dsn: 'YOUR_SENTRY_DSN',
     environment: import.meta.env.VITE_ENVIRONMENT,
   });
 }
 ```
 
 ### 2. Performance Monitoring
+
 ```typescript
 // Web Vitals
 import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
@@ -270,6 +288,7 @@ getTTFB(console.log);
 ```
 
 ### 3. Analytics
+
 ```typescript
 // Google Analytics 4
 gtag('config', 'GA_MEASUREMENT_ID', {
@@ -281,17 +300,22 @@ gtag('config', 'GA_MEASUREMENT_ID', {
 ## 🔒 Security
 
 ### 1. Content Security Policy
+
 ```html
-<meta http-equiv="Content-Security-Policy" content="
+<meta
+  http-equiv="Content-Security-Policy"
+  content="
   default-src 'self';
   script-src 'self' 'unsafe-inline' https://apis.google.com;
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
   img-src 'self' data: https:;
   connect-src 'self' https://your-supabase-url.supabase.co;
-">
+"
+/>
 ```
 
 ### 2. Security Headers
+
 ```nginx
 add_header X-Frame-Options "SAMEORIGIN" always;
 add_header X-Content-Type-Options "nosniff" always;
@@ -302,6 +326,7 @@ add_header Permissions-Policy "camera=(), microphone=(), geolocation=()";
 ## 🗄️ Database Migrations
 
 ### Pre-deployment Checklist
+
 ```bash
 # 1. Backup production database
 supabase db dump --db-url="$PROD_DATABASE_URL" > backup.sql
@@ -319,6 +344,7 @@ supabase db push --db-url="$PROD_DATABASE_URL"
 ## 🚀 CI/CD Pipeline
 
 ### GitHub Actions Deployment
+
 ```yaml
 name: Deploy to Production
 
@@ -331,25 +357,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
-          
+
       - name: Install dependencies
         run: npm ci
-        
+
       - name: Run tests
         run: npm run test:run
-        
+
       - name: Build
         run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-          
+
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25
         with:
@@ -378,11 +404,13 @@ jobs:
 ### Common Issues
 
 1. **Service Worker not updating**
+
    - Clear browser cache
    - Check cache headers
    - Verify SW registration
 
 2. **Build failures**
+
    - Check Node.js version
    - Clear node_modules and reinstall
    - Verify environment variables
@@ -393,6 +421,7 @@ jobs:
    - Audit with Lighthouse
 
 ### Useful Commands
+
 ```bash
 # Analyze bundle
 npm run build:analyze
@@ -410,6 +439,7 @@ npx lighthouse https://your-domain.com --view
 ## 📞 Support
 
 For deployment issues:
+
 1. Check GitHub Issues
 2. Review deployment logs
 3. Consult platform documentation

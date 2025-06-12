@@ -14,14 +14,21 @@ const BootstrapAdmin = () => {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [targetEmail, setTargetEmail] = useState(user?.email || '');
-  const [results, setResults] = useState<Array<{
-    action: string;
-    status: 'success' | 'error' | 'info';
-    message: string;
-    details?: unknown;
-  }>>([]);
+  const [results, setResults] = useState<
+    Array<{
+      action: string;
+      status: 'success' | 'error' | 'info';
+      message: string;
+      details?: unknown;
+    }>
+  >([]);
 
-  const addResult = (action: string, status: 'success' | 'error' | 'info', message: string, details?: unknown) => {
+  const addResult = (
+    action: string,
+    status: 'success' | 'error' | 'info',
+    message: string,
+    details?: unknown
+  ) => {
     setResults(prev => [...prev, { action, status, message, details }]);
   };
 
@@ -37,7 +44,7 @@ const BootstrapAdmin = () => {
     try {
       // Step 1: Find the user
       addResult('User Lookup', 'info', `Looking up user: ${targetEmail}`, null);
-      
+
       const { data: users, error: userError } = await supabase
         .from('profiles')
         .select('id, email, first_name, last_name')
@@ -55,11 +62,21 @@ const BootstrapAdmin = () => {
       }
 
       const targetUser = users[0];
-      addResult('User Lookup', 'success', `User found: ${targetUser.first_name || targetUser.last_name || targetUser.email}`, targetUser);
+      addResult(
+        'User Lookup',
+        'success',
+        `User found: ${targetUser.first_name || targetUser.last_name || targetUser.email}`,
+        targetUser
+      );
 
       // Step 2: Directly insert admin role (handle constraint issues)
-      addResult('Admin Creation', 'info', `Making ${targetEmail} an admin via direct table operations...`, null);
-      
+      addResult(
+        'Admin Creation',
+        'info',
+        `Making ${targetEmail} an admin via direct table operations...`,
+        null
+      );
+
       // First check if user already has a role
       const { data: existingRole, error: checkError } = await supabase
         .from('user_roles')
@@ -68,7 +85,12 @@ const BootstrapAdmin = () => {
         .maybeSingle();
 
       if (checkError) {
-        addResult('Role Check', 'error', `Error checking existing role: ${checkError.message}`, checkError);
+        addResult(
+          'Role Check',
+          'error',
+          `Error checking existing role: ${checkError.message}`,
+          checkError
+        );
       }
 
       if (existingRole) {
@@ -78,13 +100,23 @@ const BootstrapAdmin = () => {
           .from('user_roles')
           .update({
             role: 'admin',
-            assigned_at: new Date().toISOString()
+            assigned_at: new Date().toISOString(),
           })
           .eq('user_id', targetUser.id);
 
         if (updateError) {
-          addResult('Admin Creation', 'error', `Error updating role: ${updateError.message}`, updateError);
-          addResult('Manual SQL', 'info', `Run this in Supabase SQL Editor: UPDATE user_roles SET role = 'admin', assigned_at = NOW() WHERE user_id = '${targetUser.id}';`, null);
+          addResult(
+            'Admin Creation',
+            'error',
+            `Error updating role: ${updateError.message}`,
+            updateError
+          );
+          addResult(
+            'Manual SQL',
+            'info',
+            `Run this in Supabase SQL Editor: UPDATE user_roles SET role = 'admin', assigned_at = NOW() WHERE user_id = '${targetUser.id}';`,
+            null
+          );
           return;
         }
       } else {
@@ -95,38 +127,67 @@ const BootstrapAdmin = () => {
           .insert({
             user_id: targetUser.id,
             role: 'admin',
-            assigned_at: new Date().toISOString()
+            assigned_at: new Date().toISOString(),
           });
 
         if (insertError) {
-          addResult('Admin Creation', 'error', `Error creating role: ${insertError.message}`, insertError);
-          addResult('Manual SQL', 'info', `Run this in Supabase SQL Editor: INSERT INTO user_roles (user_id, role, assigned_at) VALUES ('${targetUser.id}', 'admin', NOW());`, null);
+          addResult(
+            'Admin Creation',
+            'error',
+            `Error creating role: ${insertError.message}`,
+            insertError
+          );
+          addResult(
+            'Manual SQL',
+            'info',
+            `Run this in Supabase SQL Editor: INSERT INTO user_roles (user_id, role, assigned_at) VALUES ('${targetUser.id}', 'admin', NOW());`,
+            null
+          );
           return;
         }
       }
 
       addResult('Admin Creation', 'success', `Successfully made ${targetEmail} an admin!`, null);
-        
-        // Step 3: Verify the admin role was created
-        addResult('Verification', 'info', 'Verifying admin role...', null);
-        const { data: roleCheck, error: verifyError } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', targetUser.id)
-          .single();
 
-        if (verifyError) {
-          addResult('Verification', 'error', `Error checking admin role: ${verifyError.message}`, verifyError);
-        } else if (roleCheck?.role === 'admin') {
-          addResult('Verification', 'success', '✅ Admin privileges confirmed!', roleCheck);
-          addResult('Next Steps', 'info', 'You can now access the admin dashboard. Refresh your browser if needed.', null);
-          addResult('Admin Dashboard', 'info', 'Go to: /admin to access admin features', null);
-        } else {
-          addResult('Verification', 'error', 'Admin verification failed - role not set correctly', roleCheck);
-        }
+      // Step 3: Verify the admin role was created
+      addResult('Verification', 'info', 'Verifying admin role...', null);
+      const { data: roleCheck, error: verifyError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', targetUser.id)
+        .single();
 
+      if (verifyError) {
+        addResult(
+          'Verification',
+          'error',
+          `Error checking admin role: ${verifyError.message}`,
+          verifyError
+        );
+      } else if (roleCheck?.role === 'admin') {
+        addResult('Verification', 'success', '✅ Admin privileges confirmed!', roleCheck);
+        addResult(
+          'Next Steps',
+          'info',
+          'You can now access the admin dashboard. Refresh your browser if needed.',
+          null
+        );
+        addResult('Admin Dashboard', 'info', 'Go to: /admin to access admin features', null);
+      } else {
+        addResult(
+          'Verification',
+          'error',
+          'Admin verification failed - role not set correctly',
+          roleCheck
+        );
+      }
     } catch (error) {
-      addResult('Unexpected Error', 'error', `Unexpected error: ${(error as Error).message}`, error);
+      addResult(
+        'Unexpected Error',
+        'error',
+        `Unexpected error: ${(error as Error).message}`,
+        error
+      );
     } finally {
       setIsLoading(false);
     }
@@ -181,7 +242,8 @@ const BootstrapAdmin = () => {
                 Grant Admin Privileges
               </CardTitle>
               <CardDescription>
-                Grant admin privileges to make yourself or another user an admin. Admin users can access all features including user management, analytics, and system settings.
+                Grant admin privileges to make yourself or another user an admin. Admin users can
+                access all features including user management, analytics, and system settings.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -200,29 +262,21 @@ const BootstrapAdmin = () => {
                     type="email"
                     placeholder="Enter email address"
                     value={targetEmail}
-                    onChange={(e) => setTargetEmail(e.target.value)}
+                    onChange={e => setTargetEmail(e.target.value)}
                     className="flex-1"
                   />
                   {user?.email && (
-                    <Button
-                      variant="outline"
-                      onClick={makeSelfAdmin}
-                      className="shrink-0"
-                    >
+                    <Button variant="outline" onClick={makeSelfAdmin} className="shrink-0">
                       <User className="h-4 w-4 mr-2" />
                       Make Me Admin
                     </Button>
                   )}
                 </div>
-                {user?.email && (
-                  <p className="text-xs text-gray-600">
-                    Current user: {user.email}
-                  </p>
-                )}
+                {user?.email && <p className="text-xs text-gray-600">Current user: {user.email}</p>}
               </div>
 
-                <Button 
-                onClick={makeAdmin} 
+              <Button
+                onClick={makeAdmin}
                 disabled={isLoading || !targetEmail}
                 className="btn-primary w-full"
               >
@@ -243,7 +297,7 @@ const BootstrapAdmin = () => {
                 <div className="space-y-3">
                   <div className="border-t pt-4">
                     <h3 className="font-semibold mb-3">Results</h3>
-                    
+
                     {results.map((result, index) => (
                       <div
                         key={index}
@@ -276,7 +330,9 @@ const BootstrapAdmin = () => {
                 <h4 className="font-medium text-blue-900 mb-2">After Becoming Admin:</h4>
                 <ul className="text-sm text-blue-800 space-y-1">
                   <li>• Refresh your browser to see the changes</li>
-                  <li>• Navigate to <code>/admin</code> to access the full admin dashboard</li>
+                  <li>
+                    • Navigate to <code>/admin</code> to access the full admin dashboard
+                  </li>
                   <li>• Use the Migration tool to set up your database</li>
                   <li>• Use Auth Test tools to verify everything works</li>
                 </ul>

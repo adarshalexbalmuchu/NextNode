@@ -22,7 +22,7 @@ const preloadRouteComponents = {
     // Preload frequently accessed components
     import('@/components/FeaturedPosts');
     import('@/components/BlogCard');
-  }
+  },
 };
 
 // Mouse/touch position tracking for predictive preloading
@@ -36,23 +36,23 @@ const ComponentPreloader = () => {
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const currentPosition = { x: e.clientX, y: e.clientY };
-      
+
       // Calculate velocity
       mouseVelocity = {
         x: currentPosition.x - lastMousePosition.x,
-        y: currentPosition.y - lastMousePosition.y
+        y: currentPosition.y - lastMousePosition.y,
       };
-      
+
       lastMousePosition = currentPosition;
     };
 
     const handleLinkHover = (e: Event) => {
       const target = e.target as HTMLElement;
       const link = target.closest('a[href]') as HTMLAnchorElement;
-      
+
       if (link && link.href) {
         const href = new URL(link.href).pathname;
-        
+
         // Preload components based on hovered link
         if (href.startsWith('/admin')) {
           preloadRouteComponents['/admin']?.();
@@ -79,7 +79,7 @@ const ComponentPreloader = () => {
   // Route-based preloading
   useEffect(() => {
     const currentRoute = location.pathname;
-    
+
     // Preload components for current route
     Object.entries(preloadRouteComponents).forEach(([route, preloadFn]) => {
       if (currentRoute.startsWith(route) || currentRoute === route) {

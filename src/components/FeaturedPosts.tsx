@@ -1,13 +1,12 @@
-
-import BlogCard from "./BlogCard";
-import { usePosts } from "@/hooks/usePosts";
-import { format } from "date-fns";
-import { SkeletonCard } from "@/components/ui/skeleton";
-import LoadingSpinner from "@/components/LoadingSpinner";
-import ErrorFallback from "@/components/ErrorFallback";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import BlogCard from './BlogCard';
+import { usePosts } from '@/hooks/usePosts';
+import { format } from 'date-fns';
+import { SkeletonCard } from '@/components/ui/skeleton';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import ErrorFallback from '@/components/ErrorFallback';
+import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const FeaturedPosts = () => {
   const { data: posts, isLoading, error } = usePosts(true);
@@ -21,13 +20,14 @@ const FeaturedPosts = () => {
               Featured <span className="text-primary text-glow">Guides</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Practical AI tools, career strategies, and step-by-step guides to accelerate your professional growth.
+              Practical AI tools, career strategies, and step-by-step guides to accelerate your
+              professional growth.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[...Array(6)].map((_, index) => (
-              <div 
+              <div
                 key={index}
                 className="animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
@@ -36,11 +36,11 @@ const FeaturedPosts = () => {
               </div>
             ))}
           </div>
-          
+
           <div className="text-center mt-16">
-            <LoadingSpinner 
-              size="md" 
-              text="Loading featured guides..." 
+            <LoadingSpinner
+              size="md"
+              text="Loading featured guides..."
               variant="gradient"
               timeout={10000}
             />
@@ -59,10 +59,11 @@ const FeaturedPosts = () => {
               Featured <span className="text-primary text-glow">Guides</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Practical AI tools, career strategies, and step-by-step guides to accelerate your professional growth.
+              Practical AI tools, career strategies, and step-by-step guides to accelerate your
+              professional growth.
             </p>
           </div>
-          
+
           <ErrorFallback
             error={error as Error}
             resetError={() => window.location.reload()}
@@ -83,19 +84,20 @@ const FeaturedPosts = () => {
             Featured <span className="text-primary text-glow">Guides</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Practical AI tools, career strategies, and step-by-step guides to accelerate your professional growth.
+            Practical AI tools, career strategies, and step-by-step guides to accelerate your
+            professional growth.
           </p>
         </div>
 
         {/* Featured Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts?.map((post, index) => (
-            <div 
+            <div
               key={post.id}
               className="animate-fade-in"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <BlogCard 
+              <BlogCard
                 title={post.title}
                 excerpt={post.excerpt || ''}
                 readTime={`${post.read_time} min`}

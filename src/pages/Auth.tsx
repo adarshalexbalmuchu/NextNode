@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -124,11 +123,7 @@ const Auth = () => {
                         required
                       />
                     </div>
-                    <Button
-                      type="submit"
-                      className="w-full"
-                      disabled={loading}
-                    >
+                    <Button type="submit" className="w-full" disabled={loading}>
                       {loading ? 'Signing in...' : 'Sign In'}
                     </Button>
                   </form>
@@ -139,19 +134,11 @@ const Auth = () => {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="firstName">First Name</Label>
-                        <Input
-                          id="firstName"
-                          name="firstName"
-                          placeholder="John"
-                        />
+                        <Input id="firstName" name="firstName" placeholder="John" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="lastName">Last Name</Label>
-                        <Input
-                          id="lastName"
-                          name="lastName"
-                          placeholder="Doe"
-                        />
+                        <Input id="lastName" name="lastName" placeholder="Doe" />
                       </div>
                     </div>
                     <div className="space-y-2">
@@ -174,11 +161,7 @@ const Auth = () => {
                         required
                       />
                     </div>
-                    <Button
-                      type="submit"
-                      className="w-full"
-                      disabled={loading}
-                    >
+                    <Button type="submit" className="w-full" disabled={loading}>
                       {loading ? 'Creating account...' : 'Create Account'}
                     </Button>
                   </form>

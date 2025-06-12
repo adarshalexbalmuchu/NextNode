@@ -29,6 +29,7 @@ A modern platform empowering students and professionals with AI tools, career in
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 - Supabase project set up
 
@@ -55,12 +56,14 @@ npm run dev
 The project includes comprehensive database migrations for automatic profile creation and row-level security policies.
 
 ### Option 1: Automatic Setup (Recommended)
+
 ```bash
 # Run the setup script
 ./supabase/setup.sh
 ```
 
 ### Option 2: Manual Setup
+
 1. Go to your Supabase Dashboard
 2. Navigate to SQL Editor
 3. Execute the migration files in order:
@@ -68,6 +71,7 @@ The project includes comprehensive database migrations for automatic profile cre
    - `supabase/migrations/002_functions.sql`
 
 ### What's Included
+
 - ✅ Automatic profile creation on user signup
 - ✅ Row-level security policies for all tables
 - ✅ Role-based access control (Admin, Author, User)
@@ -77,6 +81,7 @@ The project includes comprehensive database migrations for automatic profile cre
 ## 🏗️ Architecture
 
 ### Frontend Stack
+
 - **React 18** with TypeScript
 - **Vite** for build tooling
 - **Tailwind CSS** for styling
@@ -85,11 +90,13 @@ The project includes comprehensive database migrations for automatic profile cre
 - **React Query** for state management
 
 ### Backend Stack
+
 - **Supabase** for authentication and database
 - **PostgreSQL** with Row-Level Security
 - **Real-time subscriptions** for live updates
 
 ### Key Components
+
 - `AuthContext` - Authentication state management
 - `ProtectedRoute` - Route-level access control
 - `AdminDashboard` - User and content management
@@ -107,17 +114,20 @@ The project includes comprehensive database migrations for automatic profile cre
 ## 👥 User Roles
 
 ### Admin
+
 - Full access to all features
 - User management and role assignment
 - Content moderation and management
 - Analytics and reporting
 
 ### Author
+
 - Create and manage blog posts
 - Comment on posts
 - View own analytics
 
 ### User (Default)
+
 - Read published posts
 - Comment and reply to posts
 - Track reading progress

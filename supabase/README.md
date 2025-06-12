@@ -5,12 +5,14 @@ This directory contains the SQL migration files needed to set up the complete au
 ## Migration Files
 
 ### 001_initial_setup.sql
+
 - Enables Row Level Security (RLS) on all tables
 - Creates automatic profile creation trigger
 - Sets up comprehensive RLS policies for all tables
 - Configures proper permissions for authenticated users
 
 ### 002_functions.sql
+
 - Database functions for user role management
 - Post creation and management functions
 - View tracking and analytics functions
@@ -19,11 +21,13 @@ This directory contains the SQL migration files needed to set up the complete au
 ## Key Features Implemented
 
 ### 1. Automatic Profile Creation
+
 - Trigger automatically creates user profile on signup
 - Assigns default 'user' role to new users
 - Extracts first_name and last_name from auth metadata
 
 ### 2. Row-Level Security Policies
+
 - **Profiles**: Users can view/edit own profile, admins see all
 - **User Roles**: Users see own role, admins manage all roles
 - **Posts**: Public posts visible to all, authors manage own posts
@@ -33,11 +37,13 @@ This directory contains the SQL migration files needed to set up the complete au
 - **Reading Progress**: User-specific tracking
 
 ### 3. Role-Based Access Control
+
 - **Admin**: Full access to all resources
 - **Author**: Can create/manage posts and comments
 - **User**: Can comment and track reading progress
 
 ### 4. Database Functions
+
 - `get_user_role()`: Get current user role
 - `has_role()`: Check role permissions with hierarchy
 - `increment_post_views()`: Track post analytics
@@ -47,6 +53,7 @@ This directory contains the SQL migration files needed to set up the complete au
 ## Deployment Instructions
 
 ### Option 1: Using Supabase CLI
+
 ```bash
 # Install Supabase CLI if not already installed
 npm install -g @supabase/cli
@@ -62,13 +69,16 @@ supabase db push
 ```
 
 ### Option 2: Manual Deployment
+
 1. Go to your Supabase Dashboard
 2. Navigate to SQL Editor
 3. Copy and execute the contents of `001_initial_setup.sql`
 4. Copy and execute the contents of `002_functions.sql`
 
 ### Option 3: Using Migration Files
+
 If you have an existing Supabase setup with migrations:
+
 1. Copy these files to your `supabase/migrations/` directory
 2. Run `supabase db push` to apply the migrations
 
@@ -77,19 +87,22 @@ If you have an existing Supabase setup with migrations:
 After applying the migrations, verify the setup:
 
 1. **Test Profile Creation**:
+
    - Sign up a new user through your app
    - Check that profile and user_role records are created automatically
 
 2. **Test RLS Policies**:
+
    - Try accessing data with different user roles
    - Verify that permissions work as expected
 
 3. **Test Functions**:
+
    ```sql
    -- Test role checking
    SELECT get_user_role('user-id-here');
    SELECT has_role('user-id-here', 'author');
-   
+
    -- Test post view increment
    SELECT increment_post_views('some-post-slug');
    ```

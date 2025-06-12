@@ -1,11 +1,17 @@
-
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Search, Plus, Edit, Trash2, Eye, Image as ImageIcon } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
@@ -45,19 +51,22 @@ const PostManagement = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('posts')
-        .select(`
+        .select(
+          `
           *,
           categories(name, color)
-        `)
+        `
+        )
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      
+
       // Transform the data to match our Post type
-      const transformedData = data?.map(post => ({
-        ...post,
-        profiles: null, // We'll handle author lookup separately if needed
-      })) || [];
+      const transformedData =
+        data?.map(post => ({
+          ...post,
+          profiles: null, // We'll handle author lookup separately if needed
+        })) || [];
 
       return transformedData as Post[];
     },
@@ -65,57 +74,52 @@ const PostManagement = () => {
 
   const deletePostMutation = useMutation({
     mutationFn: async (postId: string) => {
-      const { error } = await supabase
-        .from('posts')
-        .delete()
-        .eq('id', postId);
+      const { error } = await supabase.from('posts').delete().eq('id', postId);
 
       if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-posts'] });
       toast({
-        title: "Success",
-        description: "Post deleted successfully",
+        title: 'Success',
+        description: 'Post deleted successfully',
       });
     },
     onError: () => {
       toast({
-        title: "Error",
-        description: "Failed to delete post",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to delete post',
+        variant: 'destructive',
       });
     },
   });
 
   const togglePublishMutation = useMutation({
     mutationFn: async ({ postId, published }: { postId: string; published: boolean }) => {
-      const { error } = await supabase
-        .from('posts')
-        .update({ published })
-        .eq('id', postId);
+      const { error } = await supabase.from('posts').update({ published }).eq('id', postId);
 
       if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-posts'] });
       toast({
-        title: "Success",
-        description: "Post status updated successfully",
+        title: 'Success',
+        description: 'Post status updated successfully',
       });
     },
     onError: () => {
       toast({
-        title: "Error",
-        description: "Failed to update post status",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to update post status',
+        variant: 'destructive',
       });
     },
   });
 
-  const filteredPosts = posts?.filter(post =>
-    post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    post.author.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPosts = posts?.filter(
+    post =>
+      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.author.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const getAuthorName = (post: Post) => {
@@ -144,9 +148,7 @@ const PostManagement = () => {
     <Card className="glass-panel">
       <CardHeader>
         <CardTitle>Post Management</CardTitle>
-        <CardDescription>
-          Manage blog posts, drafts, and publication status
-        </CardDescription>
+        <CardDescription>Manage blog posts, drafts, and publication status</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex items-center justify-between mb-6">
@@ -155,7 +157,7 @@ const PostManagement = () => {
             <Input
               placeholder="Search posts..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={e => setSearchTerm(e.target.value)}
               className="pl-10"
             />
           </div>
@@ -180,7 +182,7 @@ const PostManagement = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredPosts?.map((post) => (
+              {filteredPosts?.map(post => (
                 <TableRow key={post.id}>
                   <TableCell>
                     <div className="w-12 h-12 rounded-lg overflow-hidden bg-muted flex items-center justify-center">
@@ -198,19 +200,17 @@ const PostManagement = () => {
                   <TableCell>
                     <div>
                       <div className="font-medium">{post.title}</div>
-                      <div className="text-sm text-muted-foreground">
-                        /{post.slug}
-                      </div>
+                      <div className="text-sm text-muted-foreground">/{post.slug}</div>
                     </div>
                   </TableCell>
                   <TableCell>{getAuthorName(post)}</TableCell>
                   <TableCell>
                     {post.categories && (
-                      <Badge 
+                      <Badge
                         variant="outline"
-                        style={{ 
+                        style={{
                           borderColor: post.categories.color,
-                          color: post.categories.color 
+                          color: post.categories.color,
                         }}
                       >
                         {post.categories.name}
@@ -219,12 +219,10 @@ const PostManagement = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Badge variant={post.published ? "default" : "secondary"}>
-                        {post.published ? "Published" : "Draft"}
+                      <Badge variant={post.published ? 'default' : 'secondary'}>
+                        {post.published ? 'Published' : 'Draft'}
                       </Badge>
-                      {post.featured && (
-                        <Badge variant="outline">Featured</Badge>
-                      )}
+                      {post.featured && <Badge variant="outline">Featured</Badge>}
                     </div>
                   </TableCell>
                   <TableCell>
@@ -233,26 +231,26 @@ const PostManagement = () => {
                       {post.view_count || 0}
                     </div>
                   </TableCell>
-                  <TableCell>
-                    {new Date(post.created_at).toLocaleDateString()}
-                  </TableCell>
+                  <TableCell>{new Date(post.created_at).toLocaleDateString()}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => togglePublishMutation.mutate({
-                          postId: post.id,
-                          published: !post.published,
-                        })}
+                        onClick={() =>
+                          togglePublishMutation.mutate({
+                            postId: post.id,
+                            published: !post.published,
+                          })
+                        }
                       >
-                        {post.published ? "Unpublish" : "Publish"}
+                        {post.published ? 'Unpublish' : 'Publish'}
                       </Button>
                       <Button variant="outline" size="sm">
                         <Edit className="w-4 h-4" />
                       </Button>
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="sm"
                         onClick={() => deletePostMutation.mutate(post.id)}
                       >

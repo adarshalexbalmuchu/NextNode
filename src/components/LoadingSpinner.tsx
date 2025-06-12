@@ -1,4 +1,3 @@
-
 import { Loader2, Wifi, WifiOff, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -15,16 +14,16 @@ interface LoadingSpinnerProps {
   onTimeout?: () => void;
 }
 
-const LoadingSpinner = ({ 
-  size = 'md', 
-  className, 
-  text, 
+const LoadingSpinner = ({
+  size = 'md',
+  className,
+  text,
   'aria-label': ariaLabel,
   variant = 'spinner',
   showProgress = false,
   progress = 0,
   timeout,
-  onTimeout
+  onTimeout,
 }: LoadingSpinnerProps) => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [hasTimedOut, setHasTimedOut] = useState(false);
@@ -32,13 +31,13 @@ const LoadingSpinner = ({
   const sizeClasses = {
     sm: 'h-4 w-4',
     md: 'h-8 w-8',
-    lg: 'h-12 w-12'
+    lg: 'h-12 w-12',
   };
 
   const textSizeClasses = {
     sm: 'text-xs',
     md: 'text-sm',
-    lg: 'text-base'
+    lg: 'text-base',
   };
 
   // Monitor online status
@@ -70,17 +69,17 @@ const LoadingSpinner = ({
   // Show timeout state
   if (hasTimedOut) {
     return (
-      <div 
-        className={cn("flex flex-col items-center justify-center gap-3 p-4", className)}
+      <div
+        className={cn('flex flex-col items-center justify-center gap-3 p-4', className)}
         role="status"
         aria-live="polite"
       >
-        <AlertCircle className={cn("text-yellow-500", sizeClasses[size])} aria-hidden="true" />
+        <AlertCircle className={cn('text-yellow-500', sizeClasses[size])} aria-hidden="true" />
         <div className="text-center">
-          <p className={cn("font-medium text-yellow-600 mb-1", textSizeClasses[size])}>
+          <p className={cn('font-medium text-yellow-600 mb-1', textSizeClasses[size])}>
             Taking longer than expected
           </p>
-          <p className={cn("text-muted-foreground", textSizeClasses[size])}>
+          <p className={cn('text-muted-foreground', textSizeClasses[size])}>
             Please check your connection and try again
           </p>
         </div>
@@ -92,17 +91,17 @@ const LoadingSpinner = ({
   // Show offline state
   if (!isOnline) {
     return (
-      <div 
-        className={cn("flex flex-col items-center justify-center gap-3 p-4", className)}
+      <div
+        className={cn('flex flex-col items-center justify-center gap-3 p-4', className)}
         role="status"
         aria-live="polite"
       >
-        <WifiOff className={cn("text-red-500", sizeClasses[size])} aria-hidden="true" />
+        <WifiOff className={cn('text-red-500', sizeClasses[size])} aria-hidden="true" />
         <div className="text-center">
-          <p className={cn("font-medium text-red-600 mb-1", textSizeClasses[size])}>
+          <p className={cn('font-medium text-red-600 mb-1', textSizeClasses[size])}>
             No internet connection
           </p>
-          <p className={cn("text-muted-foreground", textSizeClasses[size])}>
+          <p className={cn('text-muted-foreground', textSizeClasses[size])}>
             Check your connection and try again
           </p>
         </div>
@@ -115,41 +114,35 @@ const LoadingSpinner = ({
     switch (variant) {
       case 'pulse':
         return (
-          <div 
-            className={cn(
-              "rounded-full bg-primary animate-pulse", 
-              sizeClasses[size]
-            )}
+          <div
+            className={cn('rounded-full bg-primary animate-pulse', sizeClasses[size])}
             aria-hidden="true"
           />
         );
-      
+
       case 'gradient':
         return (
-          <div 
+          <div
             className={cn(
-              "rounded-full bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_100%] animate-gradient",
+              'rounded-full bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_100%] animate-gradient',
               sizeClasses[size]
             )}
             aria-hidden="true"
           />
         );
-      
+
       case 'skeleton':
         return (
-          <div 
-            className={cn(
-              "rounded bg-muted animate-pulse",
-              sizeClasses[size]
-            )}
+          <div
+            className={cn('rounded bg-muted animate-pulse', sizeClasses[size])}
             aria-hidden="true"
           />
         );
-      
+
       default:
         return (
-          <Loader2 
-            className={cn("animate-spin text-primary", sizeClasses[size])} 
+          <Loader2
+            className={cn('animate-spin text-primary', sizeClasses[size])}
             aria-hidden="true"
           />
         );
@@ -157,20 +150,20 @@ const LoadingSpinner = ({
   };
 
   return (
-    <div 
-      className={cn("flex flex-col items-center justify-center gap-2", className)}
+    <div
+      className={cn('flex flex-col items-center justify-center gap-2', className)}
       role="status"
       aria-live="polite"
-      aria-label={ariaLabel || text || "Loading content"}
+      aria-label={ariaLabel || text || 'Loading content'}
     >
       <div className="relative">
         {renderLoader()}
-        
+
         {/* Progress indicator */}
         {showProgress && (
           <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2">
             <div className="w-16 h-1 bg-muted rounded-full overflow-hidden">
-              <div 
+              <div
                 className="h-full bg-primary transition-all duration-300 ease-out"
                 style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
                 aria-hidden="true"
@@ -184,15 +177,13 @@ const LoadingSpinner = ({
       <div className="flex items-center gap-1">
         <Wifi className="w-3 h-3 text-green-500" aria-hidden="true" />
         {text && (
-          <p className={cn("text-muted-foreground", textSizeClasses[size])} aria-hidden="true">
+          <p className={cn('text-muted-foreground', textSizeClasses[size])} aria-hidden="true">
             {text}
           </p>
         )}
       </div>
 
-      <span className="sr-only">
-        {ariaLabel || text || "Loading, please wait"}
-      </span>
+      <span className="sr-only">{ariaLabel || text || 'Loading, please wait'}</span>
     </div>
   );
 };

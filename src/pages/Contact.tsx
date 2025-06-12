@@ -8,7 +8,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Mail, MessageSquare, Send, MapPin, Clock } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -23,13 +29,13 @@ const Contact = () => {
     lastName: '',
     email: '',
     subject: '',
-    message: ''
+    message: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    { label: 'Contact', href: '/contact' }
+    { label: 'Contact', href: '/contact' },
   ];
 
   const validateForm = () => {
@@ -73,7 +79,7 @@ const Contact = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       setSubmitStatus('error');
       return;
@@ -84,10 +90,10 @@ const Contact = () => {
 
     try {
       const result = await submitContactForm(formData);
-      
+
       if (result.success) {
         setSubmitStatus('success');
-        
+
         // Reset form after success
         setTimeout(() => {
           setSubmitStatus('idle');
@@ -96,19 +102,19 @@ const Contact = () => {
             lastName: '',
             email: '',
             subject: '',
-            message: ''
+            message: '',
           });
         }, 4000);
       } else {
         setSubmitStatus('error');
         setErrors({ submit: result.message });
       }
-      
     } catch (error) {
       console.error('Form submission error:', error);
       setSubmitStatus('error');
-      setErrors({ 
-        submit: 'An unexpected error occurred. Please try again or contact us directly at nextnode.ai@gmail.com' 
+      setErrors({
+        submit:
+          'An unexpected error occurred. Please try again or contact us directly at nextnode.ai@gmail.com',
       });
     } finally {
       setIsSubmitting(false);
@@ -119,21 +125,21 @@ const Contact = () => {
     <div className="min-h-screen w-full">
       <Background />
       <Header />
-      
+
       <main className="container mx-auto px-6 py-20">
         <div className="max-w-6xl mx-auto">
           {/* Breadcrumb Navigation */}
           <div className="mb-8">
             <BreadcrumbNav items={breadcrumbItems} />
           </div>
-          
+
           {/* Hero Section */}
           <div className="text-center mb-12 sm:mb-16">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight px-2 sm:px-0">
               Get in <span className="text-primary text-glow">Touch</span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto px-2 sm:px-0">
-              Have a question, suggestion, or want to collaborate? We'd love to hear from you. 
+              Have a question, suggestion, or want to collaborate? We'd love to hear from you.
               <br className="hidden sm:block" />
               Reach out and let's explore the future of AI together.
             </p>
@@ -162,13 +168,14 @@ const Contact = () => {
                     </Alert>
                   )}
 
-                  {submitStatus === 'error' && (errors.submit || Object.keys(errors).length > 0) && (
-                    <Alert className="mb-6 border-red-500 text-red-700 dark:border-red-400 dark:text-red-300">
-                      <AlertDescription>
-                        {errors.submit || 'Please fix the following errors and try again.'}
-                      </AlertDescription>
-                    </Alert>
-                  )}
+                  {submitStatus === 'error' &&
+                    (errors.submit || Object.keys(errors).length > 0) && (
+                      <Alert className="mb-6 border-red-500 text-red-700 dark:border-red-400 dark:text-red-300">
+                        <AlertDescription>
+                          {errors.submit || 'Please fix the following errors and try again.'}
+                        </AlertDescription>
+                      </Alert>
+                    )}
 
                   <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6" noValidate>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -180,11 +187,11 @@ const Contact = () => {
                           id="firstName"
                           name="firstName"
                           value={formData.firstName}
-                          onChange={(e) => handleInputChange('firstName', e.target.value)}
+                          onChange={e => handleInputChange('firstName', e.target.value)}
                           placeholder="John"
                           required
                           className={`min-h-[44px] ${errors.firstName ? 'border-red-500 focus:border-red-500' : ''}`}
-                          aria-describedby={errors.firstName ? "firstName-error" : "firstName-help"}
+                          aria-describedby={errors.firstName ? 'firstName-error' : 'firstName-help'}
                           aria-invalid={!!errors.firstName}
                         />
                         {errors.firstName && (
@@ -201,11 +208,11 @@ const Contact = () => {
                           id="lastName"
                           name="lastName"
                           value={formData.lastName}
-                          onChange={(e) => handleInputChange('lastName', e.target.value)}
+                          onChange={e => handleInputChange('lastName', e.target.value)}
                           placeholder="Doe"
                           required
                           className={`min-h-[44px] ${errors.lastName ? 'border-red-500 focus:border-red-500' : ''}`}
-                          aria-describedby={errors.lastName ? "lastName-error" : "lastName-help"}
+                          aria-describedby={errors.lastName ? 'lastName-error' : 'lastName-help'}
                           aria-invalid={!!errors.lastName}
                         />
                         {errors.lastName && (
@@ -225,11 +232,11 @@ const Contact = () => {
                         name="email"
                         type="email"
                         value={formData.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        onChange={e => handleInputChange('email', e.target.value)}
                         placeholder="john@example.com"
                         required
                         className={`min-h-[44px] ${errors.email ? 'border-red-500 focus:border-red-500' : ''}`}
-                        aria-describedby={errors.email ? "email-error" : "email-help"}
+                        aria-describedby={errors.email ? 'email-error' : 'email-help'}
                         aria-invalid={!!errors.email}
                       />
                       {errors.email && (
@@ -243,14 +250,14 @@ const Contact = () => {
                       <Label htmlFor="subject" className="text-sm font-medium">
                         Subject <span className="text-red-500">*</span>
                       </Label>
-                      <Select 
+                      <Select
                         value={formData.subject}
-                        onValueChange={(value) => handleInputChange('subject', value)}
+                        onValueChange={value => handleInputChange('subject', value)}
                         required
                       >
-                        <SelectTrigger 
+                        <SelectTrigger
                           className={`min-h-[44px] ${errors.subject ? 'border-red-500 focus:border-red-500' : ''}`}
-                          aria-describedby={errors.subject ? "subject-error" : "subject-help"}
+                          aria-describedby={errors.subject ? 'subject-error' : 'subject-help'}
                           aria-invalid={!!errors.subject}
                         >
                           <SelectValue placeholder="What's this about?" />
@@ -279,12 +286,12 @@ const Contact = () => {
                         id="message"
                         name="message"
                         value={formData.message}
-                        onChange={(e) => handleInputChange('message', e.target.value)}
+                        onChange={e => handleInputChange('message', e.target.value)}
                         placeholder="Tell us more about your inquiry... (minimum 10 characters)"
                         rows={6}
                         required
                         className={`min-h-[120px] resize-y ${errors.message ? 'border-red-500 focus:border-red-500' : ''}`}
-                        aria-describedby={errors.message ? "message-error" : "message-help"}
+                        aria-describedby={errors.message ? 'message-error' : 'message-help'}
                         aria-invalid={!!errors.message}
                       />
                       {errors.message && (
@@ -301,11 +308,14 @@ const Contact = () => {
                       type="submit"
                       className="btn-primary w-full min-h-[48px] text-base sm:text-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={isSubmitting}
-                      aria-label={isSubmitting ? "Sending message..." : "Send message"}
+                      aria-label={isSubmitting ? 'Sending message...' : 'Send message'}
                     >
                       {isSubmitting ? (
                         <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2" aria-hidden="true"></div>
+                          <div
+                            className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"
+                            aria-hidden="true"
+                          ></div>
                           Sending...
                         </>
                       ) : (
@@ -332,11 +342,14 @@ const Contact = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-start gap-3">
-                    <Mail className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" aria-hidden="true" />
+                    <Mail
+                      className="w-5 h-5 text-primary mt-0.5 flex-shrink-0"
+                      aria-hidden="true"
+                    />
                     <div>
                       <p className="font-medium text-sm sm:text-base">Email</p>
-                      <a 
-                        href="mailto:nextnode.ai@gmail.com" 
+                      <a
+                        href="mailto:nextnode.ai@gmail.com"
                         className="text-muted-foreground text-sm hover:text-primary transition-colors"
                         aria-label="Send email to nextnode.ai@gmail.com"
                       >
@@ -346,18 +359,25 @@ const Contact = () => {
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <MapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" aria-hidden="true" />
+                    <MapPin
+                      className="w-5 h-5 text-primary mt-0.5 flex-shrink-0"
+                      aria-hidden="true"
+                    />
                     <div>
                       <p className="font-medium text-sm sm:text-base">Address</p>
                       <address className="text-muted-foreground text-sm not-italic">
-                        Ranchi, Jharkhand<br />
+                        Ranchi, Jharkhand
+                        <br />
                         India
                       </address>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <Clock className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" aria-hidden="true" />
+                    <Clock
+                      className="w-5 h-5 text-primary mt-0.5 flex-shrink-0"
+                      aria-hidden="true"
+                    />
                     <div>
                       <p className="font-medium text-sm sm:text-base">Response Time</p>
                       <p className="text-muted-foreground text-sm">Within 24 hours</p>
@@ -381,7 +401,7 @@ const Contact = () => {
           </div>
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );

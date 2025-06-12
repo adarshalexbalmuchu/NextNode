@@ -27,12 +27,12 @@ export const createLazyComponent = <T extends ComponentType<any>>(
 export const preloadComponent = (importFunc: () => Promise<any>) => {
   // Start loading the component
   const componentPromise = importFunc();
-  
+
   // Don't block, just cache the promise
-  componentPromise.catch((error) => {
+  componentPromise.catch(error => {
     console.warn('Failed to preload component:', error);
   });
-  
+
   return componentPromise;
 };
 
@@ -45,13 +45,13 @@ export const createIntersectionObserver = (
     root: null,
     rootMargin: '50px',
     threshold: 0.1,
-    ...options
+    ...options,
   };
 
   if ('IntersectionObserver' in window) {
     return new IntersectionObserver(callback, defaultOptions);
   }
-  
+
   // Fallback for browsers without IntersectionObserver
   return null;
 };
@@ -66,32 +66,36 @@ export const lazyLoadImage = (
     onError?: () => void;
   } = {}
 ) => {
-  const { placeholder = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"/>', onLoad, onError } = options;
-  
+  const {
+    placeholder = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"/>',
+    onLoad,
+    onError,
+  } = options;
+
   // Set placeholder immediately
   img.src = placeholder;
-  
+
   // Create new image to test loading
   const imageLoader = new Image();
-  
+
   imageLoader.onload = () => {
     img.src = src;
     img.classList.add('loaded');
     onLoad?.();
   };
-  
+
   imageLoader.onerror = () => {
     console.warn(`Failed to load image: ${src}`);
     onError?.();
   };
-  
+
   // Start loading
   imageLoader.src = src;
 };
 
 // Resource hints for better performance
 export const addResourceHint = (
-  href: string, 
+  href: string,
   rel: 'preload' | 'prefetch' | 'preconnect' | 'dns-prefetch',
   options: Partial<{
     as: string;
@@ -103,15 +107,15 @@ export const addResourceHint = (
   if (document.querySelector(`link[href="${href}"][rel="${rel}"]`)) {
     return;
   }
-  
+
   const link = document.createElement('link');
   link.rel = rel;
   link.href = href;
-  
+
   if (options.as) link.setAttribute('as', options.as);
   if (options.type) link.setAttribute('type', options.type);
   if (options.crossorigin) link.setAttribute('crossorigin', options.crossorigin);
-  
+
   document.head.appendChild(link);
 };
 
@@ -120,7 +124,7 @@ export const inlineCriticalCSS = (css: string) => {
   const style = document.createElement('style');
   style.textContent = css;
   style.setAttribute('data-critical', 'true');
-  
+
   // Insert before any existing stylesheets
   const firstLink = document.querySelector('link[rel="stylesheet"]');
   if (firstLink) {

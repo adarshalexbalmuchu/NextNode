@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -9,7 +8,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Save, Eye, FileText } from 'lucide-react';
@@ -71,29 +76,27 @@ const CreatePost = () => {
     mutationFn: async (data: PostFormData) => {
       if (!user) throw new Error('User not authenticated');
 
-      const { error } = await supabase
-        .from('posts')
-        .insert({
-          ...data,
-          author: `${user.email}`,
-          slug: data.slug || data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-        });
+      const { error } = await supabase.from('posts').insert({
+        ...data,
+        author: `${user.email}`,
+        slug: data.slug || data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+      });
 
       if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-posts'] });
       toast({
-        title: "Success",
-        description: "Post created successfully",
+        title: 'Success',
+        description: 'Post created successfully',
       });
       navigate('/admin?tab=posts');
     },
     onError: (error: any) => {
       toast({
-        title: "Error",
-        description: error.message || "Failed to create post",
-        variant: "destructive",
+        title: 'Error',
+        description: error.message || 'Failed to create post',
+        variant: 'destructive',
       });
     },
   });
@@ -101,12 +104,15 @@ const CreatePost = () => {
   const handleInputChange = (field: keyof PostFormData, value: any) => {
     setFormData(prev => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
 
     // Auto-generate slug from title
     if (field === 'title') {
-      const slug = value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      const slug = value
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
       setFormData(prev => ({ ...prev, slug }));
     }
   };
@@ -121,12 +127,12 @@ const CreatePost = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.title || !formData.content || !formData.category_id) {
       toast({
-        title: "Validation Error",
-        description: "Please fill in all required fields",
-        variant: "destructive",
+        title: 'Validation Error',
+        description: 'Please fill in all required fields',
+        variant: 'destructive',
       });
       return;
     }
@@ -191,7 +197,7 @@ const CreatePost = () => {
                   <Input
                     id="title"
                     value={formData.title}
-                    onChange={(e) => handleInputChange('title', e.target.value)}
+                    onChange={e => handleInputChange('title', e.target.value)}
                     placeholder="Enter a compelling title"
                     className="text-lg"
                   />
@@ -202,7 +208,7 @@ const CreatePost = () => {
                   <Input
                     id="slug"
                     value={formData.slug}
-                    onChange={(e) => handleInputChange('slug', e.target.value)}
+                    onChange={e => handleInputChange('slug', e.target.value)}
                     placeholder="url-friendly-slug"
                   />
                 </div>
@@ -212,7 +218,7 @@ const CreatePost = () => {
                   <Textarea
                     id="excerpt"
                     value={formData.excerpt}
-                    onChange={(e) => handleInputChange('excerpt', e.target.value)}
+                    onChange={e => handleInputChange('excerpt', e.target.value)}
                     placeholder="Brief description that appears in previews"
                     className="min-h-[80px]"
                   />
@@ -232,7 +238,11 @@ const CreatePost = () => {
                     <Card className="min-h-[400px] p-4">
                       <div className="prose prose-neutral dark:prose-invert max-w-none">
                         {formData.content ? (
-                          <div dangerouslySetInnerHTML={{ __html: formData.content.replace(/\n/g, '<br>') }} />
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: formData.content.replace(/\n/g, '<br>'),
+                            }}
+                          />
                         ) : (
                           <p className="text-muted-foreground">Start writing to see preview...</p>
                         )}
@@ -242,7 +252,7 @@ const CreatePost = () => {
                     <Textarea
                       id="content"
                       value={formData.content}
-                      onChange={(e) => handleContentChange(e.target.value)}
+                      onChange={e => handleContentChange(e.target.value)}
                       placeholder="Write your article content here..."
                       className="min-h-[400px] font-mono"
                     />
@@ -265,7 +275,7 @@ const CreatePost = () => {
                   <Switch
                     id="published"
                     checked={formData.published}
-                    onCheckedChange={(checked) => handleInputChange('published', checked)}
+                    onCheckedChange={checked => handleInputChange('published', checked)}
                   />
                 </div>
 
@@ -274,11 +284,11 @@ const CreatePost = () => {
                   <Switch
                     id="featured"
                     checked={formData.featured}
-                    onCheckedChange={(checked) => handleInputChange('featured', checked)}
+                    onCheckedChange={checked => handleInputChange('featured', checked)}
                   />
                 </div>
 
-                <Button 
+                <Button
                   onClick={handleSubmit}
                   disabled={createPostMutation.isPending}
                   className="w-full flex items-center gap-2"
@@ -299,13 +309,13 @@ const CreatePost = () => {
                   <Label htmlFor="category">Category *</Label>
                   <Select
                     value={formData.category_id}
-                    onValueChange={(value) => handleInputChange('category_id', value)}
+                    onValueChange={value => handleInputChange('category_id', value)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
-                      {categories?.map((category) => (
+                      {categories?.map(category => (
                         <SelectItem key={category.id} value={category.id}>
                           {category.name}
                         </SelectItem>
@@ -318,7 +328,7 @@ const CreatePost = () => {
                   <Label htmlFor="difficulty">Difficulty Level</Label>
                   <Select
                     value={formData.difficulty_level}
-                    onValueChange={(value: 'Beginner' | 'Intermediate' | 'Advanced') => 
+                    onValueChange={(value: 'Beginner' | 'Intermediate' | 'Advanced') =>
                       handleInputChange('difficulty_level', value)
                     }
                   >
@@ -339,7 +349,7 @@ const CreatePost = () => {
                     id="read_time"
                     type="number"
                     value={formData.read_time}
-                    onChange={(e) => handleInputChange('read_time', parseInt(e.target.value))}
+                    onChange={e => handleInputChange('read_time', parseInt(e.target.value))}
                     min="1"
                     max="60"
                   />
@@ -359,7 +369,9 @@ const CreatePost = () => {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm">Words:</span>
-                  <Badge variant="outline">{formData.content.split(/\s+/).filter(word => word.length > 0).length}</Badge>
+                  <Badge variant="outline">
+                    {formData.content.split(/\s+/).filter(word => word.length > 0).length}
+                  </Badge>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm">Est. Read Time:</span>

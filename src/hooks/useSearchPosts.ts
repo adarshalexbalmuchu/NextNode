@@ -19,20 +19,24 @@ export const useSearchPosts = (searchTerm: string, filters: SearchFilters) => {
     queryFn: async () => {
       let query = supabase
         .from('posts')
-        .select(`
+        .select(
+          `
           *,
           categories (
             id,
             name,
             color
           )
-        `)
+        `
+        )
         .eq('published', true);
 
       // Apply search term if provided
       if (searchTerm && searchTerm.trim().length > 0) {
         const searchTermTrimmed = searchTerm.trim();
-        query = query.or(`title.ilike.%${searchTermTrimmed}%,excerpt.ilike.%${searchTermTrimmed}%,content.ilike.%${searchTermTrimmed}%`);
+        query = query.or(
+          `title.ilike.%${searchTermTrimmed}%,excerpt.ilike.%${searchTermTrimmed}%,content.ilike.%${searchTermTrimmed}%`
+        );
       }
 
       // Apply category filter

@@ -9,33 +9,42 @@ import ErrorFallback from '@/components/ErrorFallback';
 const AnalyticsSimple = () => {
   const [timeRange, setTimeRange] = useState('30d');
 
-  const { data: postsAnalytics, isLoading: postsLoading, error: postsError, refetch: refetchPosts } = useQuery({
+  const {
+    data: postsAnalytics,
+    isLoading: postsLoading,
+    error: postsError,
+    refetch: refetchPosts,
+  } = useQuery({
     queryKey: ['posts-analytics', timeRange],
     queryFn: async () => {
       try {
         // Check admin access first using the correct function
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         if (!user) {
           throw new Error('Authentication required');
         }
 
         const { data: userRole, error: roleError } = await supabase.rpc('get_current_user_role');
-        
+
         if (roleError || userRole !== 'admin') {
           throw new Error('Admin access required');
         }
 
         const daysAgo = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
         const startDate = subDays(new Date(), daysAgo).toISOString();
-        
+
         const { data, error } = await supabase
           .from('posts')
-          .select(`
+          .select(
+            `
             view_count, 
             created_at, 
             title,
             categories(name)
-          `)
+          `
+          )
           .gte('created_at', startDate)
           .eq('published', true)
           .order('view_count', { ascending: false });
@@ -50,25 +59,31 @@ const AnalyticsSimple = () => {
     retry: 1,
   });
 
-  const { data: userGrowth, isLoading: usersLoading, refetch: refetchUsers } = useQuery({
+  const {
+    data: userGrowth,
+    isLoading: usersLoading,
+    refetch: refetchUsers,
+  } = useQuery({
     queryKey: ['user-growth', timeRange],
     queryFn: async () => {
       try {
         // Check admin access first using the correct function
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         if (!user) {
           throw new Error('Authentication required');
         }
 
         const { data: userRole, error: roleError } = await supabase.rpc('get_current_user_role');
-        
+
         if (roleError || userRole !== 'admin') {
           throw new Error('Admin access required');
         }
 
         const daysAgo = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
         const startDate = subDays(new Date(), daysAgo).toISOString();
-        
+
         const { data, error } = await supabase
           .from('profiles')
           .select('created_at')
@@ -97,7 +112,7 @@ const AnalyticsSimple = () => {
   // Show error state
   if (postsError) {
     return (
-      <ErrorFallback 
+      <ErrorFallback
         error={postsError as Error}
         resetError={() => {
           refetchPosts();
@@ -107,11 +122,12 @@ const AnalyticsSimple = () => {
     );
   }
 
-  const topPosts = postsAnalytics?.slice(0, 5).map(post => ({
-    title: post.title,
-    views: post.view_count || 0,
-    category: post.categories?.name || 'Uncategorized',
-  })) || [];
+  const topPosts =
+    postsAnalytics?.slice(0, 5).map(post => ({
+      title: post.title,
+      views: post.view_count || 0,
+      category: post.categories?.name || 'Uncategorized',
+    })) || [];
 
   return (
     <div className="space-y-6">
@@ -121,13 +137,13 @@ const AnalyticsSimple = () => {
           <CardTitle>Analytics Overview</CardTitle>
           <CardDescription>Platform statistics and insights</CardDescription>
           <div className="flex gap-2">
-            {['7d', '30d', '90d'].map((range) => (
+            {['7d', '30d', '90d'].map(range => (
               <button
                 key={range}
                 onClick={() => setTimeRange(range)}
                 className={`px-3 py-1 text-sm rounded ${
-                  timeRange === range 
-                    ? 'bg-primary text-primary-foreground' 
+                  timeRange === range
+                    ? 'bg-primary text-primary-foreground'
                     : 'bg-muted text-muted-foreground hover:bg-muted/80'
                 }`}
               >
@@ -183,7 +199,10 @@ const AnalyticsSimple = () => {
           <div className="space-y-3">
             {topPosts.length > 0 ? (
               topPosts.map((post, index) => (
-                <div key={index} className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                <div
+                  key={index}
+                  className="flex justify-between items-center p-3 bg-muted/50 rounded-lg"
+                >
                   <div>
                     <div className="font-medium">{post.title}</div>
                     <div className="text-sm text-muted-foreground">{post.category}</div>
@@ -205,7 +224,8 @@ const AnalyticsSimple = () => {
         <CardContent className="pt-6">
           <div className="text-center py-4">
             <p className="text-muted-foreground">
-              📊 Advanced charts are temporarily disabled due to lodash compatibility issues with Recharts.
+              📊 Advanced charts are temporarily disabled due to lodash compatibility issues with
+              Recharts.
               <br />
               Basic analytics are still available above.
             </p>

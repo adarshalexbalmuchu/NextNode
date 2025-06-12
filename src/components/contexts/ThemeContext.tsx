@@ -25,7 +25,7 @@ export function ThemeProvider({ children }: DarkModeProviderProps) {
     const root = window.document.documentElement;
     root.classList.remove('light');
     root.classList.add('dark');
-    
+
     // Remove any stored theme preferences since we only use dark mode
     localStorage.removeItem('nextnode-ui-theme');
   }, []);
@@ -36,17 +36,14 @@ export function ThemeProvider({ children }: DarkModeProviderProps) {
   };
 
   return (
-    <DarkModeProviderContext.Provider value={value}>
-      {children}
-    </DarkModeProviderContext.Provider>
+    <DarkModeProviderContext.Provider value={value}>{children}</DarkModeProviderContext.Provider>
   );
 }
 
 export const useTheme = () => {
   const context = useContext(DarkModeProviderContext);
 
-  if (context === undefined)
-    throw new Error('useTheme must be used within a ThemeProvider');
+  if (context === undefined) throw new Error('useTheme must be used within a ThemeProvider');
 
   return context;
 };

@@ -17,7 +17,9 @@ export interface ContactSubmissionResponse {
  * Submit contact form data
  * Currently simulates submission - replace with actual API endpoint
  */
-export const submitContactForm = async (data: ContactFormData): Promise<ContactSubmissionResponse> => {
+export const submitContactForm = async (
+  data: ContactFormData
+): Promise<ContactSubmissionResponse> => {
   try {
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 1500));
@@ -42,7 +44,7 @@ export const submitContactForm = async (data: ContactFormData): Promise<ContactS
     console.log('Contact form submission:', {
       ...data,
       timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent
+      userAgent: navigator.userAgent,
     });
 
     // TODO: Replace with actual API call
@@ -54,26 +56,26 @@ export const submitContactForm = async (data: ContactFormData): Promise<ContactS
     //   },
     //   body: JSON.stringify(data),
     // });
-    // 
+    //
     // if (!response.ok) {
     //   throw new Error('Failed to submit form');
     // }
-    // 
+    //
     // return await response.json();
 
     // For now, return a simulated success response
     return {
       success: true,
-      message: 'Thank you for your message! We\'ll get back to you within 24 hours.',
-      id: `contact_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      message: "Thank you for your message! We'll get back to you within 24 hours.",
+      id: `contact_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     };
-
   } catch (error) {
     console.error('Contact form submission error:', error);
-    
+
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'An unexpected error occurred. Please try again.'
+      message:
+        error instanceof Error ? error.message : 'An unexpected error occurred. Please try again.',
     };
   }
 };
@@ -100,10 +102,10 @@ export const sendContactNotification = async (data: ContactFormData): Promise<vo
 export const getContactFormAnalytics = () => {
   // TODO: Implement analytics tracking
   // Track form submissions, conversion rates, common inquiry types, etc.
-  
+
   return {
     totalSubmissions: 0,
     commonSubjects: ['general', 'collaboration', 'technical'],
-    averageResponseTime: '2 hours'
+    averageResponseTime: '2 hours',
   };
 };

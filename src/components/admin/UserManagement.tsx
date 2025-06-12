@@ -1,12 +1,24 @@
-
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Search, UserPlus } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
@@ -27,9 +39,7 @@ const UserManagement = () => {
     queryKey: ['admin-users'],
     queryFn: async () => {
       // Get all profiles
-      const { data: profiles, error: profilesError } = await supabase
-        .from('profiles')
-        .select('*');
+      const { data: profiles, error: profilesError } = await supabase.from('profiles').select('*');
 
       if (profilesError) throw profilesError;
 
@@ -41,16 +51,21 @@ const UserManagement = () => {
       if (rolesError) throw rolesError;
 
       // Map roles to profiles
-      const rolesMap = userRoles?.reduce((acc, role) => {
-        acc[role.user_id] = role.role;
-        return acc;
-      }, {} as Record<string, UserRole>) || {};
+      const rolesMap =
+        userRoles?.reduce(
+          (acc, role) => {
+            acc[role.user_id] = role.role;
+            return acc;
+          },
+          {} as Record<string, UserRole>
+        ) || {};
 
       // Combine profiles with their roles
-      const usersWithRoles = profiles?.map(profile => ({
-        ...profile,
-        role: rolesMap[profile.id] || 'user' as UserRole
-      })) || [];
+      const usersWithRoles =
+        profiles?.map(profile => ({
+          ...profile,
+          role: rolesMap[profile.id] || ('user' as UserRole),
+        })) || [];
 
       return usersWithRoles as UserWithRole[];
     },
@@ -59,41 +74,37 @@ const UserManagement = () => {
   const updateUserRoleMutation = useMutation({
     mutationFn: async ({ userId, newRole }: { userId: string; newRole: UserRole }) => {
       // First, delete existing role
-      await supabase
-        .from('user_roles')
-        .delete()
-        .eq('user_id', userId);
+      await supabase.from('user_roles').delete().eq('user_id', userId);
 
       // Then insert new role
-      const { error } = await supabase
-        .from('user_roles')
-        .insert({
-          user_id: userId,
-          role: newRole,
-        });
+      const { error } = await supabase.from('user_roles').insert({
+        user_id: userId,
+        role: newRole,
+      });
 
       if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-users'] });
       toast({
-        title: "Success",
-        description: "User role updated successfully",
+        title: 'Success',
+        description: 'User role updated successfully',
       });
     },
     onError: () => {
       toast({
-        title: "Error",
-        description: "Failed to update user role",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to update user role',
+        variant: 'destructive',
       });
     },
   });
 
-  const filteredUsers = users?.filter(user =>
-    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.last_name?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredUsers = users?.filter(
+    user =>
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.last_name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const getRoleBadgeVariant = (role: UserRole) => {
@@ -125,9 +136,7 @@ const UserManagement = () => {
     <Card className="glass">
       <CardHeader>
         <CardTitle>User Management</CardTitle>
-        <CardDescription>
-          Manage user accounts and assign roles
-        </CardDescription>
+        <CardDescription>Manage user accounts and assign roles</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex items-center justify-between mb-6">
@@ -136,7 +145,7 @@ const UserManagement = () => {
             <Input
               placeholder="Search users..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={e => setSearchTerm(e.target.value)}
               className="pl-10"
             />
           </div>
@@ -158,7 +167,7 @@ const UserManagement = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredUsers?.map((user) => (
+              {filteredUsers?.map(user => (
                 <TableRow key={user.id}>
                   <TableCell>
                     <div>
@@ -172,13 +181,9 @@ const UserManagement = () => {
                   </TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
-                    <Badge variant={getRoleBadgeVariant(user.role)}>
-                      {user.role}
-                    </Badge>
+                    <Badge variant={getRoleBadgeVariant(user.role)}>{user.role}</Badge>
                   </TableCell>
-                  <TableCell>
-                    {new Date(user.created_at).toLocaleDateString()}
-                  </TableCell>
+                  <TableCell>{new Date(user.created_at).toLocaleDateString()}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Select

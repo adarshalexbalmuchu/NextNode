@@ -10,14 +10,14 @@ import { useAccessibility } from '@/hooks/useAccessibility';
 const About = () => {
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    { label: 'About', href: '/about' }
+    { label: 'About', href: '/about' },
   ];
 
   return (
     <div className="min-h-screen w-full">
       <Background />
       <Header />
-      
+
       <main className="container mx-auto px-4 sm:px-6 py-16 sm:py-20">
         <div className="max-w-4xl mx-auto">
           {/* Breadcrumb Navigation */}
@@ -30,7 +30,8 @@ const About = () => {
               About <span className="text-primary text-glow">NextNode</span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto px-2 sm:px-0">
-              We're empowering students and professionals to thrive in the AI era through practical tools, 
+              We're empowering students and professionals to thrive in the AI era through practical
+              tools,
               <br className="hidden sm:block" />
               career insights, and actionable guides that deliver real results.
             </p>
@@ -49,13 +50,15 @@ const About = () => {
             </CardHeader>
             <CardContent className="prose prose-neutral dark:prose-invert max-w-none">
               <p className="text-base sm:text-lg leading-relaxed">
-                At NextNode, we believe that the future belongs to those who can effectively leverage AI tools 
-                and adapt to the rapidly evolving professional landscape. Our mission is to bridge the gap between 
-                cutting-edge AI technology and practical career advancement for students and working professionals.
+                At NextNode, we believe that the future belongs to those who can effectively
+                leverage AI tools and adapt to the rapidly evolving professional landscape. Our
+                mission is to bridge the gap between cutting-edge AI technology and practical career
+                advancement for students and working professionals.
               </p>
               <p className="text-base sm:text-lg leading-relaxed mt-4">
-                We provide comprehensive guides, tool reviews, and career strategies that help you master AI tools, 
-                enhance your productivity, and accelerate your professional growth in any field.
+                We provide comprehensive guides, tool reviews, and career strategies that help you
+                master AI tools, enhance your productivity, and accelerate your professional growth
+                in any field.
               </p>
             </CardContent>
           </Card>
@@ -69,7 +72,8 @@ const About = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground text-sm sm:text-base">
-                  We focus on actionable insights and tools that deliver real-world results for your career.
+                  We focus on actionable insights and tools that deliver real-world results for your
+                  career.
                 </p>
               </CardContent>
             </Card>
@@ -81,7 +85,8 @@ const About = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground text-sm sm:text-base">
-                  Every guide is designed to accelerate your professional growth and enhance your skill set.
+                  Every guide is designed to accelerate your professional growth and enhance your
+                  skill set.
                 </p>
               </CardContent>
             </Card>
@@ -93,7 +98,8 @@ const About = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground text-sm sm:text-base">
-                  Tailored content for both students starting their journey and professionals advancing their careers.
+                  Tailored content for both students starting their journey and professionals
+                  advancing their careers.
                 </p>
               </CardContent>
             </Card>
@@ -112,14 +118,30 @@ const About = () => {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
-                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">AI Tools</Badge>
-                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">Career Guides</Badge>
-                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">Resume Building</Badge>
-                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">Interview Prep</Badge>
-                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">Student Resources</Badge>
-                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">Productivity Hacks</Badge>
-                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">ChatGPT Tips</Badge>
-                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">Skill Development</Badge>
+                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">
+                  AI Tools
+                </Badge>
+                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">
+                  Career Guides
+                </Badge>
+                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">
+                  Resume Building
+                </Badge>
+                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">
+                  Interview Prep
+                </Badge>
+                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">
+                  Student Resources
+                </Badge>
+                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">
+                  Productivity Hacks
+                </Badge>
+                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">
+                  ChatGPT Tips
+                </Badge>
+                <Badge variant="outline" className="p-2 sm:p-3 text-center text-xs sm:text-sm">
+                  Skill Development
+                </Badge>
               </div>
             </CardContent>
           </Card>
@@ -138,7 +160,10 @@ const About = () => {
             <CardContent>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" aria-hidden="true"></div>
+                  <div
+                    className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"
+                    aria-hidden="true"
+                  ></div>
                   <div>
                     <h4 className="font-semibold mb-1 text-sm sm:text-base">Expert Review</h4>
                     <p className="text-muted-foreground text-sm">
@@ -147,7 +172,10 @@ const About = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" aria-hidden="true"></div>
+                  <div
+                    className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"
+                    aria-hidden="true"
+                  ></div>
                   <div>
                     <h4 className="font-semibold mb-1 text-sm sm:text-base">No Noise, No Ads</h4>
                     <p className="text-muted-foreground text-sm">
@@ -156,7 +184,10 @@ const About = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" aria-hidden="true"></div>
+                  <div
+                    className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"
+                    aria-hidden="true"
+                  ></div>
                   <div>
                     <h4 className="font-semibold mb-1 text-sm sm:text-base">Continuous Updates</h4>
                     <p className="text-muted-foreground text-sm">
@@ -169,7 +200,7 @@ const About = () => {
           </Card>
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );

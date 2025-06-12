@@ -9,6 +9,7 @@ This guide covers performance optimization strategies implemented in the NextNod
 ### 1. Code Splitting & Lazy Loading
 
 #### Route-based Code Splitting
+
 ```typescript
 // App.tsx
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
@@ -22,6 +23,7 @@ const CreatePost = lazy(() => import("./pages/CreatePost"));
 ```
 
 #### Component-level Optimization
+
 ```typescript
 // Memoized components
 const BlogCard = memo(({ title, excerpt, ...props }) => {
@@ -38,6 +40,7 @@ const handleClick = useCallback(() => {
 ### 2. Bundle Optimization
 
 #### Vite Configuration
+
 ```typescript
 // vite.config.ts
 export default defineConfig({
@@ -56,6 +59,7 @@ export default defineConfig({
 ```
 
 #### Bundle Analysis
+
 ```bash
 # Analyze bundle size
 npm run build:analyze
@@ -67,6 +71,7 @@ npm run build && npx vite-bundle-analyzer dist/stats.html
 ### 3. Image Optimization
 
 #### Lazy Image Component
+
 ```typescript
 import { LazyImage } from '@/components/ui/lazy-image'
 
@@ -78,6 +83,7 @@ import { LazyImage } from '@/components/ui/lazy-image'
 ```
 
 #### Responsive Images
+
 ```typescript
 const srcSet = generateSrcSet('/api/images/hero', [400, 800, 1200, 1600])
 
@@ -92,19 +98,21 @@ const srcSet = generateSrcSet('/api/images/hero', [400, 800, 1200, 1600])
 ### 4. Performance Monitoring
 
 #### Component Performance
+
 ```typescript
-import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor'
+import { usePerformanceMonitor } from '@/hooks/usePerformanceMonitor';
 
 const MyComponent = () => {
   usePerformanceMonitor('MyComponent');
   // Component renders are automatically tracked
-}
+};
 ```
 
 #### Web Vitals Monitoring
+
 ```typescript
 // Automatically initialized in App.tsx
-import { initWebVitals } from '@/hooks/usePerformanceMonitor'
+import { initWebVitals } from '@/hooks/usePerformanceMonitor';
 
 useEffect(() => {
   initWebVitals();
@@ -114,12 +122,13 @@ useEffect(() => {
 ### 5. React Query Optimization
 
 #### Optimized Configuration
+
 ```typescript
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000,   // 10 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes
       retry: (failureCount, error) => {
         if (error instanceof Error && error.message.includes('4')) {
           return false; // Don't retry 4xx errors
@@ -135,20 +144,20 @@ const queryClient = new QueryClient({
 
 ### Core Web Vitals
 
-| Metric | Good | Needs Improvement | Poor |
-|--------|------|-------------------|------|
-| LCP (Largest Contentful Paint) | ≤ 2.5s | 2.5s - 4.0s | > 4.0s |
-| FID (First Input Delay) | ≤ 100ms | 100ms - 300ms | > 300ms |
-| CLS (Cumulative Layout Shift) | ≤ 0.1 | 0.1 - 0.25 | > 0.25 |
+| Metric                         | Good    | Needs Improvement | Poor    |
+| ------------------------------ | ------- | ----------------- | ------- |
+| LCP (Largest Contentful Paint) | ≤ 2.5s  | 2.5s - 4.0s       | > 4.0s  |
+| FID (First Input Delay)        | ≤ 100ms | 100ms - 300ms     | > 300ms |
+| CLS (Cumulative Layout Shift)  | ≤ 0.1   | 0.1 - 0.25        | > 0.25  |
 
 ### Bundle Size Targets
 
-| Chunk Type | Target Size | Current Size | Status |
-|------------|-------------|--------------|---------|
-| Initial JS | < 200kb | TBD | 🟡 Monitor |
-| Vendor Chunks | < 500kb | TBD | 🟡 Monitor |
-| Route Chunks | < 100kb | TBD | 🟡 Monitor |
-| Total JS | < 1MB | TBD | 🟡 Monitor |
+| Chunk Type    | Target Size | Current Size | Status     |
+| ------------- | ----------- | ------------ | ---------- |
+| Initial JS    | < 200kb     | TBD          | 🟡 Monitor |
+| Vendor Chunks | < 500kb     | TBD          | 🟡 Monitor |
+| Route Chunks  | < 100kb     | TBD          | 🟡 Monitor |
+| Total JS      | < 1MB       | TBD          | 🟡 Monitor |
 
 ### Performance Budget
 
@@ -174,6 +183,7 @@ const queryClient = new QueryClient({
 ### 1. Component Optimization
 
 #### Use React.memo for Pure Components
+
 ```typescript
 const PureComponent = memo(({ data }) => {
   return <div>{data.title}</div>
@@ -181,17 +191,19 @@ const PureComponent = memo(({ data }) => {
 ```
 
 #### Optimize Re-renders
+
 ```typescript
 // Avoid inline objects and functions
 ❌ <Component style={{ margin: 10 }} onClick={() => doSomething()} />
 
-✅ 
+✅
 const style = { margin: 10 };
 const handleClick = useCallback(() => doSomething(), []);
 <Component style={style} onClick={handleClick} />
 ```
 
 #### Use useMemo for Expensive Calculations
+
 ```typescript
 const expensiveValue = useMemo(() => {
   return data.reduce((acc, item) => acc + item.value, 0);
@@ -201,20 +213,23 @@ const expensiveValue = useMemo(() => {
 ### 2. Network Optimization
 
 #### Preload Critical Resources
+
 ```html
-<link rel="preload" href="/critical-font.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/hero-image.jpg" as="image">
+<link rel="preload" href="/critical-font.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/hero-image.jpg" as="image" />
 ```
 
 #### Resource Hints
+
 ```html
-<link rel="prefetch" href="/admin-dashboard.js">
-<link rel="preconnect" href="https://api.example.com">
+<link rel="prefetch" href="/admin-dashboard.js" />
+<link rel="preconnect" href="https://api.example.com" />
 ```
 
 ### 3. Rendering Optimization
 
 #### Virtual Scrolling for Large Lists
+
 ```typescript
 import { FixedSizeList as List } from 'react-window';
 
@@ -231,13 +246,14 @@ const VirtualizedList = ({ items }) => (
 ```
 
 #### Debounced Search
+
 ```typescript
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 
 const SearchComponent = () => {
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebouncedValue(query, 300);
-  
+
   // Search API call only triggers after user stops typing
   useEffect(() => {
     if (debouncedQuery) {
@@ -250,6 +266,7 @@ const SearchComponent = () => {
 ## Performance Testing
 
 ### Lighthouse CI
+
 ```yaml
 # .github/workflows/lighthouse.yml
 name: Lighthouse CI
@@ -267,6 +284,7 @@ jobs:
 ```
 
 ### Bundle Size Monitoring
+
 ```bash
 # Check bundle size impact
 npm run build:analyze
@@ -276,6 +294,7 @@ npx bundlesize
 ```
 
 ### Performance Testing Scripts
+
 ```bash
 # Run performance tests
 npm run test:performance
@@ -327,16 +346,19 @@ import debounce from 'lodash/debounce';
 ## Tools & Resources
 
 ### Development Tools
+
 - **React DevTools Profiler**: Component render analysis
 - **Chrome DevTools**: Performance tab for runtime analysis
 - **Lighthouse**: Core Web Vitals and performance audits
 - **Bundle Analyzer**: Webpack bundle visualization
 
 ### VS Code Extensions
+
 - **Import Cost**: Shows package import sizes
 - **Performance Monitor**: Runtime performance tracking
 
 ### Monitoring Services
+
 - **Google Analytics**: Core Web Vitals tracking
 - **Sentry**: Performance monitoring and error tracking
 - **LogRocket**: Session replay with performance data

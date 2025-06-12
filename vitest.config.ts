@@ -1,7 +1,7 @@
 /// <reference types="vitest" />
-import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react-swc'
-import path from 'path'
+import { defineConfig } from 'vitest/config';
+import react from '@vitejs/plugin-react-swc';
+import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
@@ -11,10 +11,7 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     css: true,
     // Include only unit test files, explicitly exclude E2E tests
-    include: [
-      'src/**/*.{test,spec}.{ts,tsx}',
-      'src/**/__tests__/**/*.{ts,tsx}'
-    ],
+    include: ['src/**/*.{test,spec}.{ts,tsx}', 'src/**/__tests__/**/*.{ts,tsx}'],
     exclude: [
       'node_modules/**',
       'dist/**',
@@ -22,7 +19,7 @@ export default defineConfig({
       'coverage/**',
       'tests/**', // Exclude Playwright E2E tests directory
       '**/*.d.ts',
-      '**/*.config.*'
+      '**/*.config.*',
     ],
     coverage: {
       provider: 'v8',
@@ -38,13 +35,13 @@ export default defineConfig({
         'coverage/',
         'tests/', // Exclude Playwright tests from coverage
         'src/**/__tests__/**', // Exclude test files from coverage
-        'src/**/*.{test,spec}.{ts,tsx}' // Exclude test files from coverage
-      ]
-    }
+        'src/**/*.{test,spec}.{ts,tsx}', // Exclude test files from coverage
+      ],
+    },
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
   },
-})
+});

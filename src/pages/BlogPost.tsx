@@ -20,20 +20,26 @@ const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
 
-  const { data: post, isLoading, error } = useQuery({
+  const {
+    data: post,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['post', slug],
     queryFn: async () => {
       if (!slug) throw new Error('No slug provided');
 
       const { data, error } = await supabase
         .from('posts')
-        .select(`
+        .select(
+          `
           *,
           categories (
             name,
             color
           )
-        `)
+        `
+        )
         .eq('slug', slug)
         .eq('published', true)
         .single();
@@ -62,9 +68,9 @@ const BlogPost = () => {
   });
 
   const difficultyColors = {
-    'Beginner': 'bg-green-500/20 text-green-400',
-    'Intermediate': 'bg-yellow-500/20 text-yellow-400',
-    'Advanced': 'bg-red-500/20 text-red-400'
+    Beginner: 'bg-green-500/20 text-green-400',
+    Intermediate: 'bg-yellow-500/20 text-yellow-400',
+    Advanced: 'bg-red-500/20 text-red-400',
   };
 
   if (isLoading) {
@@ -84,13 +90,13 @@ const BlogPost = () => {
                 Back to Posts
               </Button>
             </div>
-            
+
             <SkeletonBlogPost showMeta={true} shimmer={true} />
-            
+
             <div className="mt-12 text-center">
-              <LoadingSpinner 
-                size="lg" 
-                text="Loading article..." 
+              <LoadingSpinner
+                size="lg"
+                text="Loading article..."
                 variant="gradient"
                 showProgress={true}
                 progress={33}
@@ -120,9 +126,9 @@ const BlogPost = () => {
                 Back to Posts
               </Button>
             </div>
-            
+
             <ErrorFallback
-              error={error as Error || new Error('Post not found')}
+              error={(error as Error) || new Error('Post not found')}
               resetError={() => navigate('/')}
               title="Post Not Found"
               description="The blog post you're looking for doesn't exist or has been removed."
@@ -137,20 +143,20 @@ const BlogPost = () => {
     <div className="min-h-screen w-full">
       <Background />
       <Header />
-      
+
       <article className="container mx-auto px-6 py-20">
         <div className="max-w-4xl mx-auto">
           {/* Breadcrumb Navigation */}
           <div className="mb-8">
-            <BreadcrumbNav 
+            <BreadcrumbNav
               items={[
                 { label: 'Home', href: '/' },
                 { label: 'Blog', href: '/blog' },
-                { label: post.title, href: `/blog/${post.slug}` }
-              ]} 
+                { label: post.title, href: `/blog/${post.slug}` },
+              ]}
             />
           </div>
-          
+
           {/* Navigation */}
           <div className="mb-8">
             <Button
@@ -167,34 +173,32 @@ const BlogPost = () => {
           <header className="mb-12">
             <div className="flex flex-wrap gap-2 mb-4">
               {post.categories && (
-                <Badge 
+                <Badge
                   variant="outline"
-                  style={{ 
+                  style={{
                     borderColor: post.categories.color,
-                    color: post.categories.color 
+                    color: post.categories.color,
                   }}
                 >
                   {post.categories.name}
                 </Badge>
               )}
               {post.difficulty_level && (
-                <Badge className={difficultyColors[post.difficulty_level as keyof typeof difficultyColors]}>
+                <Badge
+                  className={
+                    difficultyColors[post.difficulty_level as keyof typeof difficultyColors]
+                  }
+                >
                   {post.difficulty_level}
                 </Badge>
               )}
-              {post.featured && (
-                <Badge variant="default">Featured</Badge>
-              )}
+              {post.featured && <Badge variant="default">Featured</Badge>}
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              {post.title}
-            </h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">{post.title}</h1>
 
             {post.excerpt && (
-              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                {post.excerpt}
-              </p>
+              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">{post.excerpt}</p>
             )}
 
             {/* Meta Information */}
@@ -226,10 +230,10 @@ const BlogPost = () => {
           <Card className="glass-panel mb-12">
             <CardContent className="p-8">
               <div className="prose prose-neutral dark:prose-invert max-w-none">
-                <div 
-                  dangerouslySetInnerHTML={{ 
-                    __html: post.content.replace(/\n/g, '<br>') 
-                  }} 
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: post.content.replace(/\n/g, '<br>'),
+                  }}
                 />
               </div>
             </CardContent>
@@ -241,11 +245,10 @@ const BlogPost = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground mb-2">
-                    Last updated: {format(new Date(post.updated_at || post.created_at), 'MMMM d, yyyy')}
+                    Last updated:{' '}
+                    {format(new Date(post.updated_at || post.created_at), 'MMMM d, yyyy')}
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    Article ID: {post.id}
-                  </p>
+                  <p className="text-sm text-muted-foreground">Article ID: {post.id}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Button variant="outline" size="sm" className="btn-glass">

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -36,7 +35,9 @@ export const useDashboardStats = () => {
       setStats(prev => ({ ...prev, loading: true, error: null }));
 
       // Check if user is admin first using the correct function
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         setStats(prev => ({
           ...prev,
@@ -47,7 +48,7 @@ export const useDashboardStats = () => {
       }
 
       const { data: userRole, error: roleError } = await supabase.rpc('get_current_user_role');
-      
+
       if (roleError || userRole !== 'admin') {
         setStats(prev => ({
           ...prev,
@@ -113,7 +114,6 @@ export const useDashboardStats = () => {
         loading: false,
         error: null,
       });
-
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
       setStats(prev => ({
@@ -127,11 +127,13 @@ export const useDashboardStats = () => {
   const fetchRecentActivities = async () => {
     try {
       // Check if user is admin using the correct function
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return;
 
       const { data: userRole, error: roleError } = await supabase.rpc('get_current_user_role');
-      
+
       if (roleError || userRole !== 'admin') {
         return;
       }
@@ -149,16 +151,16 @@ export const useDashboardStats = () => {
         return;
       }
 
-      const activities: RecentActivity[] = recentPosts?.map(post => ({
-        id: `post-${post.title}`,
-        type: 'post_published' as const,
-        title: 'Post published',
-        description: post.title,
-        timestamp: post.created_at,
-      })) || [];
+      const activities: RecentActivity[] =
+        recentPosts?.map(post => ({
+          id: `post-${post.title}`,
+          type: 'post_published' as const,
+          title: 'Post published',
+          description: post.title,
+          timestamp: post.created_at,
+        })) || [];
 
       setRecentActivities(activities);
-
     } catch (error) {
       console.error('Error fetching recent activities:', error);
     }

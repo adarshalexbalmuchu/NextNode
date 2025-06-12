@@ -23,7 +23,7 @@ const Newsletter = () => {
     <div className="min-h-screen w-full">
       <Background />
       <Header />
-      
+
       <main className="container mx-auto px-6 py-20">
         <div className="max-w-4xl mx-auto">
           {/* Hero Section */}
@@ -32,8 +32,8 @@ const Newsletter = () => {
               Stay <span className="text-primary">Informed</span>
             </h1>
             <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              Get the latest AI insights, research breakthroughs, and technology trends 
-              delivered directly to your inbox.
+              Get the latest AI insights, research breakthroughs, and technology trends delivered
+              directly to your inbox.
             </p>
           </div>
 
@@ -58,7 +58,7 @@ const Newsletter = () => {
                       type="email"
                       placeholder="Enter your email address"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={e => setEmail(e.target.value)}
                       required
                     />
                   </div>
@@ -94,7 +94,7 @@ const Newsletter = () => {
                 </p>
               </CardContent>
             </Card>
-            
+
             <Card className="glass">
               <CardContent className="pt-6">
                 <h3 className="font-semibold mb-2">Exclusive Content</h3>
@@ -103,7 +103,7 @@ const Newsletter = () => {
                 </p>
               </CardContent>
             </Card>
-            
+
             <Card className="glass">
               <CardContent className="pt-6">
                 <h3 className="font-semibold mb-2">Early Access</h3>
@@ -115,7 +115,7 @@ const Newsletter = () => {
           </div>
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );

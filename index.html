@@ -1,51 +1,70 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NextNode - AI Tools, Careers & Practical Guides for Students and Professionals</title>
-    <meta name="description" content="Master AI tools, accelerate your career, and gain practical skills with our guides tailored for students and working professionals. Real tools, real results, real growth." />
+    <meta
+      name="description"
+      content="Master AI tools, accelerate your career, and gain practical skills with our guides tailored for students and working professionals. Real tools, real results, real growth."
+    />
     <meta name="author" content="NextNode" />
 
-    <meta property="og:title" content="NextNode - AI Tools, Careers & Practical Guides for Students and Professionals" />
-    <meta property="og:description" content="Master AI tools, accelerate your career, and gain practical skills with our guides tailored for students and working professionals." />
+    <meta
+      property="og:title"
+      content="NextNode - AI Tools, Careers & Practical Guides for Students and Professionals"
+    />
+    <meta
+      property="og:description"
+      content="Master AI tools, accelerate your career, and gain practical skills with our guides tailored for students and working professionals."
+    />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@nextnode_ai" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" href="/icons/icon-32x32.svg" />
-    
+
     <!-- PWA and Performance -->
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#3b82f6" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="NextNode" />
-    
+
     <!-- Preload critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://your-supabase-url.supabase.co" />
-    
+
     <!-- Critical CSS inline for faster LCP -->
     <style>
       /* Critical styles for immediate render */
-      body { margin: 0; background: #0a0a0a; color: #fff; font-family: system-ui, -apple-system, sans-serif; }
-      #root { min-height: 100vh; }
-      .loading-fallback { 
-        min-height: 100vh; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
+      body {
+        margin: 0;
+        background: #0a0a0a;
+        color: #fff;
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      #root {
+        min-height: 100vh;
+      }
+      .loading-fallback {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
       }
     </style>
-    
+
     <!-- Preload hero image and critical assets -->
     <link rel="preload" href="/src/assets/hero-image.webp" as="image" type="image/webp" />
     <link rel="modulepreload" href="/src/main.tsx" />

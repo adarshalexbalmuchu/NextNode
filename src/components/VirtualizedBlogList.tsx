@@ -44,7 +44,9 @@ const ListItem: FC<ListItemProps> = memo(({ index, style, data }) => {
         title={post.title}
         excerpt={post.excerpt || ''}
         readTime={`${post.read_time || 5} min`}
-        difficulty={post.difficulty_level as "Beginner" | "Intermediate" | "Advanced" || "Intermediate"}
+        difficulty={
+          (post.difficulty_level as 'Beginner' | 'Intermediate' | 'Advanced') || 'Intermediate'
+        }
         tags={post.categories ? [post.categories.name] : []}
         date={post.created_at}
         isRead={false}
@@ -56,38 +58,40 @@ const ListItem: FC<ListItemProps> = memo(({ index, style, data }) => {
 });
 
 // Optimize list component with memo
-const VirtualizedBlogList: FC<VirtualizedBlogListProps> = memo(({ 
-  posts, 
-  onPostClick = () => {} 
-}) => {
-  const itemData: ListItemData = useMemo(() => ({
-    posts,
-    onPostClick,
-  }), [posts, onPostClick]);
+const VirtualizedBlogList: FC<VirtualizedBlogListProps> = memo(
+  ({ posts, onPostClick = () => {} }) => {
+    const itemData: ListItemData = useMemo(
+      () => ({
+        posts,
+        onPostClick,
+      }),
+      [posts, onPostClick]
+    );
 
-  if (!posts.length) {
+    if (!posts.length) {
+      return (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">No posts found</p>
+        </div>
+      );
+    }
+
     return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground">No posts found</p>
+      <div className="w-full">
+        <List
+          width="100%"
+          height={600}
+          itemCount={posts.length}
+          itemSize={300}
+          itemData={itemData}
+          overscanCount={5}
+        >
+          {ListItem}
+        </List>
       </div>
     );
   }
-
-  return (
-    <div className="w-full">
-      <List
-        width="100%"
-        height={600}
-        itemCount={posts.length}
-        itemSize={300}
-        itemData={itemData}
-        overscanCount={5}
-      >
-        {ListItem}
-      </List>
-    </div>
-  );
-});
+);
 
 VirtualizedBlogList.displayName = 'VirtualizedBlogList';
 

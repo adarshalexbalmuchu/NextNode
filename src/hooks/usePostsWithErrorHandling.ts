@@ -1,4 +1,3 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -14,13 +13,15 @@ export const usePostsWithErrorHandling = (featured?: boolean) => {
     queryFn: async () => {
       let query = supabase
         .from('posts')
-        .select(`
+        .select(
+          `
           *,
           categories (
             name,
             color
           )
-        `)
+        `
+        )
         .eq('published', true)
         .order('created_at', { ascending: false });
 
@@ -33,9 +34,9 @@ export const usePostsWithErrorHandling = (featured?: boolean) => {
       if (error) {
         console.error('Error fetching posts:', error);
         toast({
-          title: "Error loading posts",
-          description: "Failed to load blog posts. Please try again.",
-          variant: "destructive",
+          title: 'Error loading posts',
+          description: 'Failed to load blog posts. Please try again.',
+          variant: 'destructive',
         });
         throw error;
       }
@@ -43,7 +44,7 @@ export const usePostsWithErrorHandling = (featured?: boolean) => {
       return data as Post[];
     },
     retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 };
 
@@ -51,17 +52,14 @@ export const useCategoriesWithErrorHandling = () => {
   return useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('categories')
-        .select('*')
-        .order('name');
+      const { data, error } = await supabase.from('categories').select('*').order('name');
 
       if (error) {
         console.error('Error fetching categories:', error);
         toast({
-          title: "Error loading categories",
-          description: "Failed to load categories. Please try again.",
-          variant: "destructive",
+          title: 'Error loading categories',
+          description: 'Failed to load categories. Please try again.',
+          variant: 'destructive',
         });
         throw error;
       }

@@ -66,10 +66,6 @@
       "label": "Mobile view of blog post reading experience"
     }
   ],
-  "features": [
-    "offline-reading",
-    "push-notifications",
-    "background-sync"
-  ],
+  "features": ["offline-reading", "push-notifications", "background-sync"],
   "prefer_related_applications": false
 }

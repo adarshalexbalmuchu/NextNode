@@ -1,21 +1,20 @@
-
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "@/components/contexts/AuthContext";
-import { ThemeProvider } from "@/components/contexts/ThemeContext";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import ErrorBoundary, { AsyncErrorBoundary } from "@/components/ErrorBoundary";
-import React, { useEffect } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Toaster } from '@/components/ui/toaster';
+import { Toaster as Sonner } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from '@/components/contexts/AuthContext';
+import { ThemeProvider } from '@/components/contexts/ThemeContext';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import ErrorBoundary, { AsyncErrorBoundary } from '@/components/ErrorBoundary';
+import React, { useEffect } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 // import { initWebVitals } from "@/hooks/usePerformanceMonitor";
 // import { registerServiceWorker, promptPWAInstall } from "@/utils/serviceWorker";
 // import { checkPerformanceBudget, logBundleInfo } from "@/utils/performanceOptimizer";
 // import { initCriticalResources } from "@/utils/criticalResourceOptimizer";
-import { toast } from "@/hooks/use-toast";
-import ComponentPreloader from "@/components/ComponentPreloader";
+import { toast } from '@/hooks/use-toast';
+import ComponentPreloader from '@/components/ComponentPreloader';
 import {
   LazyBlog,
   LazyBlogPost,
@@ -30,13 +29,13 @@ import {
   LazyCreatePost,
   LazyBootstrapAdmin,
   LazyResources,
-  LazyCareerTools
-} from "@/utils/simpleLazyLoading";
+  LazyCareerTools,
+} from '@/utils/simpleLazyLoading';
 
 // Critical pages loaded immediately for better performance
-import Index from "./pages/Index";
-import Auth from "./pages/Auth";
-import NotFound from "./pages/NotFound";
+import Index from './pages/Index';
+import Auth from './pages/Auth';
+import NotFound from './pages/NotFound';
 
 // Loading fallback component - optimized for LCP
 const PageLoadingFallback = () => (
@@ -69,18 +68,18 @@ const queryClient = new QueryClient({
         return failureCount < 3;
       },
       // Add network-based retry delay
-      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
     },
     mutations: {
       // Faster timeout for mutations
       networkMode: 'online',
-    }
+    },
   },
 });
 
 const App = () => {
   console.log('App component rendering'); // Debug log
-  
+
   // Initialize critical resources first - temporarily disabled for debugging
   useEffect(() => {
     console.log('App component mounted successfully');
@@ -99,12 +98,12 @@ const App = () => {
   //     try {
   //       initWebVitals();
   //       checkPerformanceBudget();
-  //       
+  //
   //       // Log bundle info after page load stabilizes
   //       const timeoutId = setTimeout(() => {
   //         logBundleInfo();
   //       }, 3000);
-  //       
+  //
   //       return () => clearTimeout(timeoutId);
   //     } catch (error) {
   //       console.error('Error initializing performance monitoring:', error);
@@ -174,39 +173,40 @@ const App = () => {
                 <AuthProvider>
                   <ComponentPreloader />
                   <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/blog" element={<LazyBlog />} />
-                  <Route path="/resources" element={<LazyResources />} />
-                  <Route path="/career-tools" element={<LazyCareerTools />} />
-                  <Route path="/about" element={<LazyAbout />} />
-                  <Route path="/contact" element={<LazyContact />} />
-                  <Route path="/privacy" element={<LazyPrivacy />} />
-                  <Route path="/terms" element={<LazyTerms />} />
-                  <Route path="/cookies" element={<LazyCookies />} />
-                  <Route path="/newsletter" element={<LazyNewsletter />} />
-                  <Route path="/rss" element={<LazyRSSPage />} />
-                  <Route path="/auth" element={<Auth />} />
-                  <Route path="/bootstrap" element={<LazyBootstrapAdmin />} />
-                  <Route 
-                    path="/admin" 
-                    element={
-                      <ProtectedRoute requiredRole="admin">
-                        <LazyAdminDashboard />
-                      </ProtectedRoute>
-                    } 
-                  />
-                  <Route 
-                    path="/create-post" 
-                    element={
-                      <ProtectedRoute requiredRole="author">
-                        <LazyCreatePost />
-                      </ProtectedRoute>
-                    } 
-                  />
-                  <Route path="/post/:slug" element={<LazyBlogPost />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>                </AuthProvider>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/blog" element={<LazyBlog />} />
+                    <Route path="/resources" element={<LazyResources />} />
+                    <Route path="/career-tools" element={<LazyCareerTools />} />
+                    <Route path="/about" element={<LazyAbout />} />
+                    <Route path="/contact" element={<LazyContact />} />
+                    <Route path="/privacy" element={<LazyPrivacy />} />
+                    <Route path="/terms" element={<LazyTerms />} />
+                    <Route path="/cookies" element={<LazyCookies />} />
+                    <Route path="/newsletter" element={<LazyNewsletter />} />
+                    <Route path="/rss" element={<LazyRSSPage />} />
+                    <Route path="/auth" element={<Auth />} />
+                    <Route path="/bootstrap" element={<LazyBootstrapAdmin />} />
+                    <Route
+                      path="/admin"
+                      element={
+                        <ProtectedRoute requiredRole="admin">
+                          <LazyAdminDashboard />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/create-post"
+                      element={
+                        <ProtectedRoute requiredRole="author">
+                          <LazyCreatePost />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route path="/post/:slug" element={<LazyBlogPost />} />
+                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>{' '}
+                </AuthProvider>
               </BrowserRouter>
             </TooltipProvider>
           </QueryClientProvider>
