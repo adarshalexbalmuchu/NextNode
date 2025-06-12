@@ -87,10 +87,12 @@ const Header = () => {
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2 group" aria-label="NextNode - Home">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform will-change-transform">
-                <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
-              </div>
-              <span className="hidden sm:block text-lg font-bold text-glow">NextNode</span>
+              <img
+                src="/favicon.svg"
+                alt="NextNode Logo"
+                className="w-32 h-auto sm:w-44"
+                style={{ maxHeight: '44px' }}
+              />
             </Link>
 
             {/* Desktop Navigation */}
