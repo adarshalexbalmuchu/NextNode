@@ -38,10 +38,12 @@ const BreadcrumbLink = React.forwardRef<
     asChild?: boolean;
   }
 >(({ asChild, className, ...props }, ref) => {
-  const Comp = asChild ? React.Fragment : 'a';
+  if (asChild) {
+    return <React.Fragment>{props.children}</React.Fragment>;
+  }
 
   return (
-    <Comp
+    <a
       ref={ref}
       className={cn('transition-colors hover:text-foreground', className)}
       {...props}
@@ -64,15 +66,15 @@ const BreadcrumbPage = React.forwardRef<HTMLSpanElement, React.ComponentPropsWit
 );
 BreadcrumbPage.displayName = 'BreadcrumbPage';
 
-const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentProps<'li'>) => (
-  <li
+const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentProps<'span'>) => (
+  <span
     role="presentation"
     aria-hidden="true"
     className={cn('[&>svg]:size-3.5', className)}
     {...props}
   >
     {children ?? <ChevronRight />}
-  </li>
+  </span>
 );
 BreadcrumbSeparator.displayName = 'BreadcrumbSeparator';
 

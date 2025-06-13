@@ -26,49 +26,55 @@ const CareerTools = () => {
 
   const resumeTools = [
     {
-      name: 'Resume Builder AI',
-      description: 'AI-powered resume builder with ATS optimization',
-      features: ['ATS-friendly templates', 'AI content suggestions', 'Industry-specific formats'],
-      tier: 'Free + Premium',
+      name: 'Resume Analyzer AI',
+      description: 'AI-powered resume analysis with ATS optimization and detailed feedback',
+      features: ['ATS compatibility check', 'Content scoring', 'Keyword analysis', 'Instant feedback'],
+      tier: 'Free',
       category: 'Resume',
+      link: '/tools/resume-analyzer',
     },
     {
       name: 'LinkedIn Optimizer',
-      description: 'Optimize your LinkedIn profile for better visibility',
+      description: 'Optimize your LinkedIn profile for better visibility (Coming Soon)',
       features: ['Keyword optimization', 'Profile scoring', 'Industry insights'],
       tier: 'Premium',
       category: 'Profile',
+      link: null,
     },
     {
       name: 'Cover Letter Generator',
-      description: 'Generate personalized cover letters with AI',
+      description: 'Generate personalized cover letters with AI (Coming Soon)',
       features: ['Company research', 'Role customization', 'Multiple formats'],
       tier: 'Free',
       category: 'Cover Letter',
+      link: null,
     },
   ];
 
   const interviewTools = [
     {
       name: 'Mock Interview AI',
-      description: 'Practice interviews with AI-powered feedback',
+      description: 'Practice interviews with AI-powered feedback (Coming Soon)',
       features: ['Real-time feedback', 'Industry-specific questions', 'Performance analytics'],
       tier: 'Premium',
       category: 'Practice',
+      link: null,
     },
     {
       name: 'STAR Method Builder',
-      description: 'Structure your interview responses using the STAR method',
+      description: 'Structure your interview responses using the STAR method (Coming Soon)',
       features: ['Story templates', 'Impact measurement', 'Delivery tips'],
       tier: 'Free',
       category: 'Preparation',
+      link: null,
     },
     {
       name: 'Salary Negotiation Guide',
-      description: 'Data-driven salary negotiation strategies',
+      description: 'Data-driven salary negotiation strategies (Coming Soon)',
       features: ['Market research', 'Script templates', 'Timing strategies'],
       tier: 'Premium',
       category: 'Negotiation',
+      link: null,
     },
   ];
 
@@ -147,7 +153,16 @@ const CareerTools = () => {
     },
   ];
 
-  const ToolCard = ({ tool }: { tool: any }) => (
+  interface Tool {
+    name: string;
+    description: string;
+    features: string[];
+    tier: string;
+    category: string;
+    link?: string | null;
+  }
+
+  const ToolCard = ({ tool }: { tool: Tool }) => (
     <Card className="glass-panel hover:scale-105 transition-transform h-full">
       <CardHeader>
         <div className="flex justify-between items-start">
@@ -168,9 +183,17 @@ const CareerTools = () => {
             </div>
           ))}
         </div>
-        <Button className="w-full" variant="outline">
-          Try Tool
-        </Button>
+        {tool.link ? (
+          <Button asChild className="w-full" variant="outline">
+            <Link to={tool.link}>
+              Try Tool
+            </Link>
+          </Button>
+        ) : (
+          <Button className="w-full" variant="outline" disabled>
+            Coming Soon
+          </Button>
+        )}
       </CardContent>
     </Card>
   );

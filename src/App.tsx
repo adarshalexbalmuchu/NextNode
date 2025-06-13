@@ -30,6 +30,7 @@ import {
   LazyBootstrapAdmin,
   LazyResources,
   LazyCareerTools,
+  LazyResumeAnalyzer,
 } from '@/utils/simpleLazyLoading';
 
 // Critical pages loaded immediately for better performance
@@ -177,6 +178,7 @@ const App = () => {
                     <Route path="/blog" element={<LazyBlog />} />
                     <Route path="/resources" element={<LazyResources />} />
                     <Route path="/career-tools" element={<LazyCareerTools />} />
+                    <Route path="/tools/resume-analyzer" element={<LazyResumeAnalyzer />} />
                     <Route path="/about" element={<LazyAbout />} />
                     <Route path="/contact" element={<LazyContact />} />
                     <Route path="/privacy" element={<LazyPrivacy />} />

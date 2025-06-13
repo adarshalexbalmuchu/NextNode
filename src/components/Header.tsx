@@ -1,6 +1,6 @@
-import { useState, useEffect, KeyboardEvent } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, User, LogOut, Settings, X } from 'lucide-react';
+import { Search, User, LogOut, Settings, X, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import {
@@ -28,7 +28,7 @@ const Header = () => {
 
   // Enhanced escape key handling for search
   useEffect(() => {
-    const handleKeyDown = (e: globalThis.KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setIsSearchOpen(false);
       }
@@ -52,19 +52,6 @@ const Header = () => {
     setIsSearchOpen(!isSearchOpen);
   };
 
-  const handleSearchKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Escape') {
-      setIsSearchOpen(false);
-    }
-    if (e.key === 'Enter') {
-      const searchTerm = e.currentTarget.value;
-      if (searchTerm.trim()) {
-        navigate(`/blog?search=${encodeURIComponent(searchTerm)}`);
-        setIsSearchOpen(false);
-      }
-    }
-  };
-
   return (
     <>
       {/* Skip to content link for accessibility */}
@@ -85,17 +72,17 @@ const Header = () => {
         <div className="container mx-auto px-2 sm:px-4 lg:px-6">
           <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20 min-h-[56px]">
             {/* Logo - Home Link */}
-            <Link
-              to="/"
-              className="flex items-center space-x-2 group flex-shrink-0 hover:opacity-80 transition-opacity"
+            <Link 
+              to="/" 
+              className="flex items-center space-x-2 group flex-shrink-0 hover:opacity-80 transition-opacity" 
               aria-label="NextNode - Go to Home"
               title="Go to Home"
             >
-              <img
-                src="/NextNode-Logo.svg"
-                alt="NextNode Logo"
-                className="w-32 sm:w-40 lg:w-44 h-auto group-hover:scale-105 transition-transform"
-                style={{ maxHeight: '40px' }}
+              <img 
+                src="/NextNode-Logo.svg" 
+                alt="NextNode Logo" 
+                className="w-32 sm:w-40 lg:w-44 h-auto group-hover:scale-105 transition-transform" 
+                style={{maxHeight: '40px'}} 
               />
             </Link>
 
@@ -105,16 +92,34 @@ const Header = () => {
               role="navigation"
               aria-label="Main navigation"
             >
-              <Link to="/blog" className="nav-link">
+              <Link
+                to="/"
+                className="text-xs sm:text-sm md:text-base font-medium hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-2 sm:px-3 py-2 whitespace-nowrap min-h-[44px] flex items-center"
+              >
+                Home
+              </Link>
+              <Link
+                to="/blog"
+                className="text-xs sm:text-sm md:text-base font-medium hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-2 sm:px-3 py-2 whitespace-nowrap min-h-[44px] flex items-center"
+              >
                 Guides
               </Link>
-              <Link to="/resources" className="nav-link">
+              <Link
+                to="/resources"
+                className="text-xs sm:text-sm md:text-base font-medium hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-2 sm:px-3 py-2 whitespace-nowrap min-h-[44px] flex items-center"
+              >
                 Resources
               </Link>
-              <Link to="/career-tools" className="nav-link">
+              <Link
+                to="/career-tools"
+                className="text-xs sm:text-sm md:text-base font-medium hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-2 sm:px-3 py-2 whitespace-nowrap min-h-[44px] flex items-center"
+              >
                 Career Tools
               </Link>
-              <Link to="/about" className="nav-link">
+              <Link
+                to="/about"
+                className="text-xs sm:text-sm md:text-base font-medium hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-2 sm:px-3 py-2 whitespace-nowrap min-h-[44px] flex items-center"
+              >
                 About
               </Link>
             </nav>
@@ -123,11 +128,12 @@ const Header = () => {
             <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-3 lg:space-x-4 flex-shrink-0">
               <Button
                 variant="ghost"
+                size="sm"
                 onClick={toggleSearch}
-                className="action-btn touch-friendly"
+                className="h-10 w-10 sm:h-11 sm:w-11 p-0 touch-friendly focus-visible-enhanced"
                 aria-label="Search"
               >
-                <Search className="action-icon" />
+                <Search className="w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
 
               {user ? (
@@ -135,10 +141,10 @@ const Header = () => {
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="action-btn touch-friendly"
+                      className="h-10 w-10 sm:h-11 sm:w-11 p-0 touch-friendly focus-visible-enhanced"
                       aria-label="Account menu"
                     >
-                      <User className="action-icon" />
+                      <User className="w-4 h-4 sm:w-5 sm:h-5" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="glass-panel w-64">
@@ -154,33 +160,42 @@ const Header = () => {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
 
+                    {/* Navigation Items for easy access */}
+                    <DropdownMenuItem asChild>
+                      <Link to="/" className="w-full cursor-pointer">
+                        <Home className="w-4 h-4 mr-2" />
+                        Home Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem asChild>
+                      <Link to="/blog" className="w-full cursor-pointer">
+                        <Search className="w-4 h-4 mr-2" />
+                        Browse Guides
+                      </Link>
+                    </DropdownMenuItem>
+
                     {hasRole('admin') && (
                       <>
+                        <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
                           <Link to="/admin" className="w-full cursor-pointer">
                             <Settings className="w-4 h-4 mr-2" />
                             Admin Dashboard
                           </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
                       </>
                     )}
 
-                    <DropdownMenuItem
-                      onClick={handleSignOut}
-                      className="cursor-pointer text-destructive hover:bg-destructive/10"
-                    >
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive hover:bg-destructive/10">
                       <LogOut className="w-4 h-4 mr-2" />
                       Sign Out
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button
-                  asChild
-                  size="sm"
-                  className="btn-primary text-xs sm:text-sm px-3 sm:px-4 py-2 min-h-[44px]"
-                >
+                <Button asChild size="sm" className="btn-primary text-xs sm:text-sm px-3 sm:px-4 py-2 min-h-[44px]">
                   <Link to="/auth">Sign In</Link>
                 </Button>
               )}
@@ -213,14 +228,27 @@ const Header = () => {
                 <input
                   type="text"
                   placeholder="Search articles, topics, or keywords..."
-                  className="search-input"
+                  className="flex-1 bg-transparent text-foreground placeholder-muted-foreground text-lg outline-none focus:outline-none"
                   autoFocus
-                  onKeyDown={handleSearchKeyDown}
+                  onKeyDown={e => {
+                    if (e.key === 'Escape') {
+                      setIsSearchOpen(false);
+                    }
+                    if (e.key === 'Enter') {
+                      // TODO: Implement search functionality
+                      const searchTerm = (e.target as HTMLInputElement).value;
+                      if (searchTerm.trim()) {
+                        navigate(`/blog?search=${encodeURIComponent(searchTerm)}`);
+                        setIsSearchOpen(false);
+                      }
+                    }
+                  }}
                 />
                 <Button
                   variant="ghost"
+                  size="sm"
                   onClick={() => setIsSearchOpen(false)}
-                  className="action-btn touch-friendly"
+                  className="h-8 w-8 p-0 touch-friendly"
                   aria-label="Close search"
                 >
                   <X className="w-5 h-5" />

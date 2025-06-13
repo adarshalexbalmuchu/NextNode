@@ -43,3 +43,6 @@ export const LazyBootstrapAdmin = createLazyComponent(
 );
 export const LazyResources = createLazyComponent(() => import('@/pages/Resources' as any));
 export const LazyCareerTools = createLazyComponent(() => import('@/pages/CareerTools' as any));
+export const LazyResumeAnalyzer = createLazyComponent(() =>
+  import('@/pages/tools/ResumeAnalyzerPage' as any)
+);
