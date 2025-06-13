@@ -103,7 +103,7 @@ const ResumeAnalyzer = ({ className = '' }: ResumeAnalyzerProps) => {
     if (!FileParser.isSupportedFileType(file)) {
       toast({
         title: 'Unsupported File Type',
-        description: 'Please upload a PDF, Word document (.docx), or text file (.txt).',
+        description: 'Please upload a PDF, Word document (.doc or .docx), or text file (.txt).',
         variant: 'destructive',
       });
       return;
@@ -179,7 +179,7 @@ const ResumeAnalyzer = ({ className = '' }: ResumeAnalyzerProps) => {
             AI Resume Analyzer
           </CardTitle>
           <CardDescription>
-            Upload your resume (PDF, Word, or Text) and get instant feedback with ATS optimization and keyword analysis
+            Upload your resume (PDF, Word (.doc/.docx), or Text) and get instant feedback with ATS optimization and keyword analysis
           </CardDescription>
         </CardHeader>
         
@@ -223,13 +223,13 @@ const ResumeAnalyzer = ({ className = '' }: ResumeAnalyzerProps) => {
                           <input
                             id="file-upload"
                             type="file"
-                            accept=".txt,.pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
+                            accept=".txt,.pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-word,text/plain"
                             onChange={handleFileUpload}
                             className="hidden"
                           />
                         </div>
                         <p className="text-sm text-muted-foreground">
-                          Supports PDF, Word (.docx), and Text (.txt) files
+                          Supports PDF, Word (.doc/.docx), and Text (.txt) files
                         </p>
                         <p className="text-xs text-muted-foreground mt-1">
                           Maximum file size: 10MB

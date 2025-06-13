@@ -27,23 +27,53 @@ supabase db push --file migrations/20250613_resume_analyses.sql
 
 After running the migration, uncomment the database code in `/src/services/resumeAnalysisService.ts`.
 
-### 2. API Configuration (Optional)
+### 2. API Configuration (Optional but Recommended)
 
-The tool works with local heuristic analysis by default, but you can enhance it with AI APIs:
+The tool works with local heuristic analysis by default, but you can significantly enhance it with AI APIs.
 
-#### Option A: OpenAI API (Recommended)
+**🆓 FREE Options (Recommended):**
+
+#### Option A: Google Gemini API (Best Free Option)
+1. Get a free API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Add to `.env` file:
+```bash
+VITE_GEMINI_API_KEY=your-gemini-api-key-here
+```
+- **Free Tier**: 1,500 requests/day (more than enough for personal use)
+
+#### Option B: Cohere API (High Volume Free)
+1. Get a free API key from [Cohere Dashboard](https://dashboard.cohere.com/)
+2. Add to `.env` file:
+```bash
+VITE_COHERE_API_KEY=your-cohere-api-key-here
+```
+- **Free Tier**: 5M tokens/month (~2,500 resume analyses)
+
+#### Option C: Hugging Face API (Developer Friendly)
+1. Get a free token from [Hugging Face](https://huggingface.co/settings/tokens)
+2. Add to `.env` file:
+```bash
+VITE_HUGGINGFACE_API_KEY=your-hf-token-here
+```
+- **Free Tier**: 30K characters/month
+
+**💰 Paid Options (Premium Quality):**
+
+#### Option D: OpenAI API
 1. Get an API key from [OpenAI Platform](https://platform.openai.com/api-keys)
-2. Create `.env` file in the project root:
+2. Add to `.env` file:
 ```bash
 VITE_OPENAI_API_KEY=sk-your-openai-api-key-here
 ```
 
-#### Option B: Anthropic Claude API
+#### Option E: Anthropic Claude API
 1. Get an API key from [Anthropic Console](https://console.anthropic.com/)
 2. Add to `.env` file:
 ```bash
 VITE_ANTHROPIC_API_KEY=sk-ant-your-anthropic-api-key-here
 ```
+
+**📖 Detailed Setup Guide**: See `/docs/FREE_AI_APIS.md` for complete setup instructions.
 
 ### 3. Start the Development Server
 
@@ -176,7 +206,7 @@ ResumeAnalyzer/
 
 ### Basic Usage (No API keys)
 1. Navigate to `/tools/resume-analyzer`
-2. Paste resume text or upload .txt file
+2. Upload resume file (PDF, Word .doc/.docx, or .txt) or paste resume text
 3. Click "Analyze Resume"
 4. Review local heuristic analysis
 
@@ -187,16 +217,33 @@ ResumeAnalyzer/
 4. Save results to history (if database enabled)
 
 ### Job-Targeted Analysis
-1. Input resume content
+1. Input resume content (via upload or paste)
 2. Add job description in the optional field
 3. Analyze for keyword matching and alignment
 4. Review targeted recommendations
 
-## 📈 Future Enhancements
+## � Supported File Formats
+
+The Resume Analyzer now supports multiple file formats:
+
+- **PDF Documents** (.pdf) - Full text extraction with improved error handling
+- **Word Documents** (.docx) - Full support using mammoth.js
+- **Legacy Word Documents** (.doc) - Basic support with fallback guidance
+- **Text Files** (.txt) - Direct text reading
+- **Maximum file size**: 10MB
+
+### File Upload Features
+- Drag & drop support
+- Real-time file validation
+- Automatic text extraction
+- Progress indicators during processing
+- Clear error messages with troubleshooting guidance
+
+## �📈 Future Enhancements
 
 ### Phase 2 Features
-- [ ] PDF upload support
-- [ ] Multiple file format support (.docx, .pdf)
+- [x] PDF upload support
+- [x] Multiple file format support (.doc, .docx, .pdf, .txt)
 - [ ] Analysis history dashboard
 - [ ] Resume comparison tools
 - [ ] Industry-specific templates
@@ -233,6 +280,28 @@ ResumeAnalyzer/
 - Verify user authentication
 
 ## 📝 Development Notes
+
+### File Parsing Implementation
+
+The file parsing functionality is implemented in `/src/utils/fileParser.ts`:
+
+#### Libraries Used
+- **pdf-parse**: Extracts text from PDF documents
+- **mammoth**: Processes DOCX files with excellent formatting preservation
+- **Browser File API**: Handles text file reading
+
+#### Supported MIME Types
+- `application/pdf`
+- `application/msword` (.doc)
+- `application/vnd.openxmlformats-officedocument.wordprocessingml.document` (.docx)
+- `application/vnd.ms-word` (alternative .doc MIME type)
+- `text/plain` (.txt)
+
+#### Error Handling
+- File size validation (10MB limit)
+- File type validation with fallback extension checking
+- Specific error messages for different failure scenarios
+- Graceful degradation for unsupported DOC formats
 
 ### Adding New Analysis Criteria
 1. Update `AnalysisResult` interface

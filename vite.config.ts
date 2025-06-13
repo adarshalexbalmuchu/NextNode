@@ -147,6 +147,8 @@ export default defineConfig(({ mode }) => ({
       'react-router-dom',
       '@tanstack/react-query',
       '@radix-ui/react-slot',
+      'mammoth',
+      'pdfjs-dist',
       'lodash/get',
       'lodash/isString',
       'lodash/isNaN',
@@ -154,6 +156,8 @@ export default defineConfig(({ mode }) => ({
     ],
     exclude: [
       // Keep recharts in exclude to avoid pre-bundling issues
+      // Exclude PDF.js worker to handle it separately
+      'pdfjs-dist/build/pdf.worker.min.mjs',
     ],
   },
 
