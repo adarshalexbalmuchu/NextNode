@@ -5,10 +5,31 @@ import path from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ mode }) => {
+  // Detect if running in GitHub Codespaces
+  const isCodespaces = process.env.CODESPACES === 'true';
+  const codespaceName = process.env.CODESPACE_NAME;
+  
+  return {
   server: {
     host: '::',
     port: 8080,
+    cors: {
+      origin: true,
+      credentials: true,
+    },
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+    middlewareMode: false,
+    hmr: isCodespaces ? true : {
+      port: 8080,
+      host: 'localhost'
+    },
+    // Custom middleware to handle manifest.json CORS issues in GitHub Codespaces
+    proxy: {},
   },
   plugins: [
     react(),
@@ -20,6 +41,26 @@ export default defineConfig(({ mode }) => ({
         gzipSize: true,
         brotliSize: true,
       }),
+    // Custom plugin to handle manifest.json CORS issues
+    {
+      name: 'manifest-cors-fix',
+      configureServer(server) {
+        server.middlewares.use('/manifest.json', (req, res, next) => {
+          res.setHeader('Access-Control-Allow-Origin', '*');
+          res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+          res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+          res.setHeader('Content-Type', 'application/json');
+          
+          if (req.method === 'OPTIONS') {
+            res.statusCode = 200;
+            res.end();
+            return;
+          }
+          
+          next();
+        });
+      },
+    },
   ].filter(Boolean),
   resolve: {
     alias: {
@@ -177,4 +218,5 @@ export default defineConfig(({ mode }) => ({
     strictPort: true,
     host: true,
   },
-}));
+};
+});

@@ -11,7 +11,6 @@ import {
   AlertCircle, 
   Target, 
   TrendingUp,
-  Eye,
   Download,
   Loader2,
   File
@@ -21,21 +20,30 @@ import { analyzeResume } from '@/services/resumeAnalysisService';
 import { useAuth } from '@/hooks/useAuth';
 import { FileParser } from '@/utils/fileParser';
 
+interface AnalysisSuggestion {
+  section: string;
+  issue: string;
+  improvement: string;
+}
+
+interface LinkedInConsistency {
+  field: string;
+  issue: string;
+}
+
 interface AnalysisResult {
-  overallScore: number;
-  atsScore: number;
-  contentScore: number;
-  formatScore: number;
-  keywordMatch: number;
-  strengths: string[];
-  improvements: string[];
-  missingKeywords: string[];
-  suggestions: string[];
-  sections: {
-    name: string;
-    score: number;
-    feedback: string;
-  }[];
+  score: number;
+  summary: string;
+  ats_score: number;
+  suggestions: AnalysisSuggestion[];
+  keywords: {
+    matched: string[];
+    missing: string[];
+  };
+  red_flags: string[];
+  buzzwords: string[];
+  formats: string[];
+  linkedin_consistency?: LinkedInConsistency[];
 }
 
 interface ResumeAnalyzerProps {
@@ -77,7 +85,7 @@ const ResumeAnalyzer = ({ className = '' }: ResumeAnalyzerProps) => {
       
       toast({
         title: 'Analysis Complete!',
-        description: `Your resume scored ${result.overallScore}/100. Check the results tab for detailed feedback.`,
+        description: `Your resume scored ${result.score}/100. Check the results tab for detailed feedback.`,
       });
       
     } catch (error) {
@@ -191,7 +199,7 @@ const ResumeAnalyzer = ({ className = '' }: ResumeAnalyzerProps) => {
                 Results
                 {analysisResult && (
                   <Badge variant="secondary" className="ml-2">
-                    {analysisResult.overallScore}%
+                    {analysisResult.score}%
                   </Badge>
                 )}
               </TabsTrigger>
@@ -305,11 +313,9 @@ const ResumeAnalyzer = ({ className = '' }: ResumeAnalyzerProps) => {
               {analysisResult && (
                 <div className="space-y-6">
                   {/* Overall Scores */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <ScoreCard title="Overall Score" score={analysisResult.overallScore} icon={TrendingUp} />
-                    <ScoreCard title="ATS Compatible" score={analysisResult.atsScore} icon={CheckCircle} />
-                    <ScoreCard title="Content Quality" score={analysisResult.contentScore} icon={FileText} />
-                    <ScoreCard title="Format Score" score={analysisResult.formatScore} icon={Eye} />
+                  <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
+                    <ScoreCard title="Overall Score" score={analysisResult.score} icon={TrendingUp} />
+                    <ScoreCard title="ATS Compatible" score={analysisResult.ats_score} icon={CheckCircle} />
                   </div>
 
                   {/* Keyword Match (if job description provided) */}
@@ -324,19 +330,19 @@ const ResumeAnalyzer = ({ className = '' }: ResumeAnalyzerProps) => {
                             <div className="w-full bg-gray-200 rounded-full h-2">
                               <div 
                                 className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
-                                style={{ width: `${analysisResult.keywordMatch}%` }}
+                                style={{ width: `${Math.round((analysisResult.keywords.matched.length / (analysisResult.keywords.matched.length + analysisResult.keywords.missing.length)) * 100) || 0}%` }}
                               />
                             </div>
                           </div>
-                          <Badge variant={analysisResult.keywordMatch >= 70 ? 'default' : 'destructive'}>
-                            {analysisResult.keywordMatch}% Match
+                          <Badge variant={((analysisResult.keywords.matched.length / (analysisResult.keywords.matched.length + analysisResult.keywords.missing.length)) * 100) >= 70 ? 'default' : 'destructive'}>
+                            {Math.round((analysisResult.keywords.matched.length / (analysisResult.keywords.matched.length + analysisResult.keywords.missing.length)) * 100) || 0}% Match
                           </Badge>
                         </div>
-                        {analysisResult.missingKeywords.length > 0 && (
+                        {analysisResult.keywords.missing.length > 0 && (
                           <div>
                             <p className="text-sm font-medium mb-2">Missing Keywords:</p>
                             <div className="flex flex-wrap gap-2">
-                              {analysisResult.missingKeywords.map((keyword, index) => (
+                              {analysisResult.keywords.missing.map((keyword, index) => (
                                 <Badge key={index} variant="outline" className="text-xs">
                                   {keyword}
                                 </Badge>
@@ -348,24 +354,30 @@ const ResumeAnalyzer = ({ className = '' }: ResumeAnalyzerProps) => {
                     </Card>
                   )}
 
-                  {/* Strengths and Improvements */}
+                  {/* Summary and Red Flags */}
                   <div className="grid md:grid-cols-2 gap-6">
                     <Card>
                       <CardHeader>
                         <CardTitle className="text-lg flex items-center gap-2">
-                          <CheckCircle className="w-5 h-5 text-green-500" />
-                          Strengths
+                          <FileText className="w-5 h-5 text-blue-500" />
+                          Analysis Summary
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <ul className="space-y-2">
-                          {analysisResult.strengths.map((strength, index) => (
-                            <li key={index} className="flex items-start gap-2">
-                              <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0" />
-                              <span className="text-sm">{strength}</span>
-                            </li>
-                          ))}
-                        </ul>
+                        <p className="text-sm text-gray-700">{analysisResult.summary}</p>
+                        {analysisResult.red_flags.length > 0 && (
+                          <div className="mt-4">
+                            <h4 className="font-medium text-red-600 mb-2">Red Flags:</h4>
+                            <ul className="space-y-1">
+                              {analysisResult.red_flags.map((flag, index) => (
+                                <li key={index} className="flex items-start gap-2">
+                                  <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0" />
+                                  <span className="text-sm text-red-600">{flag}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </CardContent>
                     </Card>
 
@@ -377,41 +389,18 @@ const ResumeAnalyzer = ({ className = '' }: ResumeAnalyzerProps) => {
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <ul className="space-y-2">
-                          {analysisResult.improvements.map((improvement, index) => (
-                            <li key={index} className="flex items-start gap-2">
-                              <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0" />
-                              <span className="text-sm">{improvement}</span>
+                        <ul className="space-y-3">
+                          {analysisResult.suggestions.map((suggestion, index) => (
+                            <li key={index} className="border-l-2 border-orange-500 pl-4">
+                              <div className="font-medium text-sm text-orange-700">{suggestion.section}</div>
+                              <div className="text-sm text-gray-600 mb-1">{suggestion.issue}</div>
+                              <div className="text-sm text-gray-800">{suggestion.improvement}</div>
                             </li>
                           ))}
                         </ul>
                       </CardContent>
                     </Card>
                   </div>
-
-                  {/* Section Analysis */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Section-by-Section Analysis</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {analysisResult.sections.map((section, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
-                            <div className="flex-1">
-                              <div className="flex items-center justify-between mb-1">
-                                <span className="font-medium">{section.name}</span>
-                                <Badge variant={section.score >= 80 ? 'default' : section.score >= 60 ? 'secondary' : 'destructive'}>
-                                  {section.score}%
-                                </Badge>
-                              </div>
-                              <p className="text-sm text-muted-foreground">{section.feedback}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
 
                   {/* Action Buttons */}
                   <div className="flex gap-4">

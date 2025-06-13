@@ -31,7 +31,27 @@
     <!-- <link rel="icon" type="image/png" href="/icons/icon-32x32.svg" /> -->
 
     <!-- PWA and Performance -->
-    <link rel="manifest" href="/manifest.json" />
+    <script>
+      // Conditionally load manifest.json to avoid CORS issues in GitHub Codespaces
+      (function() {
+        const hostname = window.location.hostname;
+        const isGitHubCodespaces = hostname.includes('github.dev') || 
+                                  hostname.includes('app.github.dev') || 
+                                  hostname.includes('codespaces');
+        
+        if (!isGitHubCodespaces) {
+          const manifestLink = document.createElement('link');
+          manifestLink.rel = 'manifest';
+          manifestLink.href = '/manifest.json';
+          manifestLink.onerror = function() {
+            console.warn('Manifest.json could not be loaded - PWA features may be limited');
+          };
+          document.head.appendChild(manifestLink);
+        } else {
+          console.log('Skipping manifest.json in GitHub Codespaces to avoid CORS issues');
+        }
+      })();
+    </script>
     <meta name="theme-color" content="#3b82f6" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
