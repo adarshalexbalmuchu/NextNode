@@ -222,15 +222,15 @@ ResumeAnalyzer/
 3. Analyze for keyword matching and alignment
 4. Review targeted recommendations
 
-## � Supported File Formats
+## 📁 Supported File Formats
 
 The Resume Analyzer now supports multiple file formats:
 
-- **PDF Documents** (.pdf) - Full text extraction with improved error handling
-- **Word Documents** (.docx) - Full support using mammoth.js
-- **Legacy Word Documents** (.doc) - Basic support with fallback guidance
-- **Text Files** (.txt) - Direct text reading
-- **Maximum file size**: 10MB
+- **PDF (.pdf)** ✅ *Full text extraction supported*
+- **Word Documents (.doc/.docx)** ✅ *Full text extraction*
+- **Text Files (.txt)** ✅ *Full text analysis*
+
+> **💡 Note:** PDF text extraction works for most standard PDFs. Scanned PDFs or image-based PDFs may require OCR conversion for best results.
 
 ### File Upload Features
 - Drag & drop support

@@ -341,28 +341,48 @@ async function analyzeWithCohere(request: ResumeAnalysisRequest): Promise<Analys
     throw new Error('Cohere API key not configured');
   }
 
-  const prompt = `As a professional resume reviewer, analyze this resume and provide detailed feedback:
+  const prompt = `You are a STRICT resume reviewer and hiring manager. Provide honest, critical feedback. Most resumes have significant flaws - don't be generous with scores unless truly deserved.
 
-Resume Content:
+STRICT SCORING SCALE:
+- 90-100: Exceptional (rare) - Outstanding resumes with perfect job match
+- 80-89: Very good - Minor issues only
+- 70-79: Good - Several improvement areas
+- 60-69: Average - Multiple significant problems
+- 50-59: Below average - Major issues affecting job prospects
+- 30-49: Poor - Fundamental problems, needs major work
+- 0-29: Very poor - Critical flaws, complete overhaul needed
+
+EVALUATION REQUIREMENTS:
+✓ Contact info: Professional email + phone (missing = major penalty)
+✓ Quantified achievements: Specific numbers/results (none = major penalty)  
+✓ Job matching: Must align with job requirements (poor match = low score)
+✓ Experience: Clear progression with companies/dates
+✓ ATS format: Simple, keyword-rich, no fancy formatting
+✓ Length: 1-2 pages (too short/long = penalty)
+
+${request.jobDescription ? `JOB REQUIREMENTS TO MATCH AGAINST:
+${request.jobDescription}
+
+CRITICAL: Score keywordMatch harshly - if resume doesn't clearly show the EXACT skills and experience needed for this specific role, give low scores.` : ''}
+
+RESUME TO EVALUATE:
 ${request.resumeText}
 
-${request.jobDescription ? `\nJob Description for comparison:\n${request.jobDescription}` : ''}
+Be brutally honest. Identify specific problems. Don't inflate scores.
 
-Please provide a comprehensive analysis in JSON format with these fields:
+Return JSON:
 {
   "overallScore": <number 0-100>,
   "atsScore": <number 0-100>,
   "contentScore": <number 0-100>,
   "formatScore": <number 0-100>,
   ${request.jobDescription ? '"keywordMatch": <number 0-100>,' : ''}
-  "strengths": ["list of strengths"],
-  "improvements": ["list of improvements needed"],
-  "missingKeywords": ["keywords missing from resume"],
-  "suggestions": ["actionable suggestions"],
-  "sections": [{"name": "section", "score": <0-100>, "feedback": "specific feedback"}]
-}
-
-Focus on ATS compatibility, content quality, formatting, and${request.jobDescription ? ' job alignment.' : ' overall presentation.'}`;
+  "strengths": ["specific strength 1", "specific strength 2"],
+  "improvements": ["CRITICAL: specific problem 1", "specific problem 2"],
+  "missingKeywords": ["missing requirement 1", "missing requirement 2"],
+  "suggestions": ["actionable fix 1", "actionable fix 2"],
+  "sections": [{"name": "section", "score": <0-100>, "feedback": "honest assessment"}]
+}`;
 
   try {
     const response = await fetch(RESUME_ANALYSIS_CONFIG.cohere.endpoint, {
@@ -432,25 +452,47 @@ async function analyzeWithGemini(request: ResumeAnalysisRequest): Promise<Analys
     throw new Error('Google Gemini API key not configured');
   }
 
-  const prompt = `You are an expert resume reviewer. Analyze this resume and provide detailed feedback.
+  const prompt = `You are a CRITICAL resume reviewer and experienced hiring manager. Your job is to provide honest, tough feedback that will genuinely help job seekers improve their resumes. Be strict in your scoring - most resumes have significant issues that need addressing.
 
-Resume to analyze:
+IMPORTANT SCORING GUIDELINES:
+- 90-100: Exceptional resumes (rare) - Perfect formatting, strong achievements, excellent job match
+- 80-89: Very good resumes - Minor improvements needed
+- 70-79: Good resumes - Several areas need work  
+- 60-69: Average resumes - Multiple significant issues
+- 50-59: Below average - Major problems that hurt job prospects
+- 30-49: Poor resumes - Fundamental issues, unlikely to get interviews
+- 0-29: Very poor - Critical problems, needs complete overhaul
+
+CRITICAL EVALUATION CRITERIA:
+1. CONTACT INFO: Must have professional email + phone. Missing either = major penalty
+2. QUANTIFIED ACHIEVEMENTS: Look for specific numbers, percentages, dollar amounts. No numbers = major penalty
+3. JOB MATCHING: If job description provided, resume MUST closely match requirements. Poor match = low score
+4. WORK EXPERIENCE: Must show clear career progression with company names and dates
+5. ATS COMPATIBILITY: Simple formatting, no graphics/tables, proper keywords
+6. LENGTH: 1-2 pages optimal. Too short (<300 words) or too long (>1000 words) = penalty
+
+${request.jobDescription ? `JOB DESCRIPTION FOR COMPARISON:
+${request.jobDescription}
+
+CRITICAL: Compare the resume against this specific job. Score keyword matching harshly - if the resume doesn't clearly demonstrate the required skills and experience for THIS specific role, give a low keywordMatch score.` : ''}
+
+RESUME TO ANALYZE:
 ${request.resumeText}
 
-${request.jobDescription ? `Job Description for comparison:\n${request.jobDescription}\n` : ''}
+Provide brutally honest analysis as JSON. Be specific about what's wrong and what's missing. Don't be generous with scores unless the resume truly deserves it.
 
-Provide your analysis as a JSON object with this exact structure:
+JSON format:
 {
   "overallScore": number (0-100),
   "atsScore": number (0-100), 
   "contentScore": number (0-100),
   "formatScore": number (0-100),
   ${request.jobDescription ? '"keywordMatch": number (0-100),' : ''}
-  "strengths": ["strength1", "strength2"],
-  "improvements": ["improvement1", "improvement2"],
-  "missingKeywords": ["keyword1", "keyword2"],
-  "suggestions": ["suggestion1", "suggestion2"],
-  "sections": [{"name": "section", "score": number, "feedback": "text"}]
+  "strengths": ["specific strength 1", "specific strength 2"],
+  "improvements": ["CRITICAL: specific issue 1", "specific issue 2"],
+  "missingKeywords": ["missing keyword 1", "missing keyword 2"],
+  "suggestions": ["actionable suggestion 1", "actionable suggestion 2"],
+  "sections": [{"name": "section", "score": number, "feedback": "specific feedback"}]
 }`;
 
   try {
@@ -539,93 +581,229 @@ function generateEnhancedLocalAnalysis(request: ResumeAnalysisRequest, aiText?: 
 }
 
 /**
- * Fallback analysis using local heuristics
+ * Fallback analysis using sophisticated local heuristics
  */
 function generateLocalAnalysis(request: ResumeAnalysisRequest): AnalysisResult {
   const { resumeText, jobDescription } = request;
   const text = resumeText.toLowerCase();
+  const lines = resumeText.split('\n').filter(line => line.trim().length > 0);
   
-  // Basic heuristic scoring
-  const hasContact = /email|phone|linkedin/.test(text);
-  const hasExperience = /experience|work|job|position|role/.test(text);
-  const hasEducation = /education|degree|university|college/.test(text);
-  const hasSkills = /skills|technologies|programming|software/.test(text);
-  const hasAchievements = /\d+%|\$\d+|increased|improved|reduced|developed/.test(text);
+  // === CRITICAL CONTENT ANALYSIS ===
   
-  // Word count and structure analysis
-  const wordCount = resumeText.split(/\s+/).length;
-  const hasGoodLength = wordCount >= 200 && wordCount <= 1000;
+  // Contact Information (Critical - 0 points without)
+  const hasEmail = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/.test(resumeText);
+  const hasPhone = /(\+\d{1,3}[- ]?)?\d{10}|(\(\d{3}\))\s*\d{3}[- ]?\d{4}/.test(resumeText);
+  const contactScore = hasEmail && hasPhone ? 20 : hasEmail || hasPhone ? 10 : 0;
   
-  // Basic keyword matching if job description provided
+  // Professional Experience (Most Critical)
+  const experienceKeywords = ['experience', 'employment', 'work history', 'professional', 'career'];
+  const hasExperienceSection = experienceKeywords.some(keyword => text.includes(keyword));
+  const companyIndicators = /\b(inc\.|llc|corp\.|company|ltd\.|limited|group|tech|systems|solutions)\b/gi;
+  const hasCompanyNames = (resumeText.match(companyIndicators) || []).length >= 1;
+  const datePatterns = /\b(20\d{2}|19\d{2})\b|\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+20\d{2}\b/gi;
+  const hasDates = (resumeText.match(datePatterns) || []).length >= 2;
+  const hasJobTitles = /\b(manager|director|engineer|analyst|developer|specialist|coordinator|assistant|lead|senior|junior)\b/gi.test(text);
+  
+  const experienceScore = (
+    (hasExperienceSection ? 10 : 0) +
+    (hasCompanyNames ? 15 : 0) +
+    (hasDates ? 10 : 0) +
+    (hasJobTitles ? 15 : 0)
+  );
+  
+  // Quantified Achievements (Very Important)
+  const achievementPatterns = [
+    /\d+%/g, // percentages
+    /\$[\d,]+/g, // money
+    /\b\d+\s+(million|thousand|k|m)\b/gi, // large numbers
+    /\b(increased|decreased|improved|reduced|grew|saved|generated|managed|led)\s+.*?\d+/gi,
+    /\b\d+\s+(people|employees|team|projects|clients|customers)/gi
+  ];
+  const achievementCount = achievementPatterns.reduce((count, pattern) => 
+    count + (resumeText.match(pattern) || []).length, 0);
+  const achievementScore = Math.min(20, achievementCount * 5);
+  
+  // Skills Section
+  const techSkills = /\b(javascript|python|java|react|node|sql|aws|azure|docker|kubernetes|git|agile|scrum)\b/gi;
+  const skillsSection = /\b(skills|technologies|technical|programming|languages)\b/i.test(text);
+  const techSkillCount = (resumeText.match(techSkills) || []).length;
+  const skillsScore = (skillsSection ? 10 : 0) + Math.min(10, techSkillCount * 2);
+  
+  // Education
+  const educationKeywords = /\b(education|degree|university|college|bachelor|master|phd|certification)\b/i;
+  const hasEducation = educationKeywords.test(text);
+  const educationScore = hasEducation ? 10 : 5;
+  
+  // === JOB DESCRIPTION MATCHING ===
   let keywordMatch = 0;
+  let jobMatchScore = 0;
+  let missingKeywords: string[] = [];
+  
   if (jobDescription) {
-    const jobKeywords = jobDescription.toLowerCase().split(/\s+/)
-      .filter(word => word.length > 3)
-      .slice(0, 20); // Top 20 keywords
+    const jobText = jobDescription.toLowerCase();
     
-    const matches = jobKeywords.filter(keyword => text.includes(keyword)).length;
-    keywordMatch = Math.round((matches / jobKeywords.length) * 100);
+    // Extract key requirements from job description
+    const requirementKeywords = [
+      // Technical skills
+      ...((jobText.match(/\b(javascript|python|java|react|node|sql|aws|azure|docker|kubernetes|git|agile|scrum|html|css|typescript|angular|vue|spring|mongodb|postgresql|mysql|redis|elasticsearch|kafka|jenkins|terraform|ansible|linux|windows|mac|ios|android|swift|kotlin|flutter|dart|golang|rust|scala|php|ruby|rails|django|flask|express|fastapi)\b/gi) || [])),
+      // Soft skills  
+      ...((jobText.match(/\b(leadership|communication|teamwork|problem.solving|analytical|creative|adaptable|organized|detail.oriented|time.management|project.management|collaboration|presentation|negotiation|customer.service)\b/gi) || [])),
+      // Experience levels
+      ...((jobText.match(/\b(\d+\+?\s*years?|senior|junior|mid.level|lead|principal|architect|manager|director)\b/gi) || [])),
+      // Industries/domains
+      ...((jobText.match(/\b(fintech|healthcare|e.commerce|saas|startup|enterprise|automotive|aerospace|gaming|social.media|mobile|web|cloud|ai|machine.learning|data.science|cybersecurity|blockchain)\b/gi) || []))
+    ];
+    
+    const uniqueRequirements = [...new Set(requirementKeywords.map(k => k.toLowerCase()))];
+    const resumeMatches = uniqueRequirements.filter(req => text.includes(req.toLowerCase()));
+    
+    keywordMatch = uniqueRequirements.length > 0 ? Math.round((resumeMatches.length / uniqueRequirements.length) * 100) : 0;
+    jobMatchScore = Math.round(keywordMatch * 0.3); // Up to 30 points for job matching
+    
+    missingKeywords = uniqueRequirements.filter(req => !text.includes(req.toLowerCase())).slice(0, 10);
   }
-
-  // Calculate scores based on heuristics
-  const contentScore = (
-    (hasContact ? 20 : 0) +
-    (hasExperience ? 25 : 0) +
-    (hasEducation ? 15 : 0) +
-    (hasSkills ? 20 : 0) +
-    (hasAchievements ? 20 : 0)
+  
+  // === CRITICAL SCORING SYSTEM ===
+  const contentScore = Math.min(100, contactScore + experienceScore + achievementScore + skillsScore + educationScore + jobMatchScore);
+  
+  // Format Analysis (More Critical)
+  const wordCount = resumeText.split(/\s+/).length;
+  const isOptimalLength = wordCount >= 300 && wordCount <= 800;
+  const hasBulletPoints = /[•\-*]\s/.test(resumeText);
+  const hasProperSections = lines.filter(line => /^[A-Z\s]+$/.test(line.trim())).length >= 3;
+  const hasConsistentFormatting = !/\t/.test(resumeText) && !/ {3,}/.test(resumeText);
+  
+  const formatScore = Math.min(100, 
+    (isOptimalLength ? 30 : wordCount < 200 ? 10 : wordCount > 1200 ? 15 : 20) +
+    (hasBulletPoints ? 25 : 10) +
+    (hasProperSections ? 25 : 10) +
+    (hasConsistentFormatting ? 20 : 15)
   );
-
-  const formatScore = (
-    (hasGoodLength ? 50 : 30) +
-    (resumeText.includes('\n\n') ? 25 : 15) + // Has paragraphs
-    (resumeText.includes('•') || resumeText.includes('-') ? 25 : 10) // Has bullet points
+  
+  // ATS Compatibility (Stricter)
+  const hasSpecialChars = /[^\w\s\-.@()+/,]/.test(resumeText);
+  const hasComplexFormatting = /<[^>]*>|{|}|\[|\]/.test(resumeText);
+  const isAsciiCompatible = /^[\u0020-\u007F]*$/.test(resumeText);
+  
+  const atsScore = Math.min(100,
+    (isAsciiCompatible ? 30 : 15) +
+    (!hasSpecialChars ? 25 : 10) +
+    (!hasComplexFormatting ? 25 : 10) +
+    (hasEmail && hasPhone ? 20 : 10)
   );
-
-  const atsScore = Math.min(100, (
-    (!/[^\u0080-\uFFFF]/.test(resumeText) ? 30 : 10) + // Basic ASCII characters
-    (!/<[^>]*>/.test(resumeText) ? 30 : 0) + // No HTML
-    (hasGoodLength ? 20 : 10) +
-    (hasSkills ? 20 : 10)
-  ));
-
-  const overallScore = Math.round((contentScore + formatScore + atsScore) / 3);
+  
+  // === OVERALL SCORE (Much More Critical) ===
+  const rawOverallScore = Math.round((contentScore * 0.5) + (formatScore * 0.25) + (atsScore * 0.25));
+  
+  // Apply critical penalties
+  let overallScore = rawOverallScore;
+  if (!hasEmail) {
+    overallScore = Math.min(overallScore, 40); // No email = max 40
+  }
+  if (!hasExperienceSection && !hasCompanyNames) {
+    overallScore = Math.min(overallScore, 35); // No experience = max 35
+  }
+  if (achievementCount === 0) {
+    overallScore = Math.min(overallScore, 60); // No achievements = max 60
+  }
+  if (wordCount < 150) {
+    overallScore = Math.min(overallScore, 30); // Too short = max 30
+  }
+  if (jobDescription && keywordMatch < 20) {
+    overallScore = Math.min(overallScore, 45); // Poor job match = max 45
+  }
+  
+  // === DETAILED FEEDBACK ===
+  const strengths: string[] = [];
+  const improvements: string[] = [];
+  
+  if (hasEmail && hasPhone) {
+    strengths.push('Complete contact information provided');
+  }
+  if (achievementCount >= 3) {
+    strengths.push(`${achievementCount} quantified achievements found`);
+  }
+  if (hasExperienceSection && hasCompanyNames) {
+    strengths.push('Clear work experience with company names');
+  }
+  if (hasBulletPoints) {
+    strengths.push('Good use of bullet points for readability');
+  }
+  if (keywordMatch > 50) {
+    strengths.push(`Strong keyword match (${keywordMatch}%) with job requirements`);
+  }
+  if (isOptimalLength) {
+    strengths.push('Optimal resume length for ATS systems');
+  }
+  
+  if (!hasEmail) {
+    improvements.push('CRITICAL: Add professional email address');
+  }
+  if (!hasPhone) {
+    improvements.push('Add phone number');
+  }
+  if (achievementCount === 0) {
+    improvements.push('CRITICAL: Add quantified achievements with numbers/percentages');
+  }
+  if (!hasExperienceSection) {
+    improvements.push('CRITICAL: Add professional experience section');
+  }
+  if (!hasCompanyNames) {
+    improvements.push('Include company names in work history');
+  }
+  if (wordCount < 200) {
+    improvements.push('Resume is too short - add more detail');
+  }
+  if (wordCount > 1000) {
+    improvements.push('Resume is too long - consider condensing');
+  }
+  if (jobDescription && keywordMatch < 30) {
+    improvements.push(`CRITICAL: Only ${keywordMatch}% keyword match - tailor to job description`);
+  }
+  if (!hasBulletPoints) {
+    improvements.push('Use bullet points to improve readability');
+  }
+  
+  const suggestions = [
+    'Start each bullet point with strong action verbs',
+    'Include specific metrics and results in your achievements',
+    'Ensure consistent formatting throughout the document',
+    'Use industry-specific keywords from the job posting',
+    'Keep resume to 1-2 pages maximum',
+    'Proofread for grammar and spelling errors'
+  ];
 
   return {
-    overallScore,
-    atsScore,
-    contentScore,
-    formatScore,
+    overallScore: Math.max(0, Math.min(100, overallScore)),
+    atsScore: Math.max(0, Math.min(100, atsScore)),
+    contentScore: Math.max(0, Math.min(100, contentScore)),
+    formatScore: Math.max(0, Math.min(100, formatScore)),
     keywordMatch,
-    strengths: [
-      ...(hasContact ? ['Clear contact information'] : []),
-      ...(hasExperience ? ['Relevant work experience'] : []),
-      ...(hasAchievements ? ['Quantified achievements'] : []),
-      ...(hasSkills ? ['Technical skills listed'] : []),
-    ],
-    improvements: [
-      ...(!hasContact ? ['Add complete contact information'] : []),
-      ...(!hasExperience ? ['Include work experience details'] : []),
-      ...(!hasAchievements ? ['Add quantified achievements'] : []),
-      ...(!hasGoodLength ? ['Optimize resume length'] : []),
-    ],
-    missingKeywords: jobDescription ? [
-      'Industry-specific terms',
-      'Technical skills',
-      'Soft skills',
-      'Certifications'
-    ] : [],
-    suggestions: [
-      'Use action verbs to start bullet points',
-      'Include measurable results and metrics',
-      'Tailor content to the job description',
-      'Ensure consistent formatting throughout',
-    ],
+    strengths,
+    improvements,
+    missingKeywords,
+    suggestions,
     sections: [
-      { name: 'Header & Contact', score: hasContact ? 90 : 60, feedback: hasContact ? 'Good contact info' : 'Add complete contact details' },
-      { name: 'Work Experience', score: hasExperience ? 85 : 50, feedback: hasExperience ? 'Experience section present' : 'Add work experience' },
-      { name: 'Skills', score: hasSkills ? 80 : 40, feedback: hasSkills ? 'Skills section included' : 'Add relevant skills' },
-      { name: 'Education', score: hasEducation ? 85 : 70, feedback: hasEducation ? 'Education section present' : 'Consider adding education' },
+      { 
+        name: 'Contact Information', 
+        score: Math.min(100, contactScore * 5), 
+        feedback: hasEmail && hasPhone ? 'Complete contact info' : 'Missing email or phone' 
+      },
+      { 
+        name: 'Professional Experience', 
+        score: Math.min(100, experienceScore * 2), 
+        feedback: experienceScore > 30 ? 'Good experience section' : 'Needs more detailed experience' 
+      },
+      { 
+        name: 'Achievements & Impact', 
+        score: Math.min(100, achievementScore * 5), 
+        feedback: achievementCount > 0 ? `${achievementCount} quantified achievements` : 'Add quantified achievements' 
+      },
+      { 
+        name: 'Skills & Keywords', 
+        score: Math.min(100, (skillsScore + jobMatchScore) * 3), 
+        feedback: keywordMatch > 30 ? 'Good keyword alignment' : 'Improve keyword matching' 
+      },
     ]
   };
 }

@@ -23,9 +23,9 @@ describe('PDF Parsing Browser Compatibility', () => {
 
   it('should validate file size for PDFs', () => {
     const normalPdf = new File(['x'.repeat(1000)], 'normal.pdf', { type: 'application/pdf' });
-    expect(() => FileParser.validateFileSize(normalPdf)).not.toThrow();
+    expect(FileParser.validateFileSize(normalPdf)).toBe(true);
 
     const hugePdf = new File(['x'.repeat(11 * 1024 * 1024)], 'huge.pdf', { type: 'application/pdf' });
-    expect(() => FileParser.validateFileSize(hugePdf)).toThrow('File size exceeds 10MB limit');
+    expect(FileParser.validateFileSize(hugePdf)).toBe(false);
   });
 });

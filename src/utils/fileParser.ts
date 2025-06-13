@@ -104,30 +104,52 @@ export class FileParser {
   }
 
   /**
-   * Parse PDF file using react-pdf (browser-compatible)
+   * Parse PDF file using pdfjs-dist for proper text extraction
    */
   private static async parsePdfFile(file: File): Promise<string> {
     try {
-      // Use pdf-lib for parsing which is more browser-friendly
-      const { PDFDocument } = await import('pdf-lib');
+      // Dynamic import for better bundle management
+      const pdfjsLib = await import('pdfjs-dist');
       
-      const arrayBuffer = await file.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
-      
-      const pageCount = pdfDoc.getPageCount();
-      let fullText = '';
-      
-      // Note: pdf-lib doesn't directly extract text, but we can try a simple approach
-      // For now, let's use a fallback that at least validates the PDF
-      if (pageCount > 0) {
-        // For demo purposes, we'll return a message indicating PDF was parsed
-        // In production, you might want to use a more sophisticated text extraction
-        fullText = `PDF document with ${pageCount} pages detected. Text extraction from PDF requires OCR or specialized libraries. Please consider converting to text format for full analysis.`;
-      } else {
-        throw new Error('PDF file appears to be empty or contains no pages');
+      // Set worker source for PDF.js
+      if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
       }
       
-      return fullText;
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      
+      let fullText = '';
+      
+      // Extract text from all pages
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        try {
+          const page = await pdf.getPage(pageNum);
+          const textContent = await page.getTextContent();
+          
+          // Combine all text items into a string
+          const pageText = textContent.items
+            .filter((item: { str?: string }) => item.str) // Filter out empty strings
+            .map((item: { str: string }) => item.str)
+            .join(' ');
+          
+          if (pageText.trim()) {
+            fullText += pageText + '\n';
+          }
+        } catch (pageError) {
+          console.warn(`Error extracting text from page ${pageNum}:`, pageError);
+          // Continue with other pages
+        }
+      }
+      
+      // Clean up the extracted text
+      fullText = this.cleanExtractedText(fullText);
+      
+      if (fullText && fullText.trim()) {
+        return fullText;
+      } else {
+        throw new Error('PDF file appears to contain no extractable text. This might be a scanned document that requires OCR, or the text may be embedded as images.');
+      }
     } catch (error) {
       console.error('PDF parsing error:', error);
       
@@ -139,11 +161,13 @@ export class FileParser {
           throw new Error('Password-protected PDFs are not supported. Please remove the password and try again.');
         } else if (error.message.includes('XRef')) {
           throw new Error('PDF file structure is corrupted or unsupported. Please try re-saving the PDF.');
+        } else if (error.message.includes('no extractable text')) {
+          throw error; // Re-throw our custom message
         } else {
-          throw error;
+          throw new Error('Failed to extract text from PDF. The file may be corrupted, password-protected, or contain only images. For best results, please convert to Word (.docx) or Text (.txt) format.');
         }
       } else {
-        throw new Error('Failed to process PDF. For best results, please convert your resume to Word (.docx) or Text (.txt) format.');
+        throw new Error('Failed to process PDF file. Please try converting to Word (.docx) or Text (.txt) format for better results.');
       }
     }
   }
