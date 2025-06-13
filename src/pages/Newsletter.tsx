@@ -29,20 +29,25 @@ const Newsletter = () => {
           {/* Hero Section */}
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-              Stay <span className="text-primary">Informed</span>
+              Stay <span className="text-primary text-glow">Informed</span>
             </h1>
             <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
               Get the latest AI insights, research breakthroughs, and technology trends delivered
               directly to your inbox.
             </p>
+            <div className="mt-8 flex justify-center">
+              <div className="px-6 py-3 bg-green-400/10 border border-green-400/20 rounded-full backdrop-blur-sm">
+                <span className="text-green-400 text-sm font-medium">Join 10,000+ subscribers</span>
+              </div>
+            </div>
           </div>
 
           {/* Newsletter Signup */}
-          <Card className="glass max-w-2xl mx-auto">
+          <Card className="glass max-w-2xl mx-auto border-green-400/20 hover:border-green-400/40 transition-all duration-300 hover:shadow-lg hover:shadow-green-400/10">
             <CardHeader className="text-center">
               <CardTitle className="flex items-center justify-center gap-3">
-                <Bell className="w-6 h-6 text-primary" />
-                Neural Newsletter
+                <Bell className="w-6 h-6 text-primary drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+                <span className="text-green-400">Neural Newsletter</span>
               </CardTitle>
               <CardDescription>
                 Join thousands of readers who stay ahead of the AI curve

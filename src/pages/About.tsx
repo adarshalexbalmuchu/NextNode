@@ -5,7 +5,6 @@ import BreadcrumbNav from '@/components/BreadcrumbNav';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Brain, Lightbulb, Users, Target, Rocket, Shield } from 'lucide-react';
-import { useAccessibility } from '@/hooks/useAccessibility';
 
 const About = () => {
   const breadcrumbItems = [
@@ -38,11 +37,16 @@ const About = () => {
           </div>
 
           {/* Mission Section */}
-          <Card className="glass-panel mb-8 sm:mb-12">
+          <Card className="glass-panel mb-8 sm:mb-12 border-green-400/20 hover:border-green-400/40 transition-all duration-300 hover:shadow-lg hover:shadow-green-400/10">
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-lg sm:text-xl">
-                <Target className="w-5 h-5 sm:w-6 sm:h-6 text-primary" aria-hidden="true" />
-                Our Mission
+                <Target
+                  className="w-5 h-5 sm:w-6 sm:h-6 text-primary drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]"
+                  aria-hidden="true"
+                />
+                <span className="group-hover:text-green-400 transition-colors duration-300">
+                  Our Mission
+                </span>
               </CardTitle>
               <CardDescription className="text-sm sm:text-base">
                 Empowering careers through AI mastery and practical skills

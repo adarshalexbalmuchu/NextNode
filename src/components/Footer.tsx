@@ -21,7 +21,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
           {/* Brand Section */}
           <div className="flex flex-col space-y-4">
-            <h3 className="text-xl font-light text-white tracking-wide">NextNode</h3>
+            <div className="flex items-center">
+              <img
+                src="/NextNode-Logo.svg"
+                alt="NextNode Logo"
+                className="h-8 w-auto filter brightness-0 invert hover:filter hover:brightness-100 hover:invert-0 hover:hue-rotate-90 transition-all duration-300"
+              />
+            </div>
             <p className="text-sm text-gray-300 font-light leading-relaxed max-w-xs">
               Connecting ideas, building futures through intelligent content curation.
             </p>
@@ -33,15 +39,19 @@ const Footer = () => {
             <nav className="flex flex-col space-y-3">
               <Link
                 to="/privacy"
-                className="text-gray-300 hover:text-white transition-all duration-300 text-sm font-light hover:bg-white/10 hover:backdrop-blur-sm px-3 py-2 rounded-md -mx-3"
+                className="text-gray-300 hover:text-green-400 transition-all duration-300 text-sm font-light hover:bg-green-400/10 hover:backdrop-blur-sm hover:shadow-sm hover:shadow-green-400/20 px-3 py-2 rounded-md -mx-3 group"
               >
-                Privacy Policy
+                <span className="group-hover:drop-shadow-[0_0_4px_rgba(34,197,94,0.5)]">
+                  Privacy Policy
+                </span>
               </Link>
               <Link
                 to="/terms"
-                className="text-gray-300 hover:text-white transition-all duration-300 text-sm font-light hover:bg-white/10 hover:backdrop-blur-sm px-3 py-2 rounded-md -mx-3"
+                className="text-gray-300 hover:text-green-400 transition-all duration-300 text-sm font-light hover:bg-green-400/10 hover:backdrop-blur-sm hover:shadow-sm hover:shadow-green-400/20 px-3 py-2 rounded-md -mx-3 group"
               >
-                Terms of Service
+                <span className="group-hover:drop-shadow-[0_0_4px_rgba(34,197,94,0.5)]">
+                  Terms of Service
+                </span>
               </Link>
             </nav>
           </div>
@@ -55,11 +65,11 @@ const Footer = () => {
                   href="https://instagram.com/nextnode"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-300 hover:text-white transition-all duration-300 hover:scale-110 hover:brightness-110 p-2 hover:bg-white/10 rounded-lg"
+                  className="text-gray-300 hover:text-green-400 transition-all duration-300 hover:scale-110 hover:brightness-110 p-2 hover:bg-green-400/10 hover:shadow-lg hover:shadow-green-400/20 rounded-lg group"
                   aria-label="Follow us on Instagram"
                 >
                   <svg
-                    className="w-5 h-5"
+                    className="w-5 h-5 group-hover:drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                     aria-hidden="true"
@@ -76,11 +86,11 @@ const Footer = () => {
                   href="https://linkedin.com/company/nextnode"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-300 hover:text-white transition-all duration-300 hover:scale-110 hover:brightness-110 p-2 hover:bg-white/10 rounded-lg"
+                  className="text-gray-300 hover:text-green-400 transition-all duration-300 hover:scale-110 hover:brightness-110 p-2 hover:bg-green-400/10 hover:shadow-lg hover:shadow-green-400/20 rounded-lg group"
                   aria-label="Connect with us on LinkedIn"
                 >
                   <svg
-                    className="w-5 h-5"
+                    className="w-5 h-5 group-hover:drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                     aria-hidden="true"
@@ -93,10 +103,10 @@ const Footer = () => {
 
             <button
               onClick={scrollToTop}
-              className="self-start text-gray-300 hover:text-white transition-all duration-300 hover:scale-105 p-3 hover:bg-white/10 rounded-lg backdrop-blur-sm border border-white/20 hover:border-white/40"
+              className="self-start text-gray-300 hover:text-green-400 transition-all duration-300 hover:scale-105 p-3 hover:bg-green-400/10 hover:shadow-lg hover:shadow-green-400/20 rounded-lg backdrop-blur-sm border border-white/20 hover:border-green-400/40 group"
               aria-label="Scroll to top"
             >
-              <ChevronUp className="w-5 h-5" />
+              <ChevronUp className="w-5 h-5 group-hover:drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
             </button>
           </div>
         </div>

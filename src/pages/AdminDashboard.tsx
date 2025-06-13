@@ -19,9 +19,7 @@ const AdminDashboard = () => {
   const { stats, recentActivities, refetch } = useDashboardStats();
   const [activeTab, setActiveTab] = useState('overview');
 
-  const breadcrumbItems = [
-    { label: 'Admin Dashboard', href: '/admin' },
-  ];
+  const breadcrumbItems = [{ label: 'Admin Dashboard', href: '/admin' }];
 
   if (loading) {
     return (

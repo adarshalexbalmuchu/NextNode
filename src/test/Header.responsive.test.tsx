@@ -58,7 +58,7 @@ describe('Header Responsive Design', () => {
     });
 
     render(<HeaderWrapper />);
-    
+
     expect(screen.getByText('Guides')).toBeInTheDocument();
     expect(screen.getByText('Resources')).toBeInTheDocument();
     expect(screen.getByText('Career Tools')).toBeInTheDocument();
@@ -73,7 +73,7 @@ describe('Header Responsive Design', () => {
     });
 
     render(<HeaderWrapper />);
-    
+
     expect(screen.getByLabelText('Search')).toBeInTheDocument();
   });
 
@@ -86,7 +86,7 @@ describe('Header Responsive Design', () => {
     });
 
     render(<HeaderWrapper />);
-    
+
     expect(screen.getByText('Guides')).toBeInTheDocument();
     expect(screen.getByText('Resources')).toBeInTheDocument();
     expect(screen.getByText('Career Tools')).toBeInTheDocument();
@@ -95,20 +95,20 @@ describe('Header Responsive Design', () => {
 
   test('header has proper accessibility attributes', () => {
     render(<HeaderWrapper />);
-    
+
     const navigation = screen.getByRole('navigation', { name: 'Main navigation' });
     expect(navigation).toBeInTheDocument();
-    
+
     const banner = screen.getByRole('banner');
     expect(banner).toBeInTheDocument();
   });
 
   test('touch targets meet minimum size requirements', () => {
     render(<HeaderWrapper />);
-    
+
     const searchButton = screen.getByLabelText('Search');
     const computedStyle = window.getComputedStyle(searchButton);
-    
+
     // Touch targets should be at least 44px for accessibility
     expect(searchButton).toHaveClass('touch-friendly');
   });

@@ -18,8 +18,7 @@ import {
 import { Mail, MessageSquare, Send, MapPin, Clock } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
-import { submitContactForm, type ContactFormData } from '@/services/contactService';
-import { useAccessibility } from '@/hooks/useAccessibility';
+import { submitContactForm } from '@/services/contactService';
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -143,16 +142,23 @@ const Contact = () => {
               <br className="hidden sm:block" />
               Reach out and let's explore the future of AI together.
             </p>
+            <div className="mt-8 flex justify-center">
+              <div className="px-6 py-3 bg-green-400/10 border border-green-400/20 rounded-full backdrop-blur-sm">
+                <span className="text-green-400 text-sm font-medium">
+                  We respond within 24 hours
+                </span>
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
             {/* Contact Form */}
             <div className="lg:col-span-2">
-              <Card className="glass-panel">
+              <Card className="glass-panel border-green-400/20 hover:border-green-400/40 transition-all duration-300 hover:shadow-lg hover:shadow-green-400/10">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3 text-lg sm:text-xl">
-                    <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-                    Send us a Message
+                    <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6 text-primary drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+                    <span className="text-green-400">Send us a Message</span>
                   </CardTitle>
                   <CardDescription className="text-sm sm:text-base">
                     Fill out the form below and we'll get back to you within 24 hours

@@ -85,17 +85,17 @@ const Header = () => {
         <div className="container mx-auto px-2 sm:px-4 lg:px-6">
           <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20 min-h-[56px]">
             {/* Logo - Home Link */}
-            <Link 
-              to="/" 
-              className="flex items-center space-x-2 group flex-shrink-0 hover:opacity-80 transition-opacity" 
+            <Link
+              to="/"
+              className="flex items-center space-x-2 group flex-shrink-0 hover:opacity-80 transition-opacity"
               aria-label="NextNode - Go to Home"
               title="Go to Home"
             >
-              <img 
-                src="/NextNode-Logo.svg" 
-                alt="NextNode Logo" 
-                className="w-32 sm:w-40 lg:w-44 h-auto group-hover:scale-105 transition-transform" 
-                style={{maxHeight: '40px'}} 
+              <img
+                src="/NextNode-Logo.svg"
+                alt="NextNode Logo"
+                className="w-32 sm:w-40 lg:w-44 h-auto group-hover:scale-105 transition-transform"
+                style={{ maxHeight: '40px' }}
               />
             </Link>
 
@@ -105,28 +105,16 @@ const Header = () => {
               role="navigation"
               aria-label="Main navigation"
             >
-              <Link
-                to="/blog"
-                className="nav-link"
-              >
+              <Link to="/blog" className="nav-link">
                 Guides
               </Link>
-              <Link
-                to="/resources"
-                className="nav-link"
-              >
+              <Link to="/resources" className="nav-link">
                 Resources
               </Link>
-              <Link
-                to="/career-tools"
-                className="nav-link"
-              >
+              <Link to="/career-tools" className="nav-link">
                 Career Tools
               </Link>
-              <Link
-                to="/about"
-                className="nav-link"
-              >
+              <Link to="/about" className="nav-link">
                 About
               </Link>
             </nav>
@@ -135,9 +123,8 @@ const Header = () => {
             <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-3 lg:space-x-4 flex-shrink-0">
               <Button
                 variant="ghost"
-                size="sm"
                 onClick={toggleSearch}
-                className="action-btn"
+                className="action-btn touch-friendly"
                 aria-label="Search"
               >
                 <Search className="action-icon" />
@@ -148,7 +135,7 @@ const Header = () => {
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="action-btn"
+                      className="action-btn touch-friendly"
                       aria-label="Account menu"
                     >
                       <User className="action-icon" />
@@ -179,14 +166,21 @@ const Header = () => {
                       </>
                     )}
 
-                    <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive hover:bg-destructive/10">
+                    <DropdownMenuItem
+                      onClick={handleSignOut}
+                      className="cursor-pointer text-destructive hover:bg-destructive/10"
+                    >
                       <LogOut className="w-4 h-4 mr-2" />
                       Sign Out
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button asChild size="sm" className="btn-primary text-xs sm:text-sm px-3 sm:px-4 py-2 min-h-[44px]">
+                <Button
+                  asChild
+                  size="sm"
+                  className="btn-primary text-xs sm:text-sm px-3 sm:px-4 py-2 min-h-[44px]"
+                >
                   <Link to="/auth">Sign In</Link>
                 </Button>
               )}
@@ -225,9 +219,8 @@ const Header = () => {
                 />
                 <Button
                   variant="ghost"
-                  size="sm"
                   onClick={() => setIsSearchOpen(false)}
-                  className="action-btn"
+                  className="action-btn touch-friendly"
                   aria-label="Close search"
                 >
                   <X className="w-5 h-5" />
