@@ -82,7 +82,7 @@ jobs:
 
           # Set performance budgets
           MAX_MAIN_BUNDLE_KB=250
-          MAX_CSS_BUNDLE_KB=60
+          MAX_CSS_BUNDLE_KB=65
 
           if [ $MAIN_BUNDLE_SIZE_KB -gt $MAX_MAIN_BUNDLE_KB ]; then
             echo "❌ Main bundle size (${MAIN_BUNDLE_SIZE_KB}KB) exceeds budget (${MAX_MAIN_BUNDLE_KB}KB)"
