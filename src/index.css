@@ -360,6 +360,11 @@
     outline: none;
   }
 
+  /* Search input styling */
+  .search-input {
+    @apply flex-1 bg-transparent text-foreground placeholder-muted-foreground text-lg outline-none focus:outline-none;
+  }
+
   /* Modal */
   .modal {
     background: var(--glass);
@@ -509,6 +514,13 @@
     color: hsl(var(--primary));
     outline: 2px solid hsl(var(--primary));
     outline-offset: 2px;
+  }
+
+  /* Navigation link styling to avoid repetition */
+  .nav-link {
+    @apply text-xs sm:text-sm md:text-base font-medium hover:text-primary transition-colors;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded;
+    @apply px-2 sm:px-3 py-2 whitespace-nowrap min-h-[44px] flex items-center;
   }
 
   /* Enhanced glass effects with performance considerations */
@@ -679,6 +691,109 @@
       backdrop-filter: blur(16px);
       background: var(--glass);
     }
+  }
+
+  /* Hide scrollbar utility */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+  }
+
+  /* Enhanced mobile header responsive design */
+  @media (max-width: 480px) {
+    .mobile-header-compact {
+      padding: 0.5rem;
+    }
+    
+    .mobile-header-compact .container {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+    
+    /* Ensure touch targets are adequate on very small screens */
+    .touch-friendly {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+  
+  /* Tablet optimizations */
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .tablet-nav-spacing {
+      gap: 1rem;
+    }
+  }
+
+  /* Mobile-first responsive header design */
+  @media (max-width: 320px) {
+    /* Extra small mobile devices */
+    .header-mobile-xs {
+      padding: 0.25rem;
+    }
+    
+    .nav-mobile-xs a {
+      font-size: 0.625rem; /* 10px */
+      padding: 0.25rem 0.5rem;
+    }
+    
+    .btn-mobile-xs {
+      height: 40px;
+      width: 40px;
+    }
+  }
+  
+  @media (min-width: 321px) and (max-width: 768px) {
+    /* Standard mobile devices */
+    .header-mobile {
+      padding: 0.5rem;
+    }
+    
+    .nav-mobile a {
+      font-size: 0.75rem; /* 12px */
+      padding: 0.5rem;
+    }
+  }
+  
+  @media (min-width: 769px) and (max-width: 1024px) {
+    /* Tablet devices */
+    .header-tablet {
+      padding: 0.75rem;
+    }
+    
+    .nav-tablet {
+      gap: 1.5rem;
+    }
+    
+    .nav-tablet a {
+      font-size: 0.875rem; /* 14px */
+      padding: 0.75rem 1rem;
+    }
+  }
+  
+  /* Landscape mobile optimization */
+  @media (max-height: 500px) and (orientation: landscape) {
+    .header-landscape {
+      height: 48px;
+      min-height: 48px;
+    }
+    
+    .nav-landscape a {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+    }
+  }
+
+  /* Action button styling to avoid repetition */
+  .action-btn {
+    @apply h-10 w-10 sm:h-11 sm:w-11 p-0 touch-friendly focus-visible-enhanced;
+  }
+  
+  .action-icon {
+    @apply w-4 h-4 sm:w-5 sm:h-5;
   }
 }
 

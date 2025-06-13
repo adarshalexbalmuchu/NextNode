@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Users, FileText, BarChart3, Settings, Shield } from 'lucide-react';
 import Background from '@/components/Background';
 import Header from '@/components/Header';
+import BreadcrumbNav from '@/components/BreadcrumbNav';
 import UserManagement from '@/components/admin/UserManagement';
 import PostManagement from '@/components/admin/PostManagement';
 import AnalyticsSimple from '@/components/admin/AnalyticsSimple';
@@ -18,15 +19,9 @@ const AdminDashboard = () => {
   const { stats, recentActivities, refetch } = useDashboardStats();
   const [activeTab, setActiveTab] = useState('overview');
 
-  // Debug logging
-  console.log('AdminDashboard debug:', {
-    user: user?.id,
-    userRole,
-    hasAdminRole: hasRole('admin'),
-    authLoading: loading,
-    statsLoading: stats.loading,
-    statsError: stats.error,
-  });
+  const breadcrumbItems = [
+    { label: 'Admin Dashboard', href: '/admin' },
+  ];
 
   if (loading) {
     return (
@@ -125,6 +120,7 @@ const AdminDashboard = () => {
       <Background />
       <Header />
       <main className="container mx-auto px-4 sm:px-6 py-16 sm:py-20" role="main">
+        <BreadcrumbNav items={breadcrumbItems} />
         <div className="mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold mb-2">Admin Dashboard</h1>
           <p className="text-muted-foreground text-sm sm:text-base">
