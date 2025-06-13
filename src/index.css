@@ -791,11 +791,11 @@
       padding: 0.25rem 0.5rem;
       font-size: 0.75rem;
     }
-  }  /* Action button styling to avoid repetition */
+  } /* Action button styling to avoid repetition */
   .action-btn {
     @apply h-10 w-10 sm:h-11 sm:w-11 p-0 touch-friendly;
   }
-  
+
   /* Remove ring effects from action buttons */
   .action-btn:focus-visible {
     outline: none;
@@ -803,7 +803,7 @@
     color: hsl(var(--primary));
     box-shadow: none;
   }
-  
+
   .action-icon {
     @apply w-4 h-4 sm:w-5 sm:h-5;
   }
