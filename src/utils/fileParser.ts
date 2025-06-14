@@ -1,3 +1,4 @@
+
 import * as pdfjsLib from 'pdfjs-dist';
 import mammoth from 'mammoth';
 
@@ -12,11 +13,6 @@ export interface ParsedContent {
     pages?: number;
     wordCount?: number;
   };
-}
-
-// Define TextItem type locally
-interface TextItem {
-  str: string;
 }
 
 export const parseFile = async (file: File): Promise<string> => {
@@ -48,8 +44,14 @@ const parsePDF = async (file: File): Promise<string> => {
       const textContent = await page.getTextContent();
 
       const pageText = textContent.items
-        .filter((item): item is TextItem => typeof (item as any).str === 'string')
-        .map(item => item.str)
+        .map((item: any) => {
+          // Handle both TextItem and TextMarkedContent
+          if ('str' in item) {
+            return item.str;
+          }
+          return '';
+        })
+        .filter(Boolean)
         .join(' ');
 
       fullText += pageText + '\n';

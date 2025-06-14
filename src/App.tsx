@@ -11,26 +11,26 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import ComponentPreloader from '@/components/ComponentPreloader';
 
 // Lazy load components for better performance
-import { lazyLoader } from '@/utils/lazyLoader';
+import { createLazyComponent } from '@/utils/lazyLoader';
 
-const Index = lazyLoader(() => import('@/pages/Index'));
-const Blog = lazyLoader(() => import('@/pages/Blog'));
-const BlogPost = lazyLoader(() => import('@/pages/BlogPost'));
-const About = lazyLoader(() => import('@/pages/About'));
-const Contact = lazyLoader(() => import('@/pages/Contact'));
-const Auth = lazyLoader(() => import('@/pages/Auth'));
-const AdminDashboard = lazyLoader(() => import('@/pages/AdminDashboard'));
-const CreatePost = lazyLoader(() => import('@/pages/CreatePost'));
-const CareerTools = lazyLoader(() => import('@/pages/CareerTools'));
-const ResumeAnalyzerPage = lazyLoader(() => import('@/pages/tools/ResumeAnalyzerPage'));
-const Resources = lazyLoader(() => import('@/pages/Resources'));
-const Newsletter = lazyLoader(() => import('@/pages/Newsletter'));
-const NotFound = lazyLoader(() => import('@/pages/NotFound'));
-const Terms = lazyLoader(() => import('@/pages/Terms'));
-const Privacy = lazyLoader(() => import('@/pages/Privacy'));
-const Cookies = lazyLoader(() => import('@/pages/Cookies'));
-const RSSPage = lazyLoader(() => import('@/pages/RSSPage'));
-const BootstrapAdmin = lazyLoader(() => import('@/pages/BootstrapAdmin'));
+const Index = createLazyComponent(() => import('@/pages/Index'));
+const Blog = createLazyComponent(() => import('@/pages/Blog'));
+const BlogPost = createLazyComponent(() => import('@/pages/BlogPost'));
+const About = createLazyComponent(() => import('@/pages/About'));
+const Contact = createLazyComponent(() => import('@/pages/Contact'));
+const Auth = createLazyComponent(() => import('@/pages/Auth'));
+const AdminDashboard = createLazyComponent(() => import('@/pages/AdminDashboard'));
+const CreatePost = createLazyComponent(() => import('@/pages/CreatePost'));
+const CareerTools = createLazyComponent(() => import('@/pages/CareerTools'));
+const ResumeAnalyzerPage = createLazyComponent(() => import('@/pages/tools/ResumeAnalyzerPage'));
+const Resources = createLazyComponent(() => import('@/pages/Resources'));
+const Newsletter = createLazyComponent(() => import('@/pages/Newsletter'));
+const NotFound = createLazyComponent(() => import('@/pages/NotFound'));
+const Terms = createLazyComponent(() => import('@/pages/Terms'));
+const Privacy = createLazyComponent(() => import('@/pages/Privacy'));
+const Cookies = createLazyComponent(() => import('@/pages/Cookies'));
+const RSSPage = createLazyComponent(() => import('@/pages/RSSPage'));
+const BootstrapAdmin = createLazyComponent(() => import('@/pages/BootstrapAdmin'));
 
 // Create a client
 const queryClient = new QueryClient({
