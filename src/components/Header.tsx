@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, User, LogOut, Settings, X, Home } from 'lucide-react';
@@ -102,19 +103,19 @@ const Header = () => {
                 to="/blog"
                 className="text-xs sm:text-sm md:text-base font-medium hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-2 sm:px-3 py-2 whitespace-nowrap min-h-[44px] flex items-center"
               >
-                Guides
-              </Link>
-              <Link
-                to="/resources"
-                className="text-xs sm:text-sm md:text-base font-medium hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-2 sm:px-3 py-2 whitespace-nowrap min-h-[44px] flex items-center"
-              >
-                Resources
+                AI Blog
               </Link>
               <Link
                 to="/career-tools"
                 className="text-xs sm:text-sm md:text-base font-medium hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-2 sm:px-3 py-2 whitespace-nowrap min-h-[44px] flex items-center"
               >
-                Career Tools
+                AI Tools
+              </Link>
+              <Link
+                to="/career-tools#courses"
+                className="text-xs sm:text-sm md:text-base font-medium hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-2 sm:px-3 py-2 whitespace-nowrap min-h-[44px] flex items-center"
+              >
+                AI Courses
               </Link>
               <Link
                 to="/about"
@@ -160,34 +161,18 @@ const Header = () => {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
 
-                    {/* Navigation Items for easy access */}
-                    <DropdownMenuItem asChild>
-                      <Link to="/" className="w-full cursor-pointer">
-                        <Home className="w-4 h-4 mr-2" />
-                        Home Dashboard
-                      </Link>
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem asChild>
-                      <Link to="/blog" className="w-full cursor-pointer">
-                        <Search className="w-4 h-4 mr-2" />
-                        Browse Guides
-                      </Link>
-                    </DropdownMenuItem>
-
                     {hasRole('admin') && (
                       <>
-                        <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
                           <Link to="/admin" className="w-full cursor-pointer">
                             <Settings className="w-4 h-4 mr-2" />
                             Admin Dashboard
                           </Link>
                         </DropdownMenuItem>
+                        <DropdownMenuSeparator />
                       </>
                     )}
 
-                    <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive hover:bg-destructive/10">
                       <LogOut className="w-4 h-4 mr-2" />
                       Sign Out
@@ -220,14 +205,14 @@ const Header = () => {
               style={{ animationDelay: '0.1s' }}
             >
               <h2 id="search-title" className="sr-only">
-                Search Articles
+                Search AI Content
               </h2>
 
               <div className="flex items-center space-x-4 mb-4">
                 <Search className="w-6 h-6 text-muted-foreground" />
                 <input
                   type="text"
-                  placeholder="Search articles, topics, or keywords..."
+                  placeholder="Search AI tools, courses, or blog posts..."
                   className="flex-1 bg-transparent text-foreground placeholder-muted-foreground text-lg outline-none focus:outline-none"
                   autoFocus
                   onKeyDown={e => {
