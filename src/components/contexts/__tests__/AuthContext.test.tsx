@@ -1,7 +1,6 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render } from '@/test/test-utils';
-import { screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@/test/test-utils';
 import { AuthProvider, useAuth } from '../AuthContext';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
