@@ -1,3 +1,4 @@
+
 import { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -33,8 +34,11 @@ const AllTheProviders = ({ children }: AllTheProvidersProps) => {
   );
 };
 
-const customRender = (ui: ReactElement, options?: Omit<RenderOptions, 'wrapper'>) =>
+const customRender = (ui: ReactElement, options?: RenderOptions) =>
   render(ui, { wrapper: AllTheProviders, ...options });
 
+// Re-export everything from @testing-library/react
 export * from '@testing-library/react';
+
+// Override the render function with our custom one
 export { customRender as render };

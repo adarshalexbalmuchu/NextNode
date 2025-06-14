@@ -50,22 +50,6 @@ const TestComponent = () => {
   );
 };
 
-const createWrapper = () => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
-
-  return ({ children }: { children: React.ReactNode }) => (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>{children}</AuthProvider>
-    </QueryClientProvider>
-  );
-};
-
 describe('AuthContext', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -119,17 +103,13 @@ describe('AuthContext', () => {
   });
 
   it('shows loading state initially', async () => {
-    const Wrapper = createWrapper();
-
-    render(<TestComponent />, { wrapper: Wrapper });
+    render(<TestComponent />);
 
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
   it('shows not logged in when no session', async () => {
-    const Wrapper = createWrapper();
-
-    render(<TestComponent />, { wrapper: Wrapper });
+    render(<TestComponent />);
 
     await waitFor(() => {
       expect(screen.getByTestId('user-status')).toHaveTextContent('Not logged in');
@@ -159,9 +139,7 @@ describe('AuthContext', () => {
       error: null,
     });
 
-    const Wrapper = createWrapper();
-
-    render(<TestComponent />, { wrapper: Wrapper });
+    render(<TestComponent />);
 
     await waitFor(() => {
       expect(screen.getByTestId('user-status')).toHaveTextContent('Logged in as test@example.com');
@@ -173,9 +151,7 @@ describe('AuthContext', () => {
     const mockSignOut = vi.fn().mockResolvedValue({ error: null });
     vi.mocked(supabase.auth.signOut).mockImplementation(mockSignOut);
 
-    const Wrapper = createWrapper();
-
-    render(<TestComponent />, { wrapper: Wrapper });
+    render(<TestComponent />);
 
     await waitFor(() => {
       expect(screen.getByTestId('signout-btn')).toBeInTheDocument();
