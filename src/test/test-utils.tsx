@@ -1,6 +1,6 @@
 
 import { ReactElement } from 'react';
-import { render, RenderOptions } from '@testing-library/react';
+import { render, RenderOptions, screen, fireEvent, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '@/components/contexts/AuthContext';
@@ -42,3 +42,6 @@ export * from '@testing-library/react';
 
 // Override the render function with our custom one
 export { customRender as render };
+
+// Explicitly export the commonly used functions
+export { screen, fireEvent, waitFor };
