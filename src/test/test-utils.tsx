@@ -1,9 +1,8 @@
 
+
 import { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
-import { screen } from '@testing-library/react';
-import { fireEvent } from '@testing-library/react';
-import { waitFor } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '@/components/contexts/AuthContext';
@@ -48,3 +47,4 @@ export { customRender as render };
 
 // Explicitly export the commonly used functions
 export { screen, fireEvent, waitFor };
+
