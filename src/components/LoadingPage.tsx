@@ -10,28 +10,24 @@ interface SparkProps {
 
 const ElectricSpark: React.FC<SparkProps> = ({ delay, duration, x, y }) => (
   <div
-    className="absolute w-1 h-1 bg-primary rounded-full animate-pulse"
+    className="absolute w-1 h-1 bg-primary rounded-full animate-electric-pulse"
     style={{
       left: x,
       top: y,
       animationDelay: `${delay}s`,
       animationDuration: `${duration}s`,
-      boxShadow: `
-        0 0 10px hsl(var(--primary)),
-        0 0 20px hsl(var(--primary)),
-        0 0 30px hsl(var(--primary))
-      `,
     }}
   >
     {/* Lightning bolt path */}
     <div
-      className="absolute w-0.5 bg-gradient-to-b from-primary to-transparent opacity-80"
+      className="absolute w-0.5 bg-gradient-to-b from-primary to-transparent opacity-80 animate-lightning"
       style={{
         height: '60px',
         left: '-1px',
         top: '-30px',
         transform: 'rotate(15deg)',
-        animation: `lightning ${duration}s ${delay}s infinite`,
+        animationDuration: `${duration}s`,
+        animationDelay: `${delay}s`,
       }}
     />
   </div>
@@ -67,15 +63,13 @@ const LoadingPage: React.FC = () => {
     <div className="fixed inset-0 bg-gradient-to-br from-background via-background/95 to-background flex items-center justify-center overflow-hidden">
       {/* Animated background grid */}
       <div className="absolute inset-0 opacity-20">
-        <div
-          className="absolute inset-0"
+        <div className="absolute inset-0 animate-grid-flow"
           style={{
             backgroundImage: `
               linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
               linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px)
             `,
             backgroundSize: '50px 50px',
-            animation: 'grid-flow 4s linear infinite',
           }}
         />
       </div>
@@ -159,18 +153,6 @@ const LoadingPage: React.FC = () => {
         <div className="absolute bottom-0 w-full h-0.5 bg-gradient-to-l from-primary to-transparent animate-pulse" />
         <div className="absolute right-0 w-0.5 h-full bg-gradient-to-t from-primary to-transparent animate-pulse" />
       </div>
-
-      <style jsx>{`
-        @keyframes lightning {
-          0%, 90%, 100% { opacity: 0; }
-          5%, 85% { opacity: 1; }
-        }
-        
-        @keyframes grid-flow {
-          0% { transform: translate(0, 0); }
-          100% { transform: translate(50px, 50px); }
-        }
-      `}</style>
     </div>
   );
 };
