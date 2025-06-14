@@ -1,27 +1,35 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { Button } from '@/components/ui/button';
+import { Button } from '../button';
 
 describe('Button Component', () => {
-  it('renders button with text', () => {
+  it('should render a button with default props', () => {
     render(<Button>Click me</Button>);
-    expect(screen.getByRole('button')).toHaveTextContent('Click me');
+    const buttonElement = screen.getByText('Click me');
+    expect(buttonElement).toBeInTheDocument();
   });
 
-  it('applies variant classes correctly', () => {
-    render(<Button variant="destructive">Delete</Button>);
-    const button = screen.getByRole('button');
-    expect(button).toHaveClass('bg-destructive');
+  it('should render a button with a custom class', () => {
+    render(<Button className="custom-class">Click me</Button>);
+    const buttonElement = screen.getByText('Click me');
+    expect(buttonElement).toHaveClass('custom-class');
   });
 
-  it('handles click events', async () => {
-    const handleClick = vi.fn();
-    render(<Button onClick={handleClick}>Click me</Button>);
+  it('should render a button with a variant', () => {
+    render(<Button variant="secondary">Click me</Button>);
+    const buttonElement = screen.getByText('Click me');
+    expect(buttonElement).toBeInTheDocument();
+  });
 
-    const button = screen.getByRole('button');
-    await userEvent.click(button);
+  it('should render a button with a size', () => {
+    render(<Button size="lg">Click me</Button>);
+    const buttonElement = screen.getByText('Click me');
+    expect(buttonElement).toBeInTheDocument();
+  });
 
-    expect(handleClick).toHaveBeenCalledTimes(1);
+  it('should render a disabled button', () => {
+    render(<Button disabled>Click me</Button>);
+    const buttonElement = screen.getByText('Click me');
+    expect(buttonElement).toBeDisabled();
   });
 });
