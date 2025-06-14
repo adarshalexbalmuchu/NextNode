@@ -10,6 +10,9 @@ export default defineConfig(({ mode }) => {
       host: '::',
       port: 8080,
       cors: true,
+      headers: {
+        'Content-Type': 'application/javascript; charset=utf-8'
+      }
     },
     plugins: [
       react(),
@@ -26,6 +29,10 @@ export default defineConfig(({ mode }) => {
       minify: 'esbuild',
       rollupOptions: {
         output: {
+          format: 'es',
+          entryFileNames: '[name].[hash].js',
+          chunkFileNames: '[name].[hash].js',
+          assetFileNames: '[name].[hash].[ext]',
           manualChunks: {
             'react-vendor': ['react', 'react-dom'],
             'ui-vendor': ['@radix-ui/react-slot', 'lucide-react'],
@@ -35,6 +42,7 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
+    assetsInclude: ['**/*.svg', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.webp'],
     optimizeDeps: {
       include: [
         'react',
@@ -45,6 +53,7 @@ export default defineConfig(({ mode }) => {
         'mammoth',
         'pdfjs-dist',
       ],
+      exclude: ['lovable-tagger'],
     },
   };
 });

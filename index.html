@@ -30,27 +30,6 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
 
     <!-- PWA and Performance -->
-    <script>
-      // Conditionally load manifest.json to avoid CORS issues in GitHub Codespaces
-      (function() {
-        const hostname = window.location.hostname;
-        const isGitHubCodespaces = hostname.includes('github.dev') || 
-                                  hostname.includes('app.github.dev') || 
-                                  hostname.includes('codespaces');
-        
-        if (!isGitHubCodespaces) {
-          const manifestLink = document.createElement('link');
-          manifestLink.rel = 'manifest';
-          manifestLink.href = '/manifest.json';
-          manifestLink.onerror = function() {
-            console.warn('Manifest.json could not be loaded - PWA features may be limited');
-          };
-          document.head.appendChild(manifestLink);
-        } else {
-          console.log('Skipping manifest.json in GitHub Codespaces to avoid CORS issues');
-        }
-      })();
-    </script>
     <meta name="theme-color" content="#3b82f6" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -59,7 +38,6 @@
     <!-- Preload critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="dns-prefetch" href="https://your-supabase-url.supabase.co" />
 
     <!-- Critical CSS inline for faster LCP -->
     <style>
@@ -68,10 +46,7 @@
         margin: 0;
         background: #0a0a0a;
         color: #fff;
-        font-family:
-          system-ui,
-          -apple-system,
-          sans-serif;
+        font-family: system-ui, -apple-system, sans-serif;
       }
       #root {
         min-height: 100vh;
@@ -84,9 +59,6 @@
         background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
       }
     </style>
-
-    <!-- Preload critical assets -->
-    <link rel="modulepreload" href="/src/main.tsx" />
   </head>
 
   <body>
