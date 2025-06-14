@@ -1,3 +1,4 @@
+
 import Background from '@/components/Background';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -5,9 +6,7 @@ import BreadcrumbNav from '@/components/BreadcrumbNav';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
-  ExternalLink,
   FileText,
   Users,
   Target,
@@ -15,141 +14,71 @@ import {
   GraduationCap,
   Zap,
   TrendingUp,
+  Bot,
+  BrainCircuit,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const CareerTools = () => {
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    { label: 'Career Tools', href: '/career-tools' },
+    { label: 'AI Career Tools', href: '/career-tools' },
   ];
 
-  const resumeTools = [
+  const aiCareerTools = [
     {
-      name: 'Resume Analyzer AI',
+      name: 'AI Resume Analyzer',
       description: 'AI-powered resume analysis with ATS optimization and detailed feedback',
       features: ['ATS compatibility check', 'Content scoring', 'Keyword analysis', 'Instant feedback'],
       tier: 'Free',
-      category: 'Resume',
+      category: 'Resume Optimization',
       link: '/tools/resume-analyzer',
+      icon: FileText,
     },
     {
-      name: 'LinkedIn Optimizer',
-      description: 'Optimize your LinkedIn profile for better visibility (Coming Soon)',
-      features: ['Keyword optimization', 'Profile scoring', 'Industry insights'],
-      tier: 'Premium',
-      category: 'Profile',
+      name: 'AI Interview Coach',
+      description: 'Practice interviews with AI-powered feedback and personalized coaching',
+      features: ['Mock interviews', 'Real-time feedback', 'Industry-specific questions', 'Performance analytics'],
+      tier: 'Coming Soon',
+      category: 'Interview Prep',
       link: null,
+      icon: Users,
     },
     {
-      name: 'Cover Letter Generator',
-      description: 'Generate personalized cover letters with AI (Coming Soon)',
-      features: ['Company research', 'Role customization', 'Multiple formats'],
-      tier: 'Free',
-      category: 'Cover Letter',
+      name: 'AI Career Path Advisor',
+      description: 'Get personalized career recommendations based on your skills and interests',
+      features: ['Skills assessment', 'Career matching', 'Learning roadmap', 'Job market insights'],
+      tier: 'Coming Soon',
+      category: 'Career Planning',
       link: null,
+      icon: Target,
     },
-  ];
-
-  const interviewTools = [
     {
-      name: 'Mock Interview AI',
-      description: 'Practice interviews with AI-powered feedback (Coming Soon)',
-      features: ['Real-time feedback', 'Industry-specific questions', 'Performance analytics'],
-      tier: 'Premium',
-      category: 'Practice',
+      name: 'AI Cover Letter Generator',
+      description: 'Generate personalized cover letters tailored for specific jobs and companies',
+      features: ['Company research', 'Role customization', 'Multiple formats', 'ATS optimization'],
+      tier: 'Coming Soon',
+      category: 'Job Applications',
       link: null,
+      icon: BrainCircuit,
     },
     {
-      name: 'STAR Method Builder',
-      description: 'Structure your interview responses using the STAR method (Coming Soon)',
-      features: ['Story templates', 'Impact measurement', 'Delivery tips'],
-      tier: 'Free',
-      category: 'Preparation',
+      name: 'AI Skills Gap Analyzer',
+      description: 'Identify skill gaps and get AI-powered learning recommendations',
+      features: ['Skills assessment', 'Gap analysis', 'Learning resources', 'Progress tracking'],
+      tier: 'Coming Soon',
+      category: 'Skill Development',
       link: null,
+      icon: TrendingUp,
     },
     {
-      name: 'Salary Negotiation Guide',
-      description: 'Data-driven salary negotiation strategies (Coming Soon)',
-      features: ['Market research', 'Script templates', 'Timing strategies'],
-      tier: 'Premium',
-      category: 'Negotiation',
+      name: 'AI Networking Assistant',
+      description: 'AI-powered networking strategies and outreach message generation',
+      features: ['LinkedIn optimization', 'Message templates', 'Networking strategies', 'Follow-up reminders'],
+      tier: 'Coming Soon',
+      category: 'Professional Networking',
       link: null,
-    },
-  ];
-
-  const skillDevelopment = [
-    {
-      name: 'AI Skills Assessment',
-      description: 'Assess your AI readiness and skill gaps',
-      features: ['Comprehensive evaluation', 'Personalized roadmap', 'Progress tracking'],
-      tier: 'Free',
-      category: 'Assessment',
-    },
-    {
-      name: 'Learning Path Generator',
-      description: 'Create personalized learning paths based on career goals',
-      features: ['Goal-based planning', 'Resource curation', 'Timeline optimization'],
-      tier: 'Premium',
-      category: 'Learning',
-    },
-    {
-      name: 'Certification Tracker',
-      description: 'Track and plan professional certifications',
-      features: ['Certification database', 'ROI calculator', 'Study planning'],
-      tier: 'Free',
-      category: 'Certifications',
-    },
-  ];
-
-  const networkingTools = [
-    {
-      name: 'Cold Email Templates',
-      description: 'Professional email templates for networking',
-      features: ['Industry-specific templates', 'Follow-up sequences', 'Response tracking'],
-      tier: 'Free',
-      category: 'Email',
-    },
-    {
-      name: 'Coffee Chat Scheduler',
-      description: 'Schedule and manage informational interviews',
-      features: ['Calendar integration', 'Conversation guides', 'Follow-up reminders'],
-      tier: 'Premium',
-      category: 'Meetings',
-    },
-    {
-      name: 'Industry Event Finder',
-      description: 'Discover relevant networking events and conferences',
-      features: ['Location-based search', 'Interest matching', 'Event recommendations'],
-      tier: 'Free',
-      category: 'Events',
-    },
-  ];
-
-  const careerPlanningResources = [
-    {
-      title: 'Career Transition Roadmap',
-      description: 'Step-by-step guide for changing careers with AI assistance',
-      type: 'Guide',
-      duration: '30 days',
-    },
-    {
-      title: 'Personal Branding Toolkit',
-      description: 'Build your professional brand across all platforms',
-      type: 'Toolkit',
-      duration: 'Ongoing',
-    },
-    {
-      title: 'Salary Benchmarking Tool',
-      description: 'Compare your compensation with industry standards',
-      type: 'Tool',
-      duration: 'Instant',
-    },
-    {
-      title: 'Career Goal Setting Framework',
-      description: 'Set and track meaningful career objectives',
-      type: 'Framework',
-      duration: '1 week',
+      icon: Bot,
     },
   ];
 
@@ -160,22 +89,26 @@ const CareerTools = () => {
     tier: string;
     category: string;
     link?: string | null;
+    icon: React.ComponentType<{ className?: string }>;
   }
 
   const ToolCard = ({ tool }: { tool: Tool }) => (
     <Card className="glass-panel hover:scale-105 transition-transform h-full">
       <CardHeader>
-        <div className="flex justify-between items-start">
-          <div>
-            <CardTitle className="text-lg">{tool.name}</CardTitle>
-            <CardDescription>{tool.category}</CardDescription>
+        <div className="flex justify-between items-start mb-4">
+          <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+            <tool.icon className="w-6 h-6 text-primary" />
           </div>
-          <Badge variant={tool.tier.includes('Free') ? 'default' : 'secondary'}>{tool.tier}</Badge>
+          <Badge variant={tool.tier === 'Free' ? 'default' : 'secondary'}>{tool.tier}</Badge>
+        </div>
+        <div>
+          <CardTitle className="text-lg">{tool.name}</CardTitle>
+          <CardDescription className="text-primary font-medium">{tool.category}</CardDescription>
         </div>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground mb-4">{tool.description}</p>
-        <div className="space-y-2 mb-4">
+        <div className="space-y-2 mb-6">
           {tool.features.map((feature: string, index: number) => (
             <div key={index} className="flex items-center gap-2">
               <div className="w-2 h-2 bg-primary rounded-full"></div>
@@ -212,169 +145,94 @@ const CareerTools = () => {
 
           {/* Hero Section */}
           <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <GraduationCap className="w-12 h-12 text-primary" />
+              <Bot className="w-12 h-12 text-primary" />
+            </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              Career <span className="text-primary text-glow">Tools</span>
+              AI-Powered <span className="text-primary text-glow">Career Tools</span>
             </h1>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              AI-powered tools and resources to accelerate your career growth, from resume building
-              to interview preparation and beyond.
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-8">
+              Accelerate your career growth with AI-powered tools designed specifically for students and 
+              early-career professionals. From resume optimization to interview preparation.
             </p>
+            
+            {/* Key Benefits */}
+            <div className="flex flex-wrap justify-center gap-4 mb-8">
+              {[
+                'AI-Powered Analysis',
+                'Instant Feedback', 
+                'ATS Optimization',
+                'Student-Focused',
+                'Career Ready'
+              ].map((feature) => (
+                <span 
+                  key={feature}
+                  className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium"
+                >
+                  {feature}
+                </span>
+              ))}
+            </div>
           </div>
 
-          {/* Tools Tabs */}
-          <Tabs defaultValue="resume" className="mb-16">
-            <TabsList className="grid w-full grid-cols-4 mb-8">
-              <TabsTrigger value="resume" className="flex items-center gap-2">
-                <FileText className="w-4 h-4" />
-                <span className="hidden sm:inline">Resume</span>
-              </TabsTrigger>
-              <TabsTrigger value="interview" className="flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                <span className="hidden sm:inline">Interview</span>
-              </TabsTrigger>
-              <TabsTrigger value="skills" className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4" />
-                <span className="hidden sm:inline">Skills</span>
-              </TabsTrigger>
-              <TabsTrigger value="networking" className="flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                <span className="hidden sm:inline">Network</span>
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="resume">
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold mb-2">Resume & Profile Tools</h3>
-                <p className="text-muted-foreground">
-                  Create compelling resumes and professional profiles that stand out
-                </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {resumeTools.map((tool, index) => (
-                  <ToolCard key={index} tool={tool} />
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="interview">
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold mb-2">Interview Preparation</h3>
-                <p className="text-muted-foreground">
-                  Master your interview skills with AI-powered practice and feedback
-                </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {interviewTools.map((tool, index) => (
-                  <ToolCard key={index} tool={tool} />
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="skills">
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold mb-2">Skill Development</h3>
-                <p className="text-muted-foreground">
-                  Assess, plan, and track your professional skill development journey
-                </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {skillDevelopment.map((tool, index) => (
-                  <ToolCard key={index} tool={tool} />
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="networking">
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold mb-2">Networking & Outreach</h3>
-                <p className="text-muted-foreground">
-                  Build meaningful professional connections and expand your network
-                </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {networkingTools.map((tool, index) => (
-                  <ToolCard key={index} tool={tool} />
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
-
-          {/* Career Planning Resources */}
+          {/* AI Tools Grid */}
           <section className="mb-16">
             <div className="flex items-center gap-3 mb-8">
-              <Target className="w-6 h-6 text-primary" />
-              <h2 className="text-2xl font-bold">Career Planning Resources</h2>
+              <Briefcase className="w-6 h-6 text-primary" />
+              <h2 className="text-2xl font-bold">AI Career Tools for Students</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {careerPlanningResources.map((resource, index) => (
-                <Card key={index} className="glass-panel">
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-lg">{resource.title}</CardTitle>
-                        <CardDescription>{resource.type}</CardDescription>
-                      </div>
-                      <Badge variant="outline">{resource.duration}</Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4">{resource.description}</p>
-                    <Button className="w-full" variant="outline">
-                      Access Resource
-                    </Button>
-                  </CardContent>
-                </Card>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {aiCareerTools.map((tool, index) => (
+                <div
+                  key={index}
+                  className="animate-fade-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <ToolCard tool={tool} />
+                </div>
               ))}
             </div>
           </section>
 
-          {/* Featured Career Guides */}
+          {/* Student Success Section */}
           <section className="mb-16">
-            <Card className="glass-panel p-8">
+            <Card className="glass-panel p-8 bg-gradient-to-r from-primary/10 to-secondary/10">
               <div className="text-center mb-8">
                 <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Briefcase className="w-8 h-8 text-primary" />
+                  <Zap className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Featured Career Guides</h3>
+                <h3 className="text-2xl font-bold mb-4">Designed for Student Success</h3>
                 <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                  Comprehensive guides written by career experts and AI specialists to help you
-                  navigate your professional journey.
+                  Our AI-powered tools are specifically crafted to help students and new graduates 
+                  navigate the competitive job market with confidence.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center p-4 border border-border rounded-lg">
+                <div className="text-center p-4 border border-border rounded-lg bg-background/50">
                   <GraduationCap className="w-8 h-8 text-primary mx-auto mb-3" />
-                  <h4 className="font-semibold mb-2">Student Career Prep</h4>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    From campus to career with AI assistance
+                  <h4 className="font-semibold mb-2">Student-Focused</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Tools designed for students with limited work experience
                   </p>
-                  <Button variant="outline" size="sm" asChild>
-                    <Link to="/blog?category=students">Read Guide</Link>
-                  </Button>
                 </div>
 
-                <div className="text-center p-4 border border-border rounded-lg">
-                  <Zap className="w-8 h-8 text-primary mx-auto mb-3" />
-                  <h4 className="font-semibold mb-2">Career Transition</h4>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Switch careers with confidence using AI
+                <div className="text-center p-4 border border-border rounded-lg bg-background/50">
+                  <Bot className="w-8 h-8 text-primary mx-auto mb-3" />
+                  <h4 className="font-semibold mb-2">AI-Powered</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Advanced AI algorithms provide personalized insights
                   </p>
-                  <Button variant="outline" size="sm" asChild>
-                    <Link to="/blog?category=professionals">Read Guide</Link>
-                  </Button>
                 </div>
 
-                <div className="text-center p-4 border border-border rounded-lg">
+                <div className="text-center p-4 border border-border rounded-lg bg-background/50">
                   <TrendingUp className="w-8 h-8 text-primary mx-auto mb-3" />
-                  <h4 className="font-semibold mb-2">Leadership in AI Era</h4>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Lead teams and projects with AI insights
+                  <h4 className="font-semibold mb-2">Career Ready</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Prepare for the modern job market with confidence
                   </p>
-                  <Button variant="outline" size="sm" asChild>
-                    <Link to="/blog?category=leadership">Read Guide</Link>
-                  </Button>
                 </div>
               </div>
             </Card>
@@ -382,18 +240,20 @@ const CareerTools = () => {
 
           {/* CTA Section */}
           <section>
-            <Card className="glass-panel text-center p-8 bg-gradient-to-r from-primary/10 to-secondary/10">
-              <h3 className="text-2xl font-bold mb-4">Ready to Accelerate Your Career?</h3>
+            <Card className="glass-panel text-center p-8 bg-gradient-to-r from-primary/5 to-secondary/5">
+              <h3 className="text-2xl font-bold mb-4">Ready to Launch Your Career?</h3>
               <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                Get personalized career guidance and access to our premium tools with a free
-                consultation.
+                Start with our free AI Resume Analyzer and take the first step towards landing your dream job.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button asChild size="lg">
-                  <Link to="/contact">Get Free Consultation</Link>
+                  <Link to="/tools/resume-analyzer">
+                    <FileText className="w-4 h-4 mr-2" />
+                    Start with Resume Analyzer
+                  </Link>
                 </Button>
                 <Button variant="outline" size="lg" asChild>
-                  <Link to="/blog">Browse All Guides</Link>
+                  <Link to="/contact">Get Career Guidance</Link>
                 </Button>
               </div>
             </Card>
