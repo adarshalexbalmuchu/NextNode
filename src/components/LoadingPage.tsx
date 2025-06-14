@@ -45,27 +45,17 @@ const LoadingPage: React.FC = () => {
       {/* Logo with Glow Effect */}
       <div className="relative z-10 text-center">
         <div className="mb-8 relative">
-          <div className="w-32 h-32 mx-auto mb-4 relative">
-            {/* Glow effect background */}
-            <div
-              className={`absolute inset-0 rounded-full transition-all duration-1000 ${
+          {/* Logo without any container or background */}
+          <div className="relative">
+            <img
+              src="/NextNode-Logo.svg"
+              alt="NextNode"
+              className={`w-32 h-32 object-contain transition-all duration-1000 ${
                 logoGlow 
-                  ? 'bg-gradient-to-r from-primary/60 to-accent/60 blur-2xl scale-150' 
-                  : 'bg-gradient-to-r from-primary/20 to-accent/20 blur-xl scale-100'
+                  ? 'brightness-150 drop-shadow-[0_0_30px_hsl(var(--primary))] scale-110' 
+                  : 'brightness-100 scale-100'
               }`}
             />
-            {/* Logo container */}
-            <div 
-              className={`relative w-full h-full rounded-full bg-gradient-to-r from-primary to-accent flex items-center justify-center transition-all duration-1000 ${
-                logoGlow ? 'scale-110 brightness-150' : 'scale-100 brightness-100'
-              }`}
-            >
-              <img
-                src="/NextNode-Logo.svg"
-                alt="NextNode"
-                className="w-20 h-20 object-contain filter brightness-0 invert"
-              />
-            </div>
           </div>
         </div>
 
