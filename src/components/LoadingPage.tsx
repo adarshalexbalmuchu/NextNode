@@ -25,47 +25,63 @@ const LoadingPage: React.FC = () => {
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-background via-background/95 to-background flex items-center justify-center overflow-hidden">
       
-      {/* Single Lightning Strike */}
+      {/* Enhanced Lightning Strike */}
       {showLightning && (
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2">
+          {/* Main lightning bolt */}
           <div 
-            className="w-1 bg-gradient-to-b from-primary via-primary to-transparent opacity-0 animate-lightning-strike"
+            className="w-2 bg-gradient-to-b from-primary via-white to-primary opacity-0 animate-lightning-strike"
             style={{ 
               height: '100vh',
               boxShadow: `
-                0 0 20px hsl(var(--primary)),
-                0 0 40px hsl(var(--primary)),
-                0 0 60px hsl(var(--primary))
+                0 0 30px hsl(var(--primary)),
+                0 0 60px hsl(var(--primary)),
+                0 0 90px hsl(var(--primary)),
+                0 0 120px rgba(0, 255, 255, 0.8)
               `
+            }}
+          />
+          {/* Lightning branches */}
+          <div 
+            className="absolute top-1/3 -left-8 w-16 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 animate-lightning-strike"
+            style={{ 
+              transform: 'rotate(-45deg)',
+              animationDelay: '0.1s',
+              boxShadow: `0 0 20px hsl(var(--primary))`
+            }}
+          />
+          <div 
+            className="absolute top-1/2 -right-6 w-12 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 animate-lightning-strike"
+            style={{ 
+              transform: 'rotate(30deg)',
+              animationDelay: '0.15s',
+              boxShadow: `0 0 20px hsl(var(--primary))`
+            }}
+          />
+          <div 
+            className="absolute top-2/3 -left-4 w-8 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 animate-lightning-strike"
+            style={{ 
+              transform: 'rotate(-30deg)',
+              animationDelay: '0.2s',
+              boxShadow: `0 0 15px hsl(var(--primary))`
             }}
           />
         </div>
       )}
 
-      {/* Logo with Glow Effect */}
-      <div className="relative z-10 text-center">
-        <div className="mb-8 relative">
-          {/* Logo without any container or background */}
-          <div className="relative">
-            <img
-              src="/NextNode-Logo.svg"
-              alt="NextNode"
-              className={`w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 object-contain transition-all duration-1000 ${
-                logoGlow 
-                  ? 'brightness-150 drop-shadow-[0_0_30px_hsl(var(--primary))] scale-110' 
-                  : 'brightness-100 scale-100'
-              }`}
-            />
-          </div>
+      {/* Logo with Enhanced Glow Effect */}
+      <div className="relative z-10">
+        <div className="relative">
+          <img
+            src="/NextNode-Logo.svg"
+            alt="NextNode"
+            className={`w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 object-contain transition-all duration-1000 ${
+              logoGlow 
+                ? 'brightness-200 drop-shadow-[0_0_50px_hsl(var(--primary))] drop-shadow-[0_0_100px_rgba(0,255,255,0.6)] scale-110' 
+                : 'brightness-100 scale-100'
+            }`}
+          />
         </div>
-
-        {/* Simple text */}
-        <h1 className="text-2xl font-bold text-foreground mb-2">
-          NextNode
-        </h1>
-        <p className="text-muted-foreground text-sm">
-          Powering up...
-        </p>
       </div>
     </div>
   );
