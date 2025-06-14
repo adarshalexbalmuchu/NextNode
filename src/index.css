@@ -105,6 +105,56 @@
     animation: pulse-glow 2s ease-in-out infinite;
   }
 
+  /* Dramatic Realistic Lightning Effect */
+  .lightning-container {
+    position: relative;
+    width: 120px;
+    height: 100vh;
+    margin: 0 auto;
+    z-index: 5;
+  }
+
+  .lightning-bolt {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .bolt-main, .bolt-branch {
+    fill: none;
+    stroke: #fffbe6;
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 25px #fff) drop-shadow(0 0 50px #00ffff) drop-shadow(0 0 75px hsl(var(--primary)));
+    opacity: 0;
+    transition: opacity 0.05s ease-out;
+  }
+
+  .bolt-branch {
+    stroke: #00ffff;
+    stroke-width: 4;
+    filter: drop-shadow(0 0 15px #00ffff) drop-shadow(0 0 30px hsl(var(--primary)));
+    opacity: 0;
+  }
+
+  .flash-overlay {
+    position: absolute;
+    top: 0;
+    left: -50vw;
+    width: 200vw;
+    height: 100vh;
+    background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.8) 0%, rgba(0, 255, 255, 0.3) 30%, transparent 70%);
+    opacity: 0;
+    z-index: 1;
+    pointer-events: none;
+    transition: opacity 0.05s ease-out;
+  }
+
   /* Lightning strike animation */
   @keyframes lightning-strike {
     0% { 

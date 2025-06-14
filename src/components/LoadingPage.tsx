@@ -5,67 +5,103 @@ const LoadingPage: React.FC = () => {
   const [showLightning, setShowLightning] = useState(false);
   const [logoGlow, setLogoGlow] = useState(false);
 
+  const lightningStrike = () => {
+    const main = document.querySelector('.bolt-main') as HTMLElement;
+    const branches = document.querySelectorAll('.bolt-branch') as NodeListOf<HTMLElement>;
+    const flash = document.querySelector('.flash-overlay') as HTMLElement;
+    const flickerTimings = [0, 80, 140, 180, 223];
+
+    if (!main || !branches.length || !flash) return;
+
+    // Reset
+    main.style.opacity = '0';
+    branches.forEach(b => b.style.opacity = '0');
+    flash.style.opacity = '0';
+
+    // Main flash
+    setTimeout(() => {
+      main.style.opacity = '1';
+      branches.forEach(b => b.style.opacity = String(0.7 + Math.random() * 0.3));
+      flash.style.opacity = '0.55';
+    }, flickerTimings[0]);
+
+    // Flickers
+    setTimeout(() => {
+      main.style.opacity = '0.5';
+      branches.forEach(b => b.style.opacity = '0.2');
+      flash.style.opacity = '0.15';
+    }, flickerTimings[1]);
+    
+    setTimeout(() => {
+      main.style.opacity = '1';
+      branches.forEach(b => b.style.opacity = String(0.8 + Math.random() * 0.2));
+      flash.style.opacity = '0.38';
+    }, flickerTimings[2]);
+    
+    setTimeout(() => {
+      main.style.opacity = '0.2';
+      branches.forEach(b => b.style.opacity = '0.1');
+      flash.style.opacity = '0.05';
+    }, flickerTimings[3]);
+    
+    // Fade out
+    setTimeout(() => {
+      main.style.opacity = '0';
+      branches.forEach(b => b.style.opacity = '0');
+      flash.style.opacity = '0';
+    }, flickerTimings[4]);
+  };
+
   useEffect(() => {
     // Start lightning after 500ms
     const lightningTimer = setTimeout(() => {
       setShowLightning(true);
+      // Trigger first lightning strike
+      setTimeout(() => {
+        lightningStrike();
+        // Trigger logo glow when lightning hits
+        setLogoGlow(true);
+      }, 100);
     }, 500);
-
-    // Trigger logo glow when lightning hits (after 1.2s)
-    const glowTimer = setTimeout(() => {
-      setLogoGlow(true);
-    }, 1200);
 
     return () => {
       clearTimeout(lightningTimer);
-      clearTimeout(glowTimer);
     };
   }, []);
 
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-background via-background/95 to-background flex items-center justify-center overflow-hidden">
       
-      {/* Enhanced Lightning Strike */}
+      {/* Dramatic Realistic Lightning Strike */}
       {showLightning && (
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2">
-          {/* Main lightning bolt */}
-          <div 
-            className="w-2 bg-gradient-to-b from-primary via-white to-primary opacity-0 animate-lightning-strike"
-            style={{ 
-              height: '100vh',
-              boxShadow: `
-                0 0 30px hsl(var(--primary)),
-                0 0 60px hsl(var(--primary)),
-                0 0 90px hsl(var(--primary)),
-                0 0 120px rgba(0, 255, 255, 0.8)
-              `
-            }}
-          />
-          {/* Lightning branches */}
-          <div 
-            className="absolute top-1/3 -left-8 w-16 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 animate-lightning-strike"
-            style={{ 
-              transform: 'rotate(-45deg)',
-              animationDelay: '0.1s',
-              boxShadow: `0 0 20px hsl(var(--primary))`
-            }}
-          />
-          <div 
-            className="absolute top-1/2 -right-6 w-12 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 animate-lightning-strike"
-            style={{ 
-              transform: 'rotate(30deg)',
-              animationDelay: '0.15s',
-              boxShadow: `0 0 20px hsl(var(--primary))`
-            }}
-          />
-          <div 
-            className="absolute top-2/3 -left-4 w-8 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 animate-lightning-strike"
-            style={{ 
-              transform: 'rotate(-30deg)',
-              animationDelay: '0.2s',
-              boxShadow: `0 0 15px hsl(var(--primary))`
-            }}
-          />
+          <div className="lightning-container">
+            <svg className="lightning-bolt" width="120" height="100vh" viewBox="0 0 120 800">
+              {/* Main jagged lightning bolt */}
+              <polyline 
+                points="60,0 65,80 50,120 75,200 55,280 80,360 45,440 70,520 40,600 65,680 50,760 60,800" 
+                className="bolt-main"
+              />
+              {/* Lightning branches */}
+              <polyline 
+                points="65,80 85,130 75,180" 
+                className="bolt-branch"
+              />
+              <polyline 
+                points="75,200 95,240 85,280" 
+                className="bolt-branch"
+              />
+              <polyline 
+                points="45,440 25,480 35,520" 
+                className="bolt-branch"
+              />
+              <polyline 
+                points="70,520 90,560 80,600" 
+                className="bolt-branch"
+              />
+            </svg>
+            <div className="flash-overlay"></div>
+          </div>
         </div>
       )}
 
@@ -75,7 +111,7 @@ const LoadingPage: React.FC = () => {
           <img
             src="/NextNode-Logo.svg"
             alt="NextNode"
-            className={`w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 object-contain transition-all duration-1000 ${
+            className={`w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] object-contain transition-all duration-1000 ${
               logoGlow 
                 ? 'brightness-200 drop-shadow-[0_0_50px_hsl(var(--primary))] drop-shadow-[0_0_100px_rgba(0,255,255,0.6)] scale-110' 
                 : 'brightness-100 scale-100'
