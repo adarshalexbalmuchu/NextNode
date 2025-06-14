@@ -1,6 +1,6 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@/test/test-utils';
 import { AuthProvider, useAuth } from '../AuthContext';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -30,6 +30,7 @@ vi.mock('@/integrations/supabase/client', () => ({
       })),
       insert: vi.fn(),
     })),
+    rpc: vi.fn(),
   },
 }));
 
@@ -83,6 +84,12 @@ describe('AuthContext', () => {
           callback: vi.fn(),
         },
       },
+    });
+
+    // Mock RPC call
+    vi.mocked(supabase.rpc).mockResolvedValue({
+      data: 'user',
+      error: null,
     });
 
     // Mock database operations

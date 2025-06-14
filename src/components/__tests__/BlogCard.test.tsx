@@ -1,7 +1,6 @@
 
 import { describe, it, expect } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { render, screen, fireEvent } from '@/test/test-utils';
 import BlogCard from '../BlogCard';
 
 describe('BlogCard Component', () => {
@@ -18,11 +17,7 @@ describe('BlogCard Component', () => {
   };
 
   it('renders the BlogCard component with correct data', () => {
-    render(
-      <BrowserRouter>
-        <BlogCard {...mockPost} />
-      </BrowserRouter>
-    );
+    render(<BlogCard {...mockPost} />);
 
     expect(screen.getByText(mockPost.title)).toBeInTheDocument();
     expect(screen.getByText(mockPost.excerpt)).toBeInTheDocument();
@@ -32,33 +27,21 @@ describe('BlogCard Component', () => {
   });
 
   it('applies difficulty level styles correctly', () => {
-    render(
-      <BrowserRouter>
-        <BlogCard {...mockPost} />
-      </BrowserRouter>
-    );
+    render(<BlogCard {...mockPost} />);
 
     const difficultyElement = screen.getByText(mockPost.difficulty);
     expect(difficultyElement).toBeInTheDocument();
   });
 
   it('navigates to the correct blog post on click', () => {
-    render(
-      <BrowserRouter>
-        <BlogCard {...mockPost} />
-      </BrowserRouter>
-    );
+    render(<BlogCard {...mockPost} />);
 
     const cardElement = screen.getByRole('button', { name: /read article/i });
     expect(cardElement).toBeInTheDocument();
   });
 
   it('displays "New" badge if the post is new', () => {
-    render(
-      <BrowserRouter>
-        <BlogCard {...mockPost} />
-      </BrowserRouter>
-    );
+    render(<BlogCard {...mockPost} />);
 
     // Assuming "New" badge is only displayed for posts within a week
     const today = new Date();
