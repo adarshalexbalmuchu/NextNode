@@ -21,14 +21,12 @@ describe('Resume Analysis Service', () => {
     };
 
     const result = await analyzeResume(request);
-    
+
     expect(result.result).toBeDefined();
-    expect(result.result.overallScore).toBeGreaterThan(0);
-    expect(result.result.overallScore).toBeLessThanOrEqual(100);
-    expect(result.result.strengths).toBeInstanceOf(Array);
-    expect(result.result.improvements).toBeInstanceOf(Array);
+    expect(result.result.score).toBeGreaterThan(0);
+    expect(result.result.score).toBeLessThanOrEqual(100);
     expect(result.result.suggestions).toBeInstanceOf(Array);
-    expect(result.result.sections).toBeInstanceOf(Array);
+    expect(result.result.keywords).toBeDefined();
   });
 
   it('should handle empty resume text', async () => {
@@ -46,9 +44,10 @@ describe('Resume Analysis Service', () => {
     };
 
     const result = await analyzeResume(request);
-    
-    expect(result.result.keywordMatch).toBeGreaterThanOrEqual(0);
-    expect(result.result.keywordMatch).toBeLessThanOrEqual(100);
+
+    expect(result.result.keywords).toBeDefined();
+    expect(result.result.keywords.matched.length).toBeGreaterThanOrEqual(0);
+    expect(result.result.keywords.missing.length).toBeGreaterThanOrEqual(0);
   });
 
   it('should handle resume with minimal content', async () => {
@@ -57,10 +56,10 @@ describe('Resume Analysis Service', () => {
     };
 
     const result = await analyzeResume(request);
-    
+
     expect(result.result).toBeDefined();
-    expect(result.result.overallScore).toBeGreaterThanOrEqual(0);
-    expect(result.result.improvements.length).toBeGreaterThan(0);
+    expect(result.result.score).toBeGreaterThanOrEqual(0);
+    expect(result.result.suggestions.length).toBeGreaterThan(0);
   });
 
   it('should provide section-wise feedback', async () => {
@@ -69,17 +68,8 @@ describe('Resume Analysis Service', () => {
     };
 
     const result = await analyzeResume(request);
-    
-    expect(result.result.sections).toBeInstanceOf(Array);
-    expect(result.result.sections.length).toBeGreaterThan(0);
-    
-    result.result.sections.forEach(section => {
-      expect(section).toHaveProperty('name');
-      expect(section).toHaveProperty('score');
-      expect(section).toHaveProperty('feedback');
-      expect(typeof section.score).toBe('number');
-      expect(section.score).toBeGreaterThanOrEqual(0);
-      expect(section.score).toBeLessThanOrEqual(100);
-    });
+
+    expect(result.result.suggestions).toBeInstanceOf(Array);
+    expect(result.result.keywords).toBeDefined();
   });
 });

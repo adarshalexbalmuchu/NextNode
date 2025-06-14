@@ -1,5 +1,4 @@
-
-import { describe, beforeEach, test, expect } from 'vitest';
+import { describe, beforeEach, test, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import Header from '@/components/Header';

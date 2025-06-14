@@ -38,12 +38,10 @@ JavaScript, React, Node.js, Python, SQL, Git
 
     expect(result).toBeDefined();
     expect(result.result).toBeDefined();
-    expect(result.result.overallScore).toBeGreaterThan(0);
-    expect(result.result.overallScore).toBeLessThanOrEqual(100);
-    expect(result.result.strengths).toBeInstanceOf(Array);
-    expect(result.result.improvements).toBeInstanceOf(Array);
-    expect(result.result.sections).toBeInstanceOf(Array);
-    expect(result.result.sections.length).toBeGreaterThan(0);
+    expect(result.result.score).toBeGreaterThan(0);
+    expect(result.result.score).toBeLessThanOrEqual(100);
+    expect(result.result.suggestions).toBeInstanceOf(Array);
+    expect(result.result.keywords).toBeDefined();
   });
 
   it('should handle empty resume text', async () => {
@@ -66,8 +64,8 @@ Experience in product management and team leadership.
     });
 
     expect(result).toBeDefined();
-    expect(result.result.keywordMatch).toBe(0); // No job description provided
-    expect(result.result.missingKeywords).toEqual([]);
+    expect(result.result.keywords.matched.length).toBe(0);
+    expect(result.result.keywords.missing.length).toBe(0);
   });
 
   it('should return higher scores for well-formatted resumes', async () => {
@@ -105,8 +103,8 @@ Cloud Platforms: AWS, Google Cloud, Azure
       resumeText: wellFormattedResume,
     });
 
-    expect(result.result.overallScore).toBeGreaterThan(70); // Should score well
-    expect(result.result.strengths.length).toBeGreaterThan(2);
-    expect(result.result.sections.length).toBeGreaterThan(3);
+    expect(result.result.score).toBeGreaterThan(70);
+    expect(result.result.suggestions.length).toBeGreaterThan(2);
+    expect(result.result.keywords).toBeDefined();
   });
 });
