@@ -30,19 +30,12 @@ const Newsletter = lazy(() => import('@/pages/Newsletter'));
 const RSSPage = lazy(() => import('@/pages/RSSPage'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
 
-// Create a client
+// Create a client with simpler configuration
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
-      gcTime: 1000 * 60 * 30, // 30 minutes
-      retry: (failureCount, error: any) => {
-        // Don't retry for 404s or auth errors
-        if (error?.status === 404 || error?.status === 401) {
-          return false;
-        }
-        return failureCount < 3;
-      },
+      retry: 1,
       refetchOnWindowFocus: false,
     },
   },
