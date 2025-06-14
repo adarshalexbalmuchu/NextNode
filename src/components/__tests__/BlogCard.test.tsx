@@ -1,6 +1,7 @@
 
 import { describe, it, expect } from 'vitest';
-import { render, screen, fireEvent } from '@/test/test-utils';
+import { render } from '@/test/test-utils';
+import { screen, fireEvent } from '@testing-library/react';
 import BlogCard from '../BlogCard';
 
 describe('BlogCard Component', () => {
