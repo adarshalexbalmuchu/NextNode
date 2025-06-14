@@ -1,3 +1,4 @@
+
 import { useState, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -56,7 +57,7 @@ const ImageUpload = ({
       // Generate unique filename
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-      const filePath = `blog-images/${fileName}`;
+      const filePath = `${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('blog-images')
@@ -76,6 +77,7 @@ const ImageUpload = ({
         description: 'Image uploaded successfully',
       });
     } catch (error: any) {
+      console.error('Upload error:', error);
       toast({
         title: 'Upload failed',
         description: error.message || 'Failed to upload image',

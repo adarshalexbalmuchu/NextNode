@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -15,7 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Search, Plus, Edit, Trash2, Eye, Image as ImageIcon } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import type { Database } from '@/integrations/supabase/types';
+import { useNavigate } from 'react-router-dom';
 
 type Post = {
   id: string;
@@ -35,47 +36,32 @@ type Post = {
     name: string;
     color: string;
   } | null;
-  profiles?: {
-    first_name: string | null;
-    last_name: string | null;
-    email: string;
-  } | null;
 };
 
 const PostManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { data: posts, isLoading } = useQuery({
     queryKey: ['admin-posts'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('posts')
-        .select(
-          `
+        .select(`
           *,
           categories(name, color)
-        `
-        )
+        `)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-
-      // Transform the data to match our Post type
-      const transformedData =
-        data?.map(post => ({
-          ...post,
-          profiles: null, // We'll handle author lookup separately if needed
-        })) || [];
-
-      return transformedData as Post[];
+      return data as Post[];
     },
   });
 
   const deletePostMutation = useMutation({
     mutationFn: async (postId: string) => {
       const { error } = await supabase.from('posts').delete().eq('id', postId);
-
       if (error) throw error;
     },
     onSuccess: () => {
@@ -97,7 +83,6 @@ const PostManagement = () => {
   const togglePublishMutation = useMutation({
     mutationFn: async ({ postId, published }: { postId: string; published: boolean }) => {
       const { error } = await supabase.from('posts').update({ published }).eq('id', postId);
-
       if (error) throw error;
     },
     onSuccess: () => {
@@ -121,16 +106,6 @@ const PostManagement = () => {
       post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       post.author.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const getAuthorName = (post: Post) => {
-    if (post.profiles?.first_name && post.profiles?.last_name) {
-      return `${post.profiles.first_name} ${post.profiles.last_name}`;
-    }
-    if (post.profiles?.email) {
-      return post.profiles.email;
-    }
-    return post.author;
-  };
 
   if (isLoading) {
     return (
@@ -161,7 +136,10 @@ const PostManagement = () => {
               className="pl-10"
             />
           </div>
-          <Button className="btn-primary ml-4">
+          <Button 
+            className="btn-primary ml-4"
+            onClick={() => navigate('/create-post')}
+          >
             <Plus className="w-4 h-4 mr-2" />
             New Post
           </Button>
@@ -203,7 +181,7 @@ const PostManagement = () => {
                       <div className="text-sm text-muted-foreground">/{post.slug}</div>
                     </div>
                   </TableCell>
-                  <TableCell>{getAuthorName(post)}</TableCell>
+                  <TableCell>{post.author}</TableCell>
                   <TableCell>
                     {post.categories && (
                       <Badge

@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -117,14 +118,6 @@ const CreatePost = () => {
     }
   };
 
-  const handleImageUploaded = (imageUrl: string) => {
-    handleInputChange('featured_image', imageUrl);
-  };
-
-  const handleImageRemoved = () => {
-    handleInputChange('featured_image', '');
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -224,10 +217,9 @@ const CreatePost = () => {
                   />
                 </div>
 
-                {/* Featured Image Upload */}
                 <ImageUpload
-                  onImageUploaded={handleImageUploaded}
-                  onImageRemoved={handleImageRemoved}
+                  onImageUploaded={(imageUrl) => handleInputChange('featured_image', imageUrl)}
+                  onImageRemoved={() => handleInputChange('featured_image', '')}
                   currentImage={formData.featured_image}
                   label="Featured Image"
                 />
