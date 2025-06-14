@@ -15,10 +15,12 @@ export interface ParsedContent {
   };
 }
 
-// Locally declare types (since not exported by pdfjs-dist)
-type TextItem = { str: string };
+// Define TextItem type locally
+interface TextItem {
+  str: string;
+}
 
-const parseFile = async (file: File): Promise<ParsedContent> => {
+export const parseFile = async (file: File): Promise<string> => {
   const fileExtension = file.name.split('.').pop()?.toLowerCase();
 
   switch (fileExtension) {
@@ -34,7 +36,7 @@ const parseFile = async (file: File): Promise<ParsedContent> => {
   }
 };
 
-const parsePDF = async (file: File): Promise<ParsedContent> => {
+const parsePDF = async (file: File): Promise<string> => {
   try {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -46,87 +48,56 @@ const parsePDF = async (file: File): Promise<ParsedContent> => {
       const page = await pdf.getPage(pageNum);
       const textContent = await page.getTextContent();
 
-      // Extract text just from page items with 'str' property
       const pageText = textContent.items
         .filter((item): item is TextItem => typeof (item as any).str === 'string')
-        .map(item => (item as TextItem).str)
+        .map(item => item.str)
         .join(' ');
 
       fullText += pageText + '\n';
     }
 
-    // Get document metadata
-    const metadata = await pdf.getMetadata();
-    const info = metadata?.info || {};
-
-    return {
-      text: fullText.trim(),
-      metadata: {
-        title: typeof info['Title'] === 'string' ? info['Title'] : file.name,
-        author: typeof info['Author'] === 'string' ? info['Author'] : undefined,
-        pages: numPages,
-        wordCount: fullText.trim().split(/\s+/).length,
-      },
-    };
+    return fullText.trim();
   } catch (error) {
     console.error('Error parsing PDF:', error);
     throw new Error('Failed to parse PDF file');
   }
 };
 
-const parseDOCX = async (file: File): Promise<ParsedContent> => {
+const parseDOCX = async (file: File): Promise<string> => {
   try {
     const arrayBuffer = await file.arrayBuffer();
     const result = await mammoth.extractRawText({ arrayBuffer });
-
-    return {
-      text: result.value,
-      metadata: {
-        title: file.name,
-        wordCount: result.value.trim().split(/\s+/).length,
-      },
-    };
+    return result.value;
   } catch (error) {
     console.error('Error parsing DOCX:', error);
     throw new Error('Failed to parse DOCX file');
   }
 };
 
-const parseTXT = async (file: File): Promise<ParsedContent> => {
+const parseTXT = async (file: File): Promise<string> => {
   try {
-    const text = await file.text();
-
-    return {
-      text,
-      metadata: {
-        title: file.name,
-        wordCount: text.trim().split(/\s+/).length,
-      },
-    };
+    return await file.text();
   } catch (error) {
     console.error('Error parsing TXT:', error);
     throw new Error('Failed to parse TXT file');
   }
 };
 
-// Utility function to validate file type
-const isValidFileType = (file: File): boolean => {
+export const isValidFileType = (file: File): boolean => {
   const allowedTypes = ['pdf', 'doc', 'docx', 'txt'];
   const fileExtension = file.name.split('.').pop()?.toLowerCase();
   return fileExtension ? allowedTypes.includes(fileExtension) : false;
 };
 
-// Utility function to check file size (max 10MB)
-const isValidFileSize = (file: File, maxSizeMB: number = 10): boolean => {
+export const isValidFileSize = (file: File, maxSizeMB: number = 10): boolean => {
   const maxSizeBytes = maxSizeMB * 1024 * 1024;
   return file.size <= maxSizeBytes;
 };
 
-// Clean extracted text (for use in ResumeAnalyzer)
-const cleanExtractedText = (text: string) =>
+export const cleanExtractedText = (text: string) =>
   text.replace(/\s+/g, ' ').trim();
 
-const getFileTypeDescription = (file: File): string => {
+export const getFileTypeDescription = (file: File): string => {
   const ext = file.name.split('.').pop()?.toLowerCase();
   switch (ext) {
     case 'pdf':
@@ -142,27 +113,18 @@ const getFileTypeDescription = (file: File): string => {
   }
 };
 
-const getFileSizeString = (bytes: number) => {
+export const getFileSizeString = (bytes: number) => {
   if (bytes >= 1024 * 1024 * 1024) return `${Math.round(bytes / (1024 * 1024 * 1024))} GB`;
   if (bytes >= 1024 * 1024) return `${Math.round(bytes / (1024 * 1024))} MB`;
   if (bytes >= 1024) return `${Math.round(bytes / 1024)} KB`;
   return `${bytes} bytes`;
 };
 
-// FileParser object for backward compatibility with all tests and usages
+// FileParser object for backward compatibility
 export const FileParser = {
   parseFile,
   isSupportedFileType: isValidFileType,
   validateFileSize: isValidFileSize,
-  cleanExtractedText,
-  getFileTypeDescription,
-  getFileSizeString,
-};
-
-export {
-  parseFile,
-  isValidFileType,
-  isValidFileSize,
   cleanExtractedText,
   getFileTypeDescription,
   getFileSizeString,

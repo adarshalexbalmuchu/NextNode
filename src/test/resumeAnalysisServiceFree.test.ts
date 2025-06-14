@@ -1,3 +1,4 @@
+
 import { describe, it, expect, vi } from 'vitest';
 import { analyzeResume } from '../services/resumeAnalysisService';
 
@@ -62,7 +63,7 @@ describe('Resume Analysis Service', () => {
     expect(result.result.suggestions.length).toBeGreaterThan(0);
   });
 
-  it('should provide section-wise feedback', async () => {
+  it('should provide comprehensive feedback', async () => {
     const request = {
       resumeText: 'John Doe\nEmail: john@example.com\nExperience: Software Engineer\nEducation: BS CS\nSkills: JavaScript'
     };
@@ -71,5 +72,7 @@ describe('Resume Analysis Service', () => {
 
     expect(result.result.suggestions).toBeInstanceOf(Array);
     expect(result.result.keywords).toBeDefined();
+    expect(result.result.technical_skills).toBeDefined();
+    expect(result.result.soft_skills).toBeDefined();
   });
 });

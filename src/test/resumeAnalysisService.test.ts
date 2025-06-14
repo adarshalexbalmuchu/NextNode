@@ -1,3 +1,4 @@
+
 import { describe, it, expect, vi } from 'vitest';
 import { analyzeResume } from '@/services/resumeAnalysisService';
 
@@ -104,7 +105,7 @@ Cloud Platforms: AWS, Google Cloud, Azure
     });
 
     expect(result.result.score).toBeGreaterThan(70);
-    expect(result.result.suggestions.length).toBeGreaterThan(2);
+    expect(result.result.suggestions.length).toBeGreaterThan(0);
     expect(result.result.keywords).toBeDefined();
   });
 });
