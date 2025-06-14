@@ -50,7 +50,7 @@ const LoadingPage: React.FC = () => {
             <img
               src="/NextNode-Logo.svg"
               alt="NextNode"
-              className={`w-32 h-32 object-contain transition-all duration-1000 ${
+              className={`w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 object-contain transition-all duration-1000 ${
                 logoGlow 
                   ? 'brightness-150 drop-shadow-[0_0_30px_hsl(var(--primary))] scale-110' 
                   : 'brightness-100 scale-100'
