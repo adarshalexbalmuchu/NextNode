@@ -105,6 +105,40 @@
     animation: pulse-glow 2s ease-in-out infinite;
   }
 
+  /* Lightning strike animation */
+  @keyframes lightning-strike {
+    0% { 
+      opacity: 0; 
+      transform: scaleY(0) translateY(-50%);
+    }
+    10% { 
+      opacity: 1; 
+      transform: scaleY(0.3) translateY(-20%);
+    }
+    15% { 
+      opacity: 1; 
+      transform: scaleY(1) translateY(0);
+    }
+    20% {
+      opacity: 0.8;
+    }
+    25% {
+      opacity: 1;
+    }
+    30% {
+      opacity: 0;
+    }
+    100% { 
+      opacity: 0; 
+      transform: scaleY(1) translateY(0);
+    }
+  }
+
+  .animate-lightning-strike {
+    animation: lightning-strike 0.8s ease-out forwards;
+    transform-origin: top center;
+  }
+
   /* Enhanced loading animations */
   @keyframes lightning {
     0%, 90%, 100% { 
@@ -989,5 +1023,33 @@
   50% { 
     opacity: 1; 
     transform: scale(1);
+  }
+}
+
+@keyframes lightning-strike {
+  0% { 
+    opacity: 0; 
+    transform: scaleY(0) translateY(-50%);
+  }
+  10% { 
+    opacity: 1; 
+    transform: scaleY(0.3) translateY(-20%);
+  }
+  15% { 
+    opacity: 1; 
+    transform: scaleY(1) translateY(0);
+  }
+  20% {
+    opacity: 0.8;
+  }
+  25% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 0;
+  }
+  100% { 
+    opacity: 0; 
+    transform: scaleY(1) translateY(0);
   }
 }
