@@ -66,6 +66,7 @@
     "input-otp": "^1.2.4",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
+    "lovable-tagger": "^1.1.8",
     "lucide-react": "^0.462.0",
     "mammoth": "^1.9.1",
     "pdf-lib": "^1.17.1",

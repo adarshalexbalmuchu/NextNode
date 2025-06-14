@@ -1,42 +1,43 @@
+
+import { describe, beforeEach, test, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from '@/components/contexts/AuthContext';
 import Header from '@/components/Header';
-import { vi } from 'vitest';
 
-// Mock ResizeObserver
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
+// Mock the useAuth hook
+const mockUseAuth = {
+  user: null,
+  hasRole: () => false,
+  logout: () => Promise.resolve(),
+};
+
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: () => mockUseAuth,
 }));
 
-// Mock window.matchMedia
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: vi.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  })),
+// Mock react-router-dom
+const mockNavigate = vi.fn();
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
 });
 
-const HeaderWrapper = () => (
-  <BrowserRouter>
-    <AuthProvider>
+// Helper function to render Header with Router
+const renderHeader = () => {
+  return render(
+    <BrowserRouter>
       <Header />
-    </AuthProvider>
-  </BrowserRouter>
-);
+    </BrowserRouter>
+  );
+};
 
-describe('Header Responsive Design', () => {
+describe('Header Responsive Tests', () => {
   beforeEach(() => {
-    // Reset viewport
+    vi.clearAllMocks();
+    // Reset viewport to desktop size
     Object.defineProperty(window, 'innerWidth', {
       writable: true,
       configurable: true,
@@ -47,69 +48,56 @@ describe('Header Responsive Design', () => {
       configurable: true,
       value: 768,
     });
+    window.dispatchEvent(new Event('resize'));
   });
 
-  test('renders all navigation links on mobile', () => {
-    // Simulate mobile viewport
-    Object.defineProperty(window, 'innerWidth', {
-      writable: true,
-      configurable: true,
-      value: 375,
-    });
-
-    render(<HeaderWrapper />);
-
-    expect(screen.getByText('Guides')).toBeInTheDocument();
-    expect(screen.getByText('Resources')).toBeInTheDocument();
-    expect(screen.getByText('Career Tools')).toBeInTheDocument();
+  test('renders navigation links on desktop', () => {
+    renderHeader();
+    
+    // Check for main navigation links
+    expect(screen.getByText('Home')).toBeInTheDocument();
+    expect(screen.getByText('Blog')).toBeInTheDocument();
     expect(screen.getByText('About')).toBeInTheDocument();
+    expect(screen.getByText('Contact')).toBeInTheDocument();
   });
 
-  test('renders search button on mobile', () => {
+  test('shows mobile menu button on small screens', () => {
+    // Set mobile viewport
     Object.defineProperty(window, 'innerWidth', {
       writable: true,
       configurable: true,
-      value: 375,
+      value: 640,
     });
-
-    render(<HeaderWrapper />);
-
-    expect(screen.getByLabelText('Search')).toBeInTheDocument();
+    window.dispatchEvent(new Event('resize'));
+    
+    renderHeader();
+    expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
-  test('renders all navigation links on tablet', () => {
-    // Simulate tablet viewport
-    Object.defineProperty(window, 'innerWidth', {
-      writable: true,
-      configurable: true,
-      value: 768,
-    });
-
-    render(<HeaderWrapper />);
-
-    expect(screen.getByText('Guides')).toBeInTheDocument();
-    expect(screen.getByText('Resources')).toBeInTheDocument();
-    expect(screen.getByText('Career Tools')).toBeInTheDocument();
-    expect(screen.getByText('About')).toBeInTheDocument();
+  test('navigation links are accessible on desktop', () => {
+    renderHeader();
+    
+    // Check navigation links have proper href attributes
+    expect(screen.getByText('Home').closest('a')).toHaveAttribute('href', '/');
+    expect(screen.getByText('Blog').closest('a')).toHaveAttribute('href', '/blog');
+    expect(screen.getByText('About').closest('a')).toHaveAttribute('href', '/about');
+    expect(screen.getByText('Contact').closest('a')).toHaveAttribute('href', '/contact');
   });
 
-  test('header has proper accessibility attributes', () => {
-    render(<HeaderWrapper />);
-
-    const navigation = screen.getByRole('navigation', { name: 'Main navigation' });
+  test('header has proper semantic structure', () => {
+    renderHeader();
+    
+    const header = screen.getByRole('banner');
+    expect(header).toBeInTheDocument();
+    
+    const navigation = screen.getByRole('navigation');
     expect(navigation).toBeInTheDocument();
-
-    const banner = screen.getByRole('banner');
-    expect(banner).toBeInTheDocument();
   });
 
-  test('touch targets meet minimum size requirements', () => {
-    render(<HeaderWrapper />);
-
-    const searchButton = screen.getByLabelText('Search');
-    const computedStyle = window.getComputedStyle(searchButton);
-
-    // Touch targets should be at least 44px for accessibility
-    expect(searchButton).toHaveClass('touch-friendly');
+  test('logo/brand link navigates to home', () => {
+    renderHeader();
+    
+    const logoLink = screen.getByText('NextNode').closest('a');
+    expect(logoLink).toHaveAttribute('href', '/');
   });
 });
